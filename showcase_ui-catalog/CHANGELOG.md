@@ -1,5 +1,15 @@
 # Changelog
 
+## Delivery 137 — 2026-11-13: Favicon, repository links
+
+Showcase look: **browser tab icon** (favicon) and **Home page** links. Nothing else changes.
+
+- Favicon from the public repository: `client/assets/favicon.svg` and `favicon.png` (32×32, for browsers without SVG icons), linked in `client/index.html` with addresses relative to the page (`assets/…`).
+- `client/assets/logo1.svg` removed (not used).
+- Home page: "GitHub" and "Codeberg" link to https://github.com/DDragu50/uicatalog and https://codeberg.org/DDragu50/uicatalog (GitLab replaced by Codeberg).
+- Top `README.md`: the two repository links. README and `build-public.js` comments: Codeberg instead of GitLab.
+- Public copy and `client/assets/uicatalog.zip` rebuilt.
+
 ## Delivery 136 — 2026-11-13: Public copy and download zip
 
 Showcase look: **Home page** — "Download .zip archive" is now a link. Nothing else changes.

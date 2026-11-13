@@ -1,7 +1,7 @@
 # UI Catalog
 
-<!-- Add the addresses as links, for example: Source code repositories: [GitHub](https://github.com/your-account/ui-catalog), [GitLab](https://gitlab.com/your-account/ui-catalog); the zip is made by npm run public -->
-Plain JavaScript components that AI tools configure, not rewrite: the same behaviour on every screen.<br/><br/>Source code repositories: GitHub, GitLab<br/>[Download .zip archive](./assets/uicatalog.zip)
+<!-- The zip is made by npm run public -->
+Plain JavaScript components that AI tools configure, not rewrite: the same behaviour on every screen.<br/><br/>Source code repositories: [GitHub](https://github.com/DDragu50/uicatalog), [Codeberg](https://codeberg.org/DDragu50/uicatalog)<br/>[Download .zip archive](./assets/uicatalog.zip)
 
 <!-- columns -->
 

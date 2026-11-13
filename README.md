@@ -4,6 +4,8 @@ Plain JavaScript components that AI tools configure, not rewrite: the same behav
 
 Website: [uicatalog.eu](https://uicatalog.eu)
 
+Source code: [GitHub](https://github.com/DDragu50/uicatalog), [Codeberg](https://codeberg.org/DDragu50/uicatalog)
+
 ## What is inside
 
 | Folder | What it is |

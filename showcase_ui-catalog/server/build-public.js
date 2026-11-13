@@ -3,7 +3,7 @@
 // THE PUBLIC COPY OF THE PROJECT (npm run public).
 // Copies the project (ui-catalog/ and showcase_ui-catalog/) into the folder uicatalog/ next to them, without private
 // and working files, and packs the same files into client/assets/uicatalog.zip (the Home page's "Download .zip archive").
-// The uicatalog/ folder is the content of the public repositories (GitHub, GitLab): its own .git folder, if there is
+// The uicatalog/ folder is the content of the public repositories (GitHub, Codeberg): its own .git folder, if there is
 // one, is kept; everything else is replaced at every run. The private repository ignores uicatalog/ (.gitignore).
 // Left out (EXCLUDED_*): installed packages, settings with secrets (.env), local contact messages, the working
 // documents (decisions, repository assessments, notes), status reports, system and editor files, logs.
@@ -121,7 +121,7 @@ function clearPublicFolder()
 }
 
 const files = [ ...ROOT_FILES.filter(file => { try { return statSync(path.join(ROOT,file)).isFile(); } catch { return false; } }), ...SOURCES.flatMap(listFiles) ];
-// The licence also at the top, where GitHub and GitLab look for it.
+// The licence also at the top, where GitHub and Codeberg look for it.
 const copies = [ ...files.map(file => ({ from:file, to:file })), { from:'ui-catalog/LICENSE', to:'LICENSE' } ];
 
 clearPublicFolder();
