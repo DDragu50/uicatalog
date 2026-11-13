@@ -25,6 +25,8 @@ export const APP_CONFIG = Object.freeze(
     author:Object.freeze({ href:'https://www.linkedin.com/in/dan-dragu-b215951a/' }),
     // Marker line in home.md: the text before it spans the page; after it, the left column (Core concepts) beside the FAQs.
     homeColumnsMarker:'<!-- columns -->',
+    // content/contact.md: what follows this line goes in the right-hand column of the contact page (beside the form).
+    contactAsideMarker:'<!-- aside -->',
     // Guides shown on the document page #/{key} (content copied from the library's components-js folder by "npm run sync").
     guides:Object.freeze([
         Object.freeze({ key:'framework', content:'content/how-to-use-the-framework.md' }),
@@ -181,7 +183,7 @@ export const APP_TEXTS = Object.freeze(
         columns:Object.freeze({ name:'Component', groups:'Groups', keywords:'Keywords', summary:'Description' })
     }),
     notFound:Object.freeze({ backHome:'Go to the home page' }),
-    markdown:Object.freeze({ code:'Code example', codeLanguage:'Code example ({language})', table:'Table' }),
+    markdown:Object.freeze({ newTab:'(opens in a new tab)', code:'Code example', codeLanguage:'Code example ({language})', table:'Table' }),
     contact:Object.freeze(
     {
         name:'Your name',

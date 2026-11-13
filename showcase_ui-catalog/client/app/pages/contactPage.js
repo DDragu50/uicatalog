@@ -1,7 +1,10 @@
 // contactPage.js
 //
 // CONTACT PAGE.
-// Shows content/contact.md and a contact Form (TextInput and TextArea fields) that sends the message to the server
+// Shows content/contact.md and a contact Form. contact.md is split at its marker line "<!-- aside -->": before it
+// (title and invitation) across the page; then two columns, the Form on the left and the rest of contact.md (about the
+// author, LinkedIn link) on the right, one below the other in a narrow page. Links to other sites open in a new tab.
+// The Form (TextInput and TextArea fields) that sends the message to the server
 // (POST api/contact: server/contactHandler.js locally, client/api/contact.php on the public site). Server checks are shown next to the fields; other outcomes are shown as Form messages.
 
 import { renderForm } from '../../components/form/formIndex.js';
@@ -11,6 +14,7 @@ import { renderTextInput } from '../../components/textInput/textInputIndex.js';
 import { APP_CONFIG, APP_TEXTS } from '../appConfig.js';
 import { getAppError, reportAppIssue } from '../appErrors.js';
 import { loadContent } from '../appContent.js';
+import { markExternalLinks } from '../markdown/externalLinks.js';
 import { markdownToHTML } from '../markdown/markdownReader.js';
 
 // Escapes text inserted into generated HTML.
@@ -66,13 +70,20 @@ export async function renderContactPage( root )
 {
     const children = [];
     const markdown = await loadContent(APP_CONFIG.content.contact);
-    root.innerHTML = '<div class="app-reading app-form-page"><div class="app-markdown"></div><div class="app-page-message"></div><div class="app-contact-form"></div></div>';
+    const [ intro, aside = '' ] = ( markdown ?? '' ).split(APP_CONFIG.contactAsideMarker);
+    root.innerHTML = '<div class="app-reading app-contact-page"><div class="app-markdown app-contact-intro"></div><div class="app-page-message"></div>'
+        + '<div class="app-contact-columns"><div class="app-contact-form"></div><div class="app-markdown app-contact-aside"></div></div></div>';
     if ( markdown === null )
     {
-        root.querySelector('.app-markdown').innerHTML = `<h1>${escapeHTML(APP_TEXTS.pages.contact)}</h1>`;
+        root.querySelector('.app-contact-intro').innerHTML = `<h1>${escapeHTML(APP_TEXTS.pages.contact)}</h1>`;
         children.push(renderMessage(root.querySelector('.app-page-message'),{ id:'contact-content-error', type:'WARNING', text:getAppError('CONTENT_UNAVAILABLE').message }));
     }
-    else { root.querySelector('.app-markdown').innerHTML = markdownToHTML(markdown); }
+    else
+    {
+        root.querySelector('.app-contact-intro').innerHTML = markdownToHTML(intro);
+        root.querySelector('.app-contact-aside').innerHTML = markdownToHTML(aside);
+        markExternalLinks(root.querySelector('.app-contact-page'));
+    }
 
     children.push(renderForm(root.querySelector('.app-contact-form'),
     {

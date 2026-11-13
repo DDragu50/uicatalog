@@ -15,6 +15,7 @@ import { renderCopyArea } from '../../components/copyArea/copyAreaIndex.js';
 import { APP_CONFIG, APP_TEXTS } from '../appConfig.js';
 import { getAppError } from '../appErrors.js';
 import { loadContent } from '../appContent.js';
+import { markExternalLinks } from '../markdown/externalLinks.js';
 import { markdownToHTML } from '../markdown/markdownReader.js';
 
 // Escapes text inserted into generated HTML.
@@ -53,6 +54,7 @@ export async function renderHomePage( root )
         + `<div class="app-markdown app-home-concepts">${markdownToHTML(concepts)}</div>`
         + `<section class="app-home-faqs" aria-labelledby="home-faqs-title"><h2 id="home-faqs-title">${escapeHTML(APP_TEXTS.home.faqsTitle)}</h2>`
         + '<div class="app-home-faq-host"></div></section></div></div>';
+    markExternalLinks(root.querySelector('.app-home-intro'));
     if ( home === null ) { children.push(renderMessage(root.querySelector('.app-page-message'),{ id:'home-content-error', type:'DANGER', text:getAppError('CONTENT_UNAVAILABLE').message })); }
     children.push(renderFaqs(root.querySelector('.app-home-faq-host')));
     return {

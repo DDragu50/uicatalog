@@ -279,6 +279,12 @@
     .app-home-faq-answer { margin:0 0 var(--gap-toolbar); }
     .app-home-faq-host .ui-copy-area { margin-block-end:var(--gap-toolbar); }   /* the prompt for AI tools, before the guide button */
     @container (max-width:48rem) { .app-home-columns { grid-template-columns:minmax(0,1fr); } }
+    /* Contact: title and invitation across; then the form (left, at most 640px) | about the author (right), one below the other below 48rem */
+    .app-contact-columns { display:grid; grid-template-columns:minmax(0,var(--size-lg-2)) minmax(0,1fr); gap:var(--gap-section); align-items:start; }
+    .app-contact-aside > :first-child { margin-block-start:0; }
+    @container (max-width:48rem) { .app-contact-columns { grid-template-columns:minmax(0,1fr); } }
+    /* Links to other sites (markdown/externalLinks.js): a small arrow-out-of-a-square icon after the text */
+    .app-external-link-icon { margin-inline-start:var(--gap-tight); font-size:0.75em; vertical-align:baseline; }
 
     /* --- Header search: the size of the Variants inputs (same token re-pointing as .app-customize); icon as the label --- */
     .ui-app-header-search-host { --fs-control:var(--fs-label); --fs-label:var(--fs-caption); --control-height:var(--space-xl-1); --icon-size-medium:var(--fs-label); }

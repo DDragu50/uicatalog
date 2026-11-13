@@ -1,5 +1,13 @@
 # Changelog
 
+## Delivery 138 — 2026-11-13: External links in new tabs; contact page in two columns
+
+Showcase look: **Home page** links and **Contact page** layout (your list). The live examples are unchanged.
+
+- New `client/app/markdown/externalLinks.js`: links to other sites in the Home intro and on the Contact page open in a new tab and show a small icon (arrow out of a square) after the text; screen readers hear "(opens in a new tab)". Home: GitHub, Codeberg; Contact: LinkedIn. "Download .zip archive" stays in the same tab.
+- Contact page: title and invitation across the page; below, the form on the left and your text on the right (one below the other in a narrow page). "With extensive experience…" is its own paragraph. `contact.md` is split at the line `<!-- aside -->` (`APP_CONFIG.contactAsideMarker`).
+- Public copy, the public GitHub repository and `client/assets/uicatalog.zip` updated.
+
 ## Delivery 137 — 2026-11-13: Favicon, repository links
 
 Showcase look: **browser tab icon** (favicon) and **Home page** links. Nothing else changes.
