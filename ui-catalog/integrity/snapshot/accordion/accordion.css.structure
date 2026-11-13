@@ -1,0 +1,7 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-accordion { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-accordion-joined { overflow:hidden; }   /* the frame's corners clip the panels */
+    .ui-accordion-item { min-inline-size:0; }
+}

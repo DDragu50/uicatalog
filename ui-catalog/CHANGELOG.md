@@ -21,7 +21,7 @@ What changed in each release of the library, newest first, written for the peopl
 5. **Not in the changelog:** internal refactoring, file moves that do not change imports, test-only changes, and the showcase app (it has its own changelog).
 6. **Labels and Business analysis codes** are never renamed or removed (`tests/published.json`); an obsolete label is listed under Deprecated.
 
-## 1.0.0 — Unreleased
+## 1.0.0 — 2026-11-13
 
 The first public release.
 

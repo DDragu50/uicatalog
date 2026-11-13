@@ -1,5 +1,13 @@
 # Changelog
 
+## Delivery 141 — 2026-11-13: UI Catalog 1.0.0 released
+
+The library is released as **version 1.0.0** (2026-11-13). The showcase look is unchanged.
+
+- Library `CHANGELOG.md`: "1.0.0 — 2026-11-13" (was "Unreleased").
+- `npm run release -- 1.0.0` passed: static checks, coverage, shared contract test, component tests, gallery. Stored: the original files (`ui-catalog/integrity/`), the published labels and codes (`ui-catalog/tests/published.json`), the release record (`ui-catalog/reports/release-1.0.0.md`). The manual cases are taken as checked (decision 213).
+- Public copy, the public GitHub repository and `client/assets/uicatalog.zip` updated.
+
 ## Delivery 140 — 2026-11-13: Contact page, text at the bottom
 
 Showcase look: **Contact page** (your request). The text on the right is aligned to the bottom, level with the "Send message" button; width, right edge and spacing as in delivery 139.

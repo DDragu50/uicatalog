@@ -1,0 +1,17 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-form-summary-host:empty, .ui-form-message-host:empty, .ui-form-dialog-host:empty { display:none; }
+    /* --ui-form-columns: number of columns, set by the component (1 by default) */
+    .ui-form { --ui-form-columns:1; container-type:inline-size; container-name:form; display:grid; min-inline-size:0; margin:0; }
+    .ui-form-content { display:grid; grid-template-columns:repeat(var(--ui-form-columns),minmax(0,1fr)); align-items:start; min-inline-size:0; }
+    .ui-form-item { display:contents; }
+    @container form (max-width:36rem) { .ui-form-content { grid-template-columns:minmax(0,1fr); } }
+    .ui-form-required-note { margin:0; }
+    .ui-form-actions { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-form-actions-end { justify-content:flex-end; }
+    .ui-form-actions-start { justify-content:flex-start; }
+    .ui-form-busy { cursor:progress; }
+    .ui-form-loader-host, .ui-form-overlay-host { display:contents; }
+    .ui-form-loader-host:not(:has(.ui-loader-shown)) { display:none; }
+}

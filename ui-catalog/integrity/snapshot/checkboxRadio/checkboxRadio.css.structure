@@ -1,0 +1,42 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    /* Fieldset reset */
+    .ui-checkbox-radio { min-inline-size:0; margin:0; padding:0; border:0; }
+    .ui-checkbox-radio-group-label { padding:0; }
+
+    /* Option → next option */
+    .ui-checkbox-radio-options { display:flex; min-inline-size:0; }
+    .ui-checkbox-radio-vertical .ui-checkbox-radio-options { flex-direction:column; align-items:flex-start; }
+    .ui-checkbox-radio-horizontal .ui-checkbox-radio-options { flex-direction:row; flex-wrap:wrap; align-items:center; }
+
+    /* Control/icon → its own label */
+    .ui-checkbox-radio-option { position:relative; display:inline-flex; align-items:center; min-inline-size:0; cursor:pointer; }
+    .ui-checkbox-radio-option-label { min-inline-size:0; }
+    .ui-checkbox-radio-option:has(.ui-checkbox-radio-input:disabled) { cursor:not-allowed; }
+
+    /* NATIVE: browser control stays visible */
+    .ui-checkbox-radio-presentation-native .ui-checkbox-radio-input { flex:0 0 auto; margin:0; }
+
+    /* ICON / CHIP: native input stays focusable and semantic; only its rendering is hidden */
+    .ui-checkbox-radio-visually-hidden, .ui-checkbox-radio-presentation-icon .ui-checkbox-radio-input, .ui-checkbox-radio-presentation-chip .ui-checkbox-radio-input, .ui-checkbox-radio-presentation-segmented .ui-checkbox-radio-input { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    .ui-checkbox-radio-presentation-icon .ui-checkbox-radio-option:has(.ui-checkbox-radio-input:focus-visible), .ui-checkbox-radio-presentation-chip .ui-checkbox-radio-option:has(.ui-checkbox-radio-input:focus-visible) { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+
+    /* SEGMENTED: one row that never wraps (few, short options); the frame clips the segments to its corners; focus is
+       drawn inside the focused segment, so the clipping never hides it */
+    .ui-checkbox-radio-horizontal.ui-checkbox-radio-presentation-segmented .ui-checkbox-radio-options { display:inline-flex; flex-wrap:nowrap; align-items:stretch; max-inline-size:100%; overflow:hidden; }
+    .ui-checkbox-radio-presentation-segmented .ui-checkbox-radio-option { justify-content:center; white-space:nowrap; }
+    .ui-checkbox-radio-presentation-segmented .ui-checkbox-radio-option:has(.ui-checkbox-radio-input:focus-visible) { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    /* ICON */
+    .ui-checkbox-radio-icon { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; line-height:1; }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and options: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-checkbox-radio:not(.ui-checkbox-radio-label-top), .ui-checkbox-radio.ui-checkbox-radio-label-start) { display:grid; grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        :is(.ui-labels-start .ui-checkbox-radio:not(.ui-checkbox-radio-label-top), .ui-checkbox-radio.ui-checkbox-radio-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-checkbox-radio:not(.ui-checkbox-radio-label-top), .ui-checkbox-radio.ui-checkbox-radio-label-start) > .ui-checkbox-radio-group-label { grid-column:1; float:inline-start; margin:0; align-self:start; }
+    }
+}

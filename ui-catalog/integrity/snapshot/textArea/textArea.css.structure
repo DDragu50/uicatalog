@@ -1,0 +1,40 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-text-area-wrapper { display:grid; min-inline-size:0; max-inline-size:var(--percentage-full); }
+    .ui-text-area-label { display:flex; align-items:center; margin:0; }
+
+    .ui-text-area-field { box-sizing:border-box; display:block; inline-size:100%; min-inline-size:0;
+      block-size:var(--ui-text-area-height,auto); overflow-y:var(--ui-text-area-overflow,auto); overflow-wrap:anywhere; }
+    .ui-text-area-field:focus { outline:0; }
+    .ui-text-area-field:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-text-area-resize-none { resize:none; }
+    .ui-text-area-resize-vertical { resize:vertical; }
+
+    /* footer: help (left, takes the free room and wraps) and counter (right) on one line; the error on its own line below */
+    .ui-text-area-footer { display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; }
+    .ui-text-area-footer:has(.ui-text-area-error[hidden]):not(:has(.ui-text-area-counter, .ui-text-area-help)) { display:none; }
+    .ui-text-area-footer > .ui-text-area-help { flex:1 1 0; min-inline-size:0; }
+    .ui-text-area-footer > .ui-text-area-error { order:1; flex-basis:100%; }
+    .ui-text-area-counter { margin-inline-start:auto; white-space:nowrap; }
+
+    .ui-text-area-view-value { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .ui-text-area-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+
+    @media (max-width:768px) { .ui-text-area-wrapper { max-inline-size:100%; } }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and field: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-text-area-wrapper:not(.ui-text-area-label-top), .ui-text-area-wrapper.ui-text-area-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        /* label on the left with width SMALL / MEDIUM / LARGE: the row keeps the full width and the option sizes the field
+           column (a share of the row, never more than the room beside the label) */
+        :is(.ui-labels-start .ui-text-area-wrapper:not(.ui-text-area-label-top), .ui-text-area-wrapper.ui-text-area-label-start).ui-text-area-width-small { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-s), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-area-wrapper:not(.ui-text-area-label-top), .ui-text-area-wrapper.ui-text-area-label-start).ui-text-area-width-medium { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-m), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-area-wrapper:not(.ui-text-area-label-top), .ui-text-area-wrapper.ui-text-area-label-start).ui-text-area-width-large { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-l), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-area-wrapper:not(.ui-text-area-label-top), .ui-text-area-wrapper.ui-text-area-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-text-area-wrapper:not(.ui-text-area-label-top), .ui-text-area-wrapper.ui-text-area-label-start) > .ui-text-area-label { grid-column:1; float:inline-start; margin:0; align-self:start; margin-block-start:calc(( var(--control-height) - 1lh ) / 2); }
+    }
+}

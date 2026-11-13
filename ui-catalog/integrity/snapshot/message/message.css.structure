@@ -1,0 +1,47 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-message { display:flex; align-items:flex-start; box-sizing:border-box; min-inline-size:0; }
+    .ui-message[hidden] { display:none; }
+
+    /* icon: as high as the first text line (font size × line height) */
+    .ui-message-icon { flex:0 0 auto; display:inline-flex; align-items:center; block-size:calc(var(--fs-control) * var(--lh-body)); }
+    .ui-message-body { flex:1 1 auto; min-inline-size:0; display:grid; }
+    .ui-message-title { margin:0; }
+    .ui-message-text { margin:0; }
+    .ui-message-link:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-message-details { margin:0; }
+    .ui-message-detail-link:focus-visible, .ui-message:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-message-actions { display:flex; flex-wrap:wrap; }
+    .ui-message-close-host { flex:0 0 auto; }
+    /* remaining time: bar fills the free width, its fill is as long as the remaining part (--ui-message-remaining, set by
+       the component from 1 to 0); the text keeps its width while the digits change */
+    .ui-message-remaining { display:flex; align-items:center; }
+    .ui-message-remaining-bar { flex:1 1 auto; display:block; overflow:hidden; }
+    .ui-message-remaining-fill { display:block; block-size:100%; inline-size:calc(var(--ui-message-remaining,1) * 100%); }
+    .ui-message-remaining-text { flex:0 0 auto; white-space:nowrap; text-align:end; font-variant-numeric:tabular-nums; }
+    .ui-message-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+
+    .ui-message-inline { align-items:flex-start; }
+    .ui-message-inline .ui-message-icon { block-size:calc(var(--fs-label) * var(--lh-body)); }
+    /* without a title the first line is the (smaller) text */
+    .ui-message:not(:has(.ui-message-title)) .ui-message-icon { block-size:calc(var(--fs-label) * var(--lh-body)); }
+    .ui-message-banner { inline-size:100%; }
+    .ui-message-banner .ui-message-body { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-message-banner .ui-message-actions { margin:0; }
+    .ui-message-banner .ui-message-remaining { flex-basis:100%; }
+
+    /* Toasts: stacked in a corner region of the application's toast area */
+    .ui-message-region { position:fixed; z-index:40; display:flex; flex-direction:column; pointer-events:none; }
+    .ui-message-region > * { pointer-events:auto; }
+    .ui-message-region-top-left { inset-block-start:var(--page-sticky-offset,0px); inset-inline-start:0; }
+    .ui-message-region-top-right { inset-block-start:var(--page-sticky-offset,0px); inset-inline-end:0; }
+    .ui-message-region-bottom-left { inset-block-end:0; inset-inline-start:0; }
+    .ui-message-region-bottom-right { inset-block-end:0; inset-inline-end:0; }
+
+    /* Modal: native dialog */
+    .ui-message-modal { margin:auto; }
+    .ui-message-modal .ui-message-actions { justify-content:flex-end; }
+    .ui-message-modal:not([open]) { display:none; }
+    .ui-message-modal:has(.ui-message-title) .ui-message-icon { block-size:calc(var(--fs-block-title) * var(--lh-body)); }
+}

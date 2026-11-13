@@ -1,0 +1,60 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-loader { position:relative; min-inline-size:0; }
+    .ui-loader-frame[hidden] { display:none; }
+    .ui-loader-panel { display:flex; align-items:center; min-inline-size:0; }
+    .ui-loader-body { display:flex; flex:1 1 auto; flex-direction:column; min-inline-size:0; }
+    .ui-loader-indicator { position:relative; min-inline-size:0; }
+    .ui-loader-indicator:focus { outline:none; }
+    .ui-loader-indicator:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    /* the value moves to the next line when the label and the value do not fit; words never break unless longer than the line */
+    .ui-loader-text { display:flex; flex-wrap:wrap; align-items:baseline; min-inline-size:0; overflow-wrap:break-word; }
+    .ui-loader-value { flex:none; white-space:nowrap; }
+    /* label placements: ABOVE (text first), BELOW, END (text after the indicator, on one line) */
+    .ui-loader-label-above .ui-loader-body { flex-direction:column-reverse; }
+    .ui-loader-label-end .ui-loader-body { flex-direction:row; flex-wrap:wrap; align-items:center; }
+    .ui-loader-bar.ui-loader-label-above .ui-loader-text, .ui-loader-bar.ui-loader-label-below .ui-loader-text { justify-content:space-between; }
+    .ui-loader-bar.ui-loader-label-above .ui-loader-label, .ui-loader-bar.ui-loader-label-below .ui-loader-label { flex:1 1 auto; }
+    .ui-loader-bar.ui-loader-label-end .ui-loader-indicator { flex-grow:1; flex-shrink:1; }
+    .ui-loader-ring:is(.ui-loader-label-above, .ui-loader-label-below) .ui-loader-body { align-items:center; text-align:center; }
+    /* bar: the fill from the start, or the moving band (indeterminate) */
+    .ui-loader-track { position:relative; display:block; overflow:hidden; }
+    .ui-loader-fill { position:absolute; inset-block:0; inset-inline-start:0; inline-size:calc(var(--ui-loader-progress, 0) * 100%); }
+    .ui-loader-indeterminate .ui-loader-fill { inline-size:auto; }
+    /* ring: the circle, or the end-status symbol in its place */
+    .ui-loader-ring .ui-loader-indicator { display:inline-flex; flex:none; align-items:center; justify-content:center; }
+    .ui-loader-circle { display:block; }
+    .ui-loader-symbol { display:none; line-height:1; }
+    .ui-loader:is([data-status="DONE"], [data-status="ERROR"], [data-status="CANCELLED"]) .ui-loader-symbol { display:inline-block; flex:none; }
+    .ui-loader-ring:is([data-status="DONE"], [data-status="ERROR"], [data-status="CANCELLED"]) .ui-loader-circle { display:none; }
+    .ui-loader-cancel { display:inline-flex; flex:none; }
+    .ui-loader-cancel[hidden] { display:none; }
+    /* EDGE: a line pinned to the top of the target, taking no space */
+    .ui-loader-placement-edge { position:absolute; inset-block-start:0; inset-inline:0; z-index:20; pointer-events:none; }
+    /* OVERLAY: idle without size; while blocking, the root covers the target and takes the pointer */
+    .ui-loader-placement-overlay { position:absolute; }
+    .ui-loader-placement-overlay.ui-loader-blocking { inset:0; z-index:20; cursor:progress; }
+    .ui-loader-placement-overlay .ui-loader-frame { position:absolute; inset:0; display:grid; place-items:center; box-sizing:border-box; }
+    .ui-loader-placement-overlay:not(.ui-loader-shown) .ui-loader-frame { opacity:0; }
+    .ui-loader-scrim { position:absolute; inset:0; }
+    .ui-loader-placement-overlay .ui-loader-panel { position:relative; flex-direction:column; max-inline-size:100%; box-sizing:border-box; cursor:default; }
+    .ui-loader-placement-overlay.ui-loader-bar .ui-loader-body { align-self:stretch; }
+    .ui-loader-indicator-top .ui-loader-frame { align-items:start; }
+    .ui-loader-indicator-top .ui-loader-panel { position:sticky; }
+    /* the target (classes set by the component) */
+    .ui-loader-target { isolation:isolate; }
+    .ui-loader-target-static { position:relative; }
+    .ui-loader-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    @keyframes ui-loader-sweep {
+        0% { inset-inline-start:0; inset-inline-end:100%; }
+        50% { inset-inline-start:0; inset-inline-end:0; }
+        100% { inset-inline-start:100%; inset-inline-end:0; }
+    }
+    @keyframes ui-loader-spin { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion:reduce) {
+        .ui-loader-fill, .ui-loader-circle-arc, .ui-loader-placement-overlay .ui-loader-frame { transition:none; }
+        .ui-loader-indeterminate .ui-loader-fill { animation:none; inset-inline:0; opacity:var(--opacity-muted); }
+        .ui-loader-indeterminate .ui-loader-circle { animation:none; }
+    }
+}

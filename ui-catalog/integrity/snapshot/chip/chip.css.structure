@@ -1,0 +1,12 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-chip-list { display:flex; flex-wrap:wrap; }
+    .ui-chip { display:inline-flex; align-items:center; max-inline-size:100%; }
+    .ui-chip-label { min-inline-size:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    /* icons: .9em is a proportion of the chip text */
+    .ui-chip > i { flex-shrink:0; font-size:.9em; }
+    .ui-chip-remove { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; padding:0; border:0; background-color:transparent; color:inherit; line-height:1; cursor:pointer; }
+    .ui-chip-remove:hover { opacity:1; }
+    .ui-chip-remove:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); opacity:1; }
+}

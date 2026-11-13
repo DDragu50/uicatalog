@@ -1,0 +1,53 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-tree-view { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-tree-view-toolbar { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-tree-view-toolbar-separator { flex:0 0 auto; }
+    .ui-tree-view-search-input { box-sizing:border-box; inline-size:100%; }
+    .ui-tree-view-search-input:focus-visible, .ui-tree-view-rename:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-tree-view-body { min-inline-size:0; }
+    .ui-tree-view-no-results:empty { display:none; }
+    .ui-tree-view-tree, .ui-tree-view-group { margin:0; padding:0; list-style:none; }
+    .ui-tree-view-group { position:relative; }
+    .ui-tree-view-group[hidden], .ui-tree-view-item[hidden] { display:none; }
+    .ui-tree-view-row { display:flex; align-items:center; box-sizing:border-box; cursor:default; user-select:none; }
+    .ui-tree-view-item { outline:none; }   /* the focus ring is drawn on the row (the treeitem also holds its sub-list) */
+    .ui-tree-view-item:focus-visible > .ui-tree-view-row { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-tree-view-item[aria-disabled="true"] > .ui-tree-view-row { cursor:not-allowed; }
+    .ui-tree-view-editable .ui-tree-view-item[draggable="true"] > .ui-tree-view-row { cursor:grab; }
+    /* arrow: two physical borders (right, bottom) turned: closed points to the text end (right; left in right-to-left),
+       open points down in both directions; hidden for items without sub-items */
+    .ui-tree-view-toggle { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; cursor:pointer; }
+    .ui-tree-view-toggle::before { content:''; transform:rotate(-45deg); }
+    .ui-tree-view-toggle:dir(rtl)::before { transform:rotate(135deg); }
+    .ui-tree-view-item[aria-expanded="true"] > .ui-tree-view-row .ui-tree-view-toggle::before { transform:rotate(45deg); }
+    .ui-tree-view-item:not([aria-expanded]) > .ui-tree-view-row .ui-tree-view-toggle { cursor:default; }
+    .ui-tree-view-item:not([aria-expanded]) > .ui-tree-view-row .ui-tree-view-toggle::before { visibility:hidden; }
+    /* checkbox: box with a centred mark (check: two borders turned; mixed: a bar) */
+    .ui-tree-view-check { position:relative; display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; box-sizing:border-box; cursor:pointer; }
+    .ui-tree-view-check::before { content:''; position:absolute; inset:calc(-1 * var(--space-sm-2)); }   /* a larger click area (box + 4px around it) */
+    .ui-tree-view-item[aria-disabled="true"] > .ui-tree-view-row .ui-tree-view-check { cursor:not-allowed; }
+    .ui-tree-view-item:is([aria-checked="true"], [aria-checked="mixed"]) > .ui-tree-view-row .ui-tree-view-check::after { content:''; }
+    .ui-tree-view-item[aria-checked="true"] > .ui-tree-view-row .ui-tree-view-check::after { transform:translateY(-15%) rotate(45deg); }
+    .ui-tree-view-icon { display:inline-flex; flex:0 0 auto; justify-content:center; }
+    .ui-tree-view-text { flex:1 1 auto; min-inline-size:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-tree-view-badge { flex:0 0 auto; text-align:center; }
+    .ui-tree-view-status { flex:0 0 auto; }
+    .ui-tree-view-status:empty { display:none; }
+    .ui-tree-view-item[aria-busy="true"] > .ui-tree-view-row .ui-tree-view-status { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    .ui-tree-view-loader { display:inline-flex; flex:0 0 auto; align-items:center; }
+    .ui-tree-view-loader:not(:has(.ui-loader-shown)) { display:none; }
+    .ui-tree-view-rename { box-sizing:border-box; inline-size:100%; min-inline-size:0; }
+    .ui-tree-view-lines .ui-tree-view-group::before { content:''; position:absolute; inset-block:0; pointer-events:none; }
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and tree: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-tree-view:not(.ui-tree-view-label-top), .ui-tree-view.ui-tree-view-label-start) { display:grid; grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        :is(.ui-labels-start .ui-tree-view:not(.ui-tree-view-label-top), .ui-tree-view.ui-tree-view-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-tree-view:not(.ui-tree-view-label-top), .ui-tree-view.ui-tree-view-label-start) > .ui-tree-view-label { grid-column:1; grid-row:1 / span 6; align-self:start; }
+    }
+    @media (prefers-reduced-motion:reduce) { .ui-tree-view-toggle::before { transition:none; } }
+}

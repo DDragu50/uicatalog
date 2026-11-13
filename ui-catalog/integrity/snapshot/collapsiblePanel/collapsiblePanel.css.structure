@@ -1,0 +1,44 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-collapsible-panel { inline-size:var(--percentage-full); overflow:hidden; container-type:inline-size; container-name:panel; }
+
+    .ui-collapsible-panel-header { display:flex; align-items:flex-start; }
+    /* headingLevel 2–6: the heading around the header control adds no look of its own (no margin, inherited type) */
+    .ui-collapsible-panel-heading-level { display:flex; min-inline-size:0; margin:0; font:inherit; color:inherit; }
+    .ui-collapsible-panel-toggle,
+    .ui-collapsible-panel-heading { display:flex; align-items:flex-start; min-inline-size:0; border:0; background:transparent; padding:0; color:inherit; font:inherit; text-align:start; }
+    .ui-collapsible-panel-toggle { cursor:pointer; }
+    .ui-collapsible-panel-toggle:disabled { cursor:default; }
+    .ui-collapsible-panel-toggle:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+
+    /* arrow: 1.5em is a proportion of the title size; drawn as a character, turned when expanded */
+    .ui-collapsible-panel-chevron { flex-shrink:0; font-size:1.5em; line-height:1; }
+    .ui-collapsible-panel-chevron::before { content:"\203A"; }
+    .ui-collapsible-panel[data-state="EXPANDED"] .ui-collapsible-panel-chevron { transform:rotate(90deg); }
+
+    .ui-collapsible-panel-icon { flex-shrink:0; line-height:1; }
+    .ui-collapsible-panel-titles { display:grid; min-inline-size:0; }
+
+    .ui-collapsible-panel-chips,
+    .ui-collapsible-panel-actions { display:flex; flex-wrap:wrap; align-items:center; flex-shrink:0; }
+    .ui-collapsible-panel-actions { margin-inline-start:auto; }
+    .ui-collapsible-panel-chips .ui-chip-list { display:flex; align-items:center; flex-wrap:wrap; }
+    .ui-collapsible-panel-action { display:flex; }
+
+    .ui-collapsible-panel-summary { display:flex; flex-wrap:wrap; align-items:center; }
+
+    .ui-collapsible-panel[data-state="COLLAPSED"] .ui-collapsible-panel-content { display:none; }
+    .ui-collapsible-panel[data-state="EXPANDED"][data-show-summary-expanded="false"] .ui-collapsible-panel-summary { display:none; }
+    .ui-collapsible-panel-summary[hidden],
+    .ui-collapsible-panel-summary:empty { display:none; }
+
+    .ui-collapsible-panel-group { display:grid; }
+
+    /* narrow panel (below 26rem): chips and action Buttons move to their own row, on the right */
+    @container panel (max-width:26rem) {
+        .ui-collapsible-panel-header { flex-wrap:wrap; }
+        .ui-collapsible-panel-chips,
+        .ui-collapsible-panel-actions { inline-size:var(--percentage-full); justify-content:flex-end; }
+    }
+}

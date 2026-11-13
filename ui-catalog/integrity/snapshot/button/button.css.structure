@@ -1,0 +1,19 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-button { box-sizing:border-box; display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; margin:0; text-align:center; text-decoration:none; white-space:nowrap; vertical-align:middle; cursor:pointer; appearance:none; }
+    .ui-button:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-button:is(:disabled,[aria-disabled="true"]) { cursor:not-allowed; }
+    .ui-button-link { vertical-align:baseline; }
+    .ui-button-link.ui-button-icon-button { aspect-ratio:auto; }
+    .ui-button-link:focus-visible { outline:var(--link-focus-outline); outline-offset:var(--link-focus-offset); }
+    .ui-button-visually-hidden { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    .ui-button-icon-button { aspect-ratio:1 / 1; }
+
+    /* Icons: glyph proportions remain natural; width/height are never stretched. */
+    .ui-button-icon { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; width:auto; height:auto; }
+    .ui-button-icon i { display:inline-block; width:auto; height:auto; }
+
+    /* Label: one line, cut off with "…" when there is no room */
+    .ui-button-label { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}

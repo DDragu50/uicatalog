@@ -1,0 +1,18 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-notifications-panel { position:relative; display:inline-flex; }
+    .ui-notifications-panel-popup { position:absolute; inset-inline-end:0; z-index:35; display:flex; flex-direction:column; max-block-size:70vh; overflow:hidden; text-align:start; }
+    .ui-notifications-panel-popup[hidden] { display:none; }
+    .ui-notifications-panel-header { display:flex; align-items:center; justify-content:space-between; }
+    .ui-notifications-panel-title { margin:0; }
+    .ui-notifications-panel-list { flex:1 1 auto; margin:0; list-style:none; overflow-y:auto; }
+    .ui-notifications-panel-item { position:relative; display:flex; align-items:flex-start; color:inherit; text-decoration:none; }
+    .ui-notifications-panel-item:focus-visible, .ui-notifications-panel-see-all:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-notifications-panel-unread::after { content:''; position:absolute; border-top-left-radius:50%; border-top-right-radius:50%; border-bottom-right-radius:50%; border-bottom-left-radius:50%; }
+    .ui-notifications-panel-icon { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; border-top-left-radius:50%; border-top-right-radius:50%; border-bottom-right-radius:50%; border-bottom-left-radius:50%; }
+    .ui-notifications-panel-text { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-notifications-panel-empty { text-align:center; }
+    .ui-notifications-panel-footer { text-align:center; }
+    .ui-notifications-panel-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+}

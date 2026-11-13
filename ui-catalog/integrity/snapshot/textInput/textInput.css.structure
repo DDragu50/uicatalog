@@ -1,0 +1,42 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-text-input-wrapper { display:grid; min-inline-size:0; max-inline-size:var(--percentage-full); }
+    .ui-text-input-label { display:flex; align-items:center; margin-block-end:0; }
+
+    .ui-text-input-control { display:flex; align-items:center; inline-size:100%; min-inline-size:0; }
+
+    /* the typed text has no border or background of its own: the box around it (.ui-text-input-control) draws them */
+    .ui-text-input-field { box-sizing:border-box; flex:1 1 auto; inline-size:100%; min-inline-size:0;
+      border:0; outline:0; border-radius:inherit; background:transparent; }
+
+    /* Common trailing area: static icon or interactive child component. */
+    .ui-text-input-icon-area { display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+    .ui-text-input-icon-area:empty { display:none; }
+    .ui-text-input-static-icon { display:block; }
+    .ui-text-input-icon-button-host { display:flex; align-items:center; justify-content:center; }
+
+    .ui-text-input-view-value { margin:0; }
+
+    /* Number spinner */
+    .ui-text-input-number-no-spinner::-webkit-inner-spin-button,
+    .ui-text-input-number-no-spinner::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+    .ui-text-input-number-no-spinner { -moz-appearance:textfield; appearance:textfield; }
+
+    @media (max-width:768px) { .ui-text-input-wrapper { max-inline-size:100%; } }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and field: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        /* label on the left with width SMALL / MEDIUM / LARGE: the row keeps the full width and the option sizes the field
+           column (a share of the row, never more than the room beside the label) */
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start).ui-text-input-width-small { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-s), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start).ui-text-input-width-medium { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-m), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start).ui-text-input-width-large { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-l), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start) > .ui-text-input-label { grid-column:1; float:inline-start; margin:0; align-self:center; }
+    }
+}

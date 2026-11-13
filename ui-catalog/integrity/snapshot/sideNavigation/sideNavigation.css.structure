@@ -1,0 +1,64 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-side-nav { display:flex; flex-direction:column; block-size:100%; min-block-size:0; box-sizing:border-box; }
+    .ui-side-nav-header { display:flex; justify-content:flex-end; }
+    .ui-side-nav-close-host { display:none; }
+    .ui-side-nav-search-input { box-sizing:border-box; inline-size:100%; }
+    .ui-side-nav-search-input:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-side-nav-scroll { flex:1 1 auto; min-block-size:0; overflow-y:auto; overscroll-behavior:contain; }
+    .ui-side-nav-no-results:empty { display:none; }
+    .ui-side-nav-list { margin:0; padding:0; list-style:none; }
+    .ui-side-nav-group-label { display:block; letter-spacing:0.04em; }
+    .ui-side-nav-separator { block-size:0; }
+    [hidden].ui-side-nav-item, [hidden].ui-side-nav-group, [hidden].ui-side-nav-separator { display:none; }
+    .ui-side-nav-row { display:flex; align-items:center; }
+    /* TREE lines: drawn by each nested item of the main list (not in the rail or the flyout) */
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item { position:relative; }
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::before, .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::after { content:''; position:absolute; pointer-events:none; }
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::before { inset-block-start:0; block-size:100%; }
+    .ui-side-nav-link { display:flex; flex:1 1 auto; align-items:center; min-inline-size:0; border:0; text-align:start; text-decoration:none; cursor:pointer; box-sizing:border-box; }
+    .ui-side-nav-link:focus-visible, .ui-side-nav-toggle:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-side-nav-heading { cursor:default; }
+    .ui-side-nav-disabled { cursor:not-allowed; }
+    .ui-side-nav-icon { display:inline-flex; flex:0 0 auto; justify-content:center; }
+    .ui-side-nav-initial { visibility:hidden; }   /* empty icon space: keeps labels aligned */
+    .ui-side-nav-flyout .ui-side-nav-initial { display:none; }
+    .ui-side-nav:not(:has(.ui-side-nav-icon:not(.ui-side-nav-initial))) .ui-side-nav-initial { display:none; }   /* no entry has an icon: no icon column */
+    .ui-side-nav-label { flex:1 1 auto; min-inline-size:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-side-nav-badge { flex:0 0 auto; text-align:center; }
+    .ui-side-nav-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    .ui-side-nav-toggle { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; border:0; cursor:pointer; }
+    /* the arrow is drawn with two borders and turned; logical sides on purpose (they follow the text direction) */
+    .ui-side-nav-chevron { margin-inline-start:auto; border-inline-end:var(--border-thin) solid currentColor; border-block-end:var(--border-thin) solid currentColor; transform:scale(0.7) rotate(-45deg); }
+    .ui-side-nav-chevron:dir(rtl) { transform:scale(0.7) rotate(135deg); }
+    [aria-expanded="true"] > .ui-side-nav-chevron { transform:scale(0.7) rotate(45deg); }
+    /* PLUS_MINUS sign: two centred bars; open (or searching): the vertical bar is scaled to nothing ("−") */
+    .ui-side-nav-sign, .ui-side-nav-sign-space { display:inline-flex; flex:0 0 auto; position:relative; }
+    .ui-side-nav-sign::before, .ui-side-nav-sign::after { content:''; position:absolute; inset:0; margin:auto; }
+    [aria-expanded="true"] > .ui-side-nav-sign::after, .ui-side-nav-searching .ui-side-nav-sign::after { transform:scaleY(0); }
+    .ui-side-nav-children { display:grid; grid-template-rows:0fr; visibility:hidden; }
+    .ui-side-nav-children > .ui-side-nav-list { overflow:hidden; min-block-size:0; }
+    .ui-side-nav-children-open, .ui-side-nav-searching .ui-side-nav-children { grid-template-rows:1fr; visibility:visible; }
+    /* Collapsed rail (desktop): icons only; sub-items in a flyout */
+    .ui-side-nav-rail .ui-side-nav-header { justify-content:center; }
+    .ui-side-nav-rail .ui-side-nav-root :is(.ui-side-nav-sign, .ui-side-nav-sign-space, .ui-side-nav-label, .ui-side-nav-badge, .ui-side-nav-external, .ui-side-nav-toggle, .ui-side-nav-chevron, .ui-side-nav-group-label, .ui-side-nav-children), .ui-side-nav-rail .ui-side-nav-search { display:none; }
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-link { justify-content:center; padding:0; }
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-row { padding-inline-start:0; }
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-has-children .ui-side-nav-icon::after { content:''; position:absolute; inline-size:var(--space-sm-2); block-size:var(--space-sm-2); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); }
+    /* flyout position: the component writes --ui-side-nav-flyout-top / -left (measured) */
+    .ui-side-nav-flyout { position:fixed; inset:auto; margin:0; inset-block-start:var(--ui-side-nav-flyout-top,0); inset-inline-start:var(--ui-side-nav-flyout-left,0); max-block-size:calc(100vh - 2 * var(--gap-block)); overflow-y:auto; }
+    .ui-side-nav-flyout:not(:popover-open):not(.ui-side-nav-flyout-open) { display:none; }
+    .ui-side-nav-flyout-title { margin:0; }
+    /* Mobile drawer below 48rem (a literal: custom properties cannot be used in media queries) */
+    @media (max-width:48rem) {
+        .ui-side-nav { position:fixed; inset-block:0; inset-inline-start:0; z-index:39; transform:translateX(-100%); visibility:hidden; }
+        .ui-side-nav:dir(rtl) { transform:translateX(100%); }
+        .ui-side-nav-drawer-open, .ui-side-nav-drawer-open:dir(rtl) { transform:none; visibility:visible; }   /* visible at once, so focus can move in */
+        .ui-side-nav-rail-host { display:none; }
+        .ui-side-nav-close-host { display:inline-flex; }
+        .ui-side-nav-overlay { position:fixed; inset:0; z-index:38; }
+        .ui-side-nav-overlay[hidden] { display:none; }
+    }
+    @media (prefers-reduced-motion:reduce) { .ui-side-nav, .ui-side-nav-children, .ui-side-nav-chevron, .ui-side-nav-sign::after { transition:none; } }
+}

@@ -1,0 +1,16 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-pagination { display:flex; flex-wrap:wrap; align-items:center; inline-size:100%; }
+    .ui-pagination[hidden] { display:none; }
+    .ui-pagination-pages, .ui-pagination-arrows, .ui-pagination-go-to { display:flex; align-items:center; }
+    .ui-pagination-arrows[hidden], .ui-pagination-go-to[hidden] { display:none; }
+    .ui-pagination-page, .ui-pagination-ellipsis { display:inline-flex; align-items:center; justify-content:center; }
+    .ui-pagination-page { border:0; cursor:pointer; }
+    .ui-pagination-page:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-pagination-current { cursor:default; }
+    .ui-pagination-go-to-label { white-space:nowrap; }
+    .ui-pagination-go-to-input { box-sizing:border-box; text-align:center; }
+    .ui-pagination-go-to-input:focus { outline:0; }
+    .ui-pagination-go-to-input:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+}

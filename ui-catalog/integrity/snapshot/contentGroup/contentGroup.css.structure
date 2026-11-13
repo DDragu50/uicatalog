@@ -1,0 +1,22 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-content-group { --ui-content-group-span:1; grid-column:span var(--ui-content-group-span); container-type:inline-size; container-name:content-group; min-inline-size:0; }
+    /* the frame comes after the group rule: a FIELDSET group is its own frame and keeps margin 0 */
+    .ui-content-group-frame { display:grid; min-inline-size:0; margin:0; }
+
+    .ui-content-group-label { margin:0; }
+    .ui-content-group-title { margin:0; }
+    .ui-content-group-description { margin:0; }
+
+    .ui-content-group-content { display:flex; min-inline-size:0; }
+    .ui-content-group-item { min-inline-size:0; }
+    .ui-content-group-vertical > .ui-content-group-content, .ui-content-group-vertical > .ui-content-group-frame > .ui-content-group-content { flex-direction:column; }
+    .ui-content-group-horizontal > .ui-content-group-content, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content { flex-direction:row; flex-wrap:wrap; align-items:flex-start; }
+
+    /* narrow group (below 22rem): HORIZONTAL items stack, with the VERTICAL gap */
+    @container content-group (max-width:22rem) {
+        .ui-content-group-horizontal > .ui-content-group-content, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content { flex-direction:column; align-items:stretch; gap:var(--gap-tight); }
+        .ui-content-group-horizontal > .ui-content-group-content > .ui-content-group-item, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content > .ui-content-group-item { flex:none; }
+    }
+}

@@ -1,0 +1,50 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-stepper { container-type:inline-size; container-name:stepper; display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-stepper-body { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-stepper-list { display:flex; min-inline-size:0; margin:0; padding:0; list-style:none; }
+    .ui-stepper-step { position:relative; display:flex; min-inline-size:0; }
+    .ui-stepper-trigger { display:flex; align-items:flex-start; min-inline-size:0; margin:0; text-align:start; }
+    button.ui-stepper-trigger { cursor:pointer; }
+    button.ui-stepper-trigger:disabled { cursor:default; }
+    .ui-stepper-busy button.ui-stepper-trigger { cursor:progress; }
+    .ui-stepper-trigger:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-stepper-marker { display:inline-flex; flex:none; align-items:center; justify-content:center; box-sizing:border-box; }
+    .ui-stepper-text { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-stepper-label { overflow-wrap:break-word; }
+    .ui-stepper-connector { display:block; flex:1 1 auto; }
+    /* HORIZONTAL: steps share the width equally (the line after each step fills its share) */
+    .ui-stepper-horizontal .ui-stepper-list { flex-direction:row; align-items:flex-start; }
+    .ui-stepper-horizontal .ui-stepper-step { flex:1 1 0; align-items:flex-start; }
+    .ui-stepper-horizontal .ui-stepper-trigger { flex:0 1 auto; min-inline-size:min-content; }
+    .ui-stepper-label-below .ui-stepper-step { flex-direction:column; align-items:center; }
+    .ui-stepper-label-below .ui-stepper-trigger { flex-direction:column; align-items:center; text-align:center; }
+    .ui-stepper-label-below .ui-stepper-connector { position:absolute; }
+    /* VERTICAL: steps stacked; the trigger, then the INLINE panel */
+    .ui-stepper-vertical .ui-stepper-list { flex-direction:column; }
+    .ui-stepper-vertical .ui-stepper-step { flex-direction:column; }
+    .ui-stepper-vertical .ui-stepper-connector { position:absolute; }
+    .ui-stepper-vertical.ui-stepper-content-separate .ui-stepper-body { display:grid; grid-template-columns:minmax(0, max-content) minmax(0, 1fr); align-items:start; }
+    .ui-stepper-panel:focus { outline:none; }
+    .ui-stepper-panels { min-inline-size:0; }
+    /* button bar: Back and the actions at the start, Skip / Next / Finish at the end */
+    .ui-stepper-buttons, .ui-stepper-actions, .ui-stepper-forward { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-stepper-forward { margin-inline-start:auto; }
+    /* the Loader line above the bar takes no place (out of the flow) and never catches the pointer */
+    .ui-stepper-buttons { position:relative; }
+    .ui-stepper-loader-host { position:absolute; inset-inline:0; inset-block-end:100%; pointer-events:none; }
+    /* compact bar instead of the list in narrow containers */
+    .ui-stepper-compact-bar { display:none; flex-direction:column; }
+    .ui-stepper-compact-track { display:block; overflow:hidden; }
+    .ui-stepper-compact-fill { display:block; block-size:100%; inline-size:calc(var(--ui-stepper-progress, 0) * 100%); }
+    @container stepper (max-width:36rem) {
+        .ui-stepper-compact .ui-stepper-compact-bar { display:flex; }
+        .ui-stepper-compact .ui-stepper-list { display:none; }
+        .ui-stepper-vertical.ui-stepper-content-separate .ui-stepper-body { grid-template-columns:minmax(0, 1fr); }
+    }
+    .ui-stepper-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    @media (prefers-reduced-motion:reduce) {
+        .ui-stepper-trigger, .ui-stepper-marker { transition:none; }
+    }
+}

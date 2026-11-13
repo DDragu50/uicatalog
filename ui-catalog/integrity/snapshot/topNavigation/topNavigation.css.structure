@@ -1,0 +1,45 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-top-nav { position:relative; display:flex; align-items:center; min-inline-size:0; inline-size:100%; }
+    .ui-top-nav-menu-host { display:none; }
+    .ui-top-nav-bar { display:flex; flex:1 1 auto; align-items:stretch; min-inline-size:0; margin:0; padding:0; list-style:none; }
+    /* no overflow clipping: dropdowns hang below; overflow goes to "More" */
+    .ui-top-nav-item { position:relative; display:flex; flex:0 0 auto; align-items:center; }
+    .ui-top-nav-item[hidden] { display:none; }
+    .ui-top-nav-link, .ui-top-nav-toggle { display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; cursor:pointer; }
+    .ui-top-nav-link:focus-visible, .ui-top-nav-toggle:focus-visible, .ui-top-nav-entry:focus-visible, .ui-top-nav-mobile-link:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-top-nav-disabled { cursor:not-allowed; }
+    .ui-top-nav-icon { display:inline-flex; }
+    .ui-top-nav-text { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-top-nav-description { white-space:normal; }
+    .ui-top-nav-badge { text-align:center; }
+    .ui-top-nav-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    /* the arrow is drawn with two borders and turned; logical sides on purpose (they follow the text direction) */
+    .ui-top-nav-chevron { border-inline-end:var(--border-thin) solid currentColor; border-block-end:var(--border-thin) solid currentColor; transform:scale(0.7) rotate(45deg); }
+    [aria-expanded="true"] > .ui-top-nav-chevron { transform:scale(0.7) rotate(225deg); }
+    /* Current page styles */
+    .ui-top-nav-current-underline .ui-top-nav-current-branch::after { content:''; position:absolute; inset-block-end:0; }
+    .ui-top-nav-current-underline .ui-top-nav-item:not(.ui-top-nav-current-branch, .ui-top-nav-more):has(> .ui-top-nav-link:not(.ui-top-nav-disabled):hover, > .ui-top-nav-toggle:hover)::after { content:''; position:absolute; inset-block-end:0; }
+    /* Dropdown panels */
+    .ui-top-nav-panel { position:absolute; inset-block-start:100%; inset-inline-start:0; z-index:10; max-block-size:70vh; overflow-y:auto; }
+    .ui-top-nav-panel[hidden] { display:none; }
+    .ui-top-nav-panel-end { inset-inline-start:auto; inset-inline-end:0; }
+    .ui-top-nav-panel-list { margin:0; padding:0; list-style:none; }
+    .ui-top-nav-entry { display:flex; align-items:center; text-decoration:none; box-sizing:border-box; }
+    .ui-top-nav-group-label { display:block; margin:0; }
+    .ui-top-nav-separator { block-size:0; }
+    .ui-top-nav-panel-mega { display:grid; }
+    /* Narrow screens: menu Button and expandable panel */
+    .ui-top-nav-mobile { position:absolute; inset-block-start:100%; inset-inline:0; z-index:10; max-block-size:80vh; overflow-y:auto; }
+    .ui-top-nav-mobile[hidden], .ui-top-nav-mobile-list[hidden] { display:none; }
+    .ui-top-nav-mobile-list { margin:0; padding:0; list-style:none; }
+    .ui-top-nav-mobile-link { display:flex; align-items:center; inline-size:100%; text-align:start; text-decoration:none; cursor:pointer; box-sizing:border-box; }
+    .ui-top-nav-mobile-link .ui-top-nav-chevron { margin-inline-start:auto; }
+    /* below 48rem the bar is replaced by the menu Button (48rem is a literal: custom properties cannot be used in media queries) */
+    @media (max-width:48rem) {
+        .ui-top-nav-bar { display:none; }
+        .ui-top-nav-menu-host { display:inline-flex; }
+    }
+    @media (prefers-reduced-motion:reduce) { .ui-top-nav-chevron { transition:none; } }
+}

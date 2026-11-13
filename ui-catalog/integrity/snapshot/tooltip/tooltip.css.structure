@@ -1,0 +1,19 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    /* a fixed box placed by the component (popover defaults reset: no inset, margin or border of the browser) */
+    .ui-tooltip { position:fixed; inset:auto; left:var(--ui-tooltip-left, 0); top:var(--ui-tooltip-top, 0); z-index:50; margin:0; display:flex; align-items:baseline; box-sizing:border-box; overflow:visible; overflow-wrap:break-word; pointer-events:auto; }
+    .ui-tooltip:not(.ui-tooltip-open) { display:none; }
+    /* the host other components create for their Tooltip takes no place */
+    .ui-tooltip-host { display:contents; }
+    .ui-tooltip-text { min-inline-size:0; }
+    .ui-tooltip-shortcut { flex:none; white-space:nowrap; }
+    .ui-tooltip-shortcut[hidden] { display:none; }
+    .ui-tooltip-arrow { position:absolute; box-sizing:border-box; transform:rotate(45deg); }
+    .ui-tooltip[data-side="TOP"] .ui-tooltip-arrow { top:100%; left:var(--ui-tooltip-arrow); translate:-50% -50%; }
+    .ui-tooltip[data-side="BOTTOM"] .ui-tooltip-arrow { bottom:100%; left:var(--ui-tooltip-arrow); translate:-50% 50%; }
+    .ui-tooltip[data-side="LEFT"] .ui-tooltip-arrow { left:100%; top:var(--ui-tooltip-arrow); translate:-50% -50%; }
+    .ui-tooltip[data-side="RIGHT"] .ui-tooltip-arrow { right:100%; top:var(--ui-tooltip-arrow); translate:50% -50%; }
+    @keyframes ui-tooltip-in { from { opacity:0; } to { opacity:1; } }
+    @media (prefers-reduced-motion:reduce) { .ui-tooltip { animation:none; } }
+}

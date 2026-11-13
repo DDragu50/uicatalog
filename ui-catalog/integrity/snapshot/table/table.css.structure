@@ -1,0 +1,42 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-table { display:grid; min-inline-size:0; }
+    .ui-table-bar { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-table-selection-links, .ui-table-actions { display:inline-flex; flex-wrap:wrap; align-items:center; }
+    .ui-table-actions { margin-inline-start:auto; }
+    .ui-table-selection-links [hidden], .ui-table-actions [hidden] { display:none; }
+    .ui-table-grid { inline-size:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; }
+    .ui-table-grid col { inline-size:var(--ui-table-col); }   /* --ui-table-col: set by the component from the --table-column-* tokens */
+    .ui-table-grid th, .ui-table-grid td { text-align:start; vertical-align:middle; overflow:hidden; }
+    .ui-table-grid th { white-space:nowrap; }
+    .ui-table-grid .ui-table-align-center { text-align:center; }
+    .ui-table-grid .ui-table-align-end { text-align:end; }
+    .ui-table-grid .ui-table-counter { text-align:end; font-variant-numeric:tabular-nums; }
+    .ui-table-grid .ui-table-select-cell { text-align:center; }
+    .ui-table-truncate { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-table-sort { display:inline-flex; align-items:center; max-inline-size:100%; padding:0; border:0; cursor:pointer; }
+    .ui-table-sort:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-table-message td { text-align:center; }
+    .ui-table-message-host { display:flex; justify-content:center; text-align:start; }
+    .ui-table-footer { display:flex; justify-content:flex-end; }
+    /* Sticky bar and column header, below the page's sticky header */
+    .ui-table-sticky .ui-table-bar { position:sticky; inset-block-start:var(--page-sticky-offset); z-index:2; }
+    .ui-table-sticky thead th { position:sticky; inset-block-start:calc(var(--page-sticky-offset) + var(--ui-table-bar-height,0px)); z-index:1; }
+    /* Progress row: no height of its own; the Loader line overflows its cell downwards, over the first row */
+    .ui-table-grid .ui-table-progress-cell { block-size:0; padding:0; border:0; overflow:visible; line-height:0; }
+    .ui-table-sticky .ui-table-progress-cell { position:sticky; inset-block-start:calc(var(--page-sticky-offset) + var(--ui-table-bar-height,0px) + var(--ui-table-head-height,0px)); z-index:2; }
+    .ui-table-cards .ui-table-progress, .ui-table-cards .ui-table-progress-cell { display:block; }
+    /* Card mode: each row becomes a card of label/value pairs (only ALWAYS columns are rendered) */
+    .ui-table-cards .ui-table-grid, .ui-table-cards tbody, .ui-table-cards tr, .ui-table-cards td { display:block; }
+    .ui-table-cards colgroup, .ui-table-cards thead th:not(.ui-table-select-cell) { display:none; }
+    .ui-table-cards thead, .ui-table-cards thead tr { display:block; }
+    .ui-table-cards .ui-table-grid thead th.ui-table-select-cell { display:block; border:0; text-align:start; }
+    .ui-table-cards tbody tr:not(.ui-table-message) { position:relative; }
+    .ui-table-cards .ui-table-grid tbody td { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); border:0; text-align:start; }
+    .ui-table-cards tbody td::before { content:attr(data-label); }
+    .ui-table-cards tbody td.ui-table-select-cell::before { content:''; }
+    .ui-table-cards .ui-table-message td { display:block; }
+    .ui-table-cards .ui-table-message td::before { content:none; }
+    @media (prefers-reduced-motion:reduce) { .ui-table-loading tbody td { transition:none; } }
+}

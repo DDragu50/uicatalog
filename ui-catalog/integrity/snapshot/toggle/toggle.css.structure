@@ -1,0 +1,42 @@
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-toggle { display:grid; min-inline-size:0; padding:0; border:0; }
+    .ui-toggle-label { margin:0; padding:0; }
+    .ui-toggle-view-value { margin:0; }
+
+    /* Switch */
+    .ui-toggle-row { display:flex; align-items:center; }
+    .ui-toggle-control { position:relative; display:inline-flex; flex:0 0 auto; inline-size:var(--ui-toggle-width); block-size:var(--ui-toggle-height); }
+    .ui-toggle-input { position:absolute; inset:0; inline-size:100%; block-size:100%; margin:0; opacity:0; cursor:pointer; z-index:1; }
+    .ui-toggle-input:disabled { cursor:not-allowed; }
+    .ui-toggle-track { position:relative; inline-size:100%; block-size:100%; }
+    .ui-toggle-knob { box-sizing:border-box; position:absolute; }
+    .ui-toggle-input:focus-visible + .ui-toggle-track { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+
+    /* Both values visible: Off (switch) On — the knob moves toward the active value */
+    .ui-toggle-side { cursor:pointer; user-select:none; }
+    .ui-toggle-display-both:has(.ui-toggle-input:disabled) .ui-toggle-side { cursor:not-allowed; }
+
+    .ui-toggle-busy .ui-toggle-input, .ui-toggle-busy .ui-toggle-side { cursor:progress; }
+    @keyframes ui-toggle-spin { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion:reduce) { .ui-toggle-knob, .ui-toggle-track { transition:none; } .ui-toggle-busy .ui-toggle-knob { animation:none; } }
+
+    /* Radio buttons */
+    .ui-toggle-options { display:flex; }
+    .ui-toggle-vertical .ui-toggle-options { flex-direction:column; }
+    .ui-toggle-horizontal .ui-toggle-options { flex-direction:row; flex-wrap:wrap; }
+    .ui-toggle-option { display:inline-flex; align-items:center; cursor:pointer; }
+    .ui-toggle-radio-input { margin:0; }
+    .ui-toggle-option:has(.ui-toggle-radio-input:disabled) { cursor:not-allowed; }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and field: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-toggle:not(.ui-toggle-label-top), .ui-toggle.ui-toggle-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        :is(.ui-labels-start .ui-toggle:not(.ui-toggle-label-top), .ui-toggle.ui-toggle-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-toggle:not(.ui-toggle-label-top), .ui-toggle.ui-toggle-label-start) > .ui-toggle-label { grid-column:1; float:inline-start; margin:0; align-self:center; }
+    }
+}
