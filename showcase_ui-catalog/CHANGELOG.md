@@ -1,5 +1,12 @@
 # Changelog
 
+## Delivery 139 — 2026-11-13: Contact page, right column
+
+Showcase look: **Contact page** (your request). The live examples are unchanged.
+
+- The text on the right starts at the top of the page, in line with "Contact", and ends in line with the header's search icon; it takes all the width left beside the form.
+- 64px between the form and the text (was 32px). One column below 48rem, as before.
+
 ## Delivery 138 — 2026-11-13: External links in new tabs; contact page in two columns
 
 Showcase look: **Home page** links and **Contact page** layout (your list). The live examples are unchanged.

@@ -2,8 +2,8 @@
 //
 // CONTACT PAGE.
 // Shows content/contact.md and a contact Form. contact.md is split at its marker line "<!-- aside -->": before it
-// (title and invitation) across the page; then two columns, the Form on the left and the rest of contact.md (about the
-// author, LinkedIn link) on the right, one below the other in a narrow page. Links to other sites open in a new tab.
+// (title and invitation) above the Form on the left; the rest of contact.md (about the author, LinkedIn link) on the right,
+// from the top of the page to its right edge; one below the other in a narrow page. Links to other sites open in a new tab.
 // The Form (TextInput and TextArea fields) that sends the message to the server
 // (POST api/contact: server/contactHandler.js locally, client/api/contact.php on the public site). Server checks are shown next to the fields; other outcomes are shown as Form messages.
 
@@ -71,8 +71,8 @@ export async function renderContactPage( root )
     const children = [];
     const markdown = await loadContent(APP_CONFIG.content.contact);
     const [ intro, aside = '' ] = ( markdown ?? '' ).split(APP_CONFIG.contactAsideMarker);
-    root.innerHTML = '<div class="app-reading app-contact-page"><div class="app-markdown app-contact-intro"></div><div class="app-page-message"></div>'
-        + '<div class="app-contact-columns"><div class="app-contact-form"></div><div class="app-markdown app-contact-aside"></div></div></div>';
+    root.innerHTML = '<div class="app-reading app-reading-full app-contact-page"><div class="app-contact-main"><div class="app-markdown app-contact-intro"></div><div class="app-page-message"></div>'
+        + '<div class="app-contact-form"></div></div><div class="app-markdown app-contact-aside"></div></div>';
     if ( markdown === null )
     {
         root.querySelector('.app-contact-intro').innerHTML = `<h1>${escapeHTML(APP_TEXTS.pages.contact)}</h1>`;
