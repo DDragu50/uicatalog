@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Component test harness</title>
+<link rel="stylesheet" href="/source/design-system.css">
+<link rel="stylesheet" href="/source/app-shell.css">
+<style>
+/* Test harness only: room around the component. */
+body { padding:var(--space-md-3); }
+</style>
+</head>
+<body>
+<!-- Driven by tools/component-tests.mjs: one component renders into #host per test case (see harness.js). -->
+<main><p id="before">Text before the component.</p><div id="host"></div><p id="after">Text after the component.</p></main>
+<script type="module" src="/tests/components/harness.js"></script>
+</body>
+</html>

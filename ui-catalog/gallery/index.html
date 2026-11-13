@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>UI Catalog Gallery</title>
+<!-- Live: every component and every token is read from ../source each time the page opens (decision 194).
+     Open it with "npm run gallery" (the components are JavaScript modules, which browsers load only from a server). -->
+<link rel="stylesheet" href="../source/design-system.css">
+<link rel="stylesheet" href="../source/app-shell.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+<header class="gallery-header">
+<div>
+<h1>UI Catalog Gallery</h1>
+<p class="gallery-note">Every component in its key variants and every design token, read live from <code>source/</code>: change a file, reload, see the result.</p>
+</div>
+<div class="gallery-switches" role="group" aria-label="View">
+<label>Theme <select id="gallery-theme"><option value="">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+<label>Direction <select id="gallery-direction"><option value="ltr">Left to right</option><option value="rtl">Right to left</option></select></label>
+</div>
+</header>
+<nav class="gallery-contents" aria-label="Contents"><ul id="gallery-contents"></ul></nav>
+<main id="gallery-main">
+<section id="components" aria-labelledby="components-title"><h2 id="components-title">Components</h2><div id="gallery-components"></div></section>
+<section id="tokens" aria-labelledby="tokens-title"><h2 id="tokens-title">Design tokens</h2><p class="gallery-note">Grouped as in <code>design-system.css</code>; colours show their value in the current theme and their contrast on <code>--c-surface</code> (WCAG AA: 4.5:1 for text, 3:1 for large text and borders).</p><div id="gallery-tokens"></div></section>
+</main>
+<script type="module" src="gallery.js"></script>
+</body>
+</html>

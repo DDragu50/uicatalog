@@ -1,0 +1,60 @@
+/* ==========================================================================
+   preview.css — the stage of the live example (preview.html, shown in a frame on the component page)
+
+   Uses only tokens from showcase-styling/design-system.css, so the stage follows the showcase look.
+   Reset and bare-element typography: showcase-styling/app-shell.css (loaded before this file).
+   Layer: layout (declared in design-system.css; never redeclared here).
+
+   <main id="preview-stage" class="app-preview-stage">
+     <div class="app-preview-host"> → the component </div>
+   </main>
+     (or <div class="app-preview-host"><div class="app-preview-side"> → the component </div></div>, see sideNavigation.js)
+   <div id="toast-area" class="app-preview-toast-area"></div>   (shared area for Message toasts)
+   --app-preview-stage-min-height: set per example from the adjustment's stage.minHeight (a design token).
+
+   "States" gallery (the same page, request.gallery):
+   <table class="app-states-table"><thead><tr><td></td><th scope="col">PRIMARY</th> … </tr></thead>
+     <tbody><tr><th scope="row">Default</th><td><div class="app-states-cell" inert> → the component </div></td> … </tr></tbody></table>
+   ========================================================================== */
+
+@layer layout {
+    .app-preview-stage { display:flex; flex-direction:column; align-items:stretch; min-block-size:var(--app-preview-stage-min-height,auto); padding:var(--padding-page); }
+    /* The example's container: components that place their label on the left (labelPosition START) or change layout by
+       their own width (container queries) measure this box, as they would measure a Form or ContentGroup in a page. */
+    .app-preview-host { min-inline-size:0; container-type:inline-size; }
+    /* Side column for components that fill the height of their container (SideNavigation). */
+    /* States gallery: one column per value (e.g. hierarchy), one row per state; names in the label style. The table fills the
+       available width (the value columns share it); when narrower than its content, the stage scrolls sideways. */
+    .app-preview-stage:has(> .app-states-table) { overflow-x:auto; }
+    .app-states-table { inline-size:var(--percentage-full); border-collapse:collapse; }
+    .app-states-table th { padding:var(--gap-tight) var(--gap-toolbar) var(--gap-tight) 0; color:var(--c-muted); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); text-align:start; vertical-align:bottom; }
+    .app-states-table tbody th { vertical-align:middle; }
+    .app-states-table thead th { text-align:center; }   /* value names centred over their column */
+    /* space between the buttons: --gap-toolbar on each side, so twice --gap-toolbar between neighbours (rows and columns) */
+    .app-states-table td { padding:var(--gap-toolbar); vertical-align:middle; }
+    .app-states-cell { display:flex; justify-content:center; }   /* each state centred in its column */
+    /* Examples: one group per title (label style), examples side by side, each with its settings underneath. */
+    .app-examples { display:flex; flex-direction:column; gap:var(--gap-block); }
+    .app-examples-group { display:flex; flex-direction:column; gap:var(--gap-toolbar); }
+    .app-examples-title { color:var(--c-muted); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-compact); }
+    .app-examples-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(var(--size-md-1),1fr)); gap:var(--gap-block) var(--gap-toolbar); margin:0; padding:0; list-style:none; }
+    /* fit: each example as wide as its content, side by side, wrapping when there is no room (Badge) */
+    .app-examples-list-fit { display:flex; flex-wrap:wrap; justify-content:space-between; }
+    .app-examples-list-fit .app-examples-item { flex:0 1 auto; max-inline-size:calc(var(--size-md-1) * 1.75); }
+    /* the label wraps within the example's width instead of widening it */
+    .app-examples-list-fit .app-examples-label { inline-size:0; min-inline-size:100%; }
+    /* min-inline-size 0: an example never widens its column; long text is cut by the component itself */
+    .app-examples-item { display:flex; flex-direction:column; align-items:center; gap:var(--gap-inline-items); min-inline-size:0; text-align:center; }
+    /* same height for every example (room for the LARGE size and a corner marker), so the labels line up */
+    .app-examples-cell { display:flex; align-items:center; justify-content:center; min-block-size:calc(var(--control-height) + 3 * var(--gap-inline-items)); padding:var(--gap-inline-items); }
+    .app-examples-label { color:var(--c-muted); font-size:var(--fs-caption); line-height:var(--lh-compact); overflow-wrap:anywhere; }
+    /* Bars behind an example (Badge: where it sits): a light header bar or a brand-coloured one. */
+    .app-preview-bar { display:flex; align-items:center; padding:var(--gap-inline-items) var(--gap-block); border-radius:var(--radius-control); }
+    .app-preview-bar-surface { background-color:var(--c-surface); border:var(--border-thin) solid var(--c-border); }
+    .app-preview-bar-brand { background-color:var(--c-accent); }
+    .app-examples-cell { max-inline-size:100%; box-sizing:border-box; }
+    .app-examples-cell.app-preview-bar { padding:var(--gap-inline-items) var(--gap-toolbar); }
+    /* a narrow box for components that change below a width (Breadcrumbs: back link below 30rem) */
+    .app-preview-narrow { inline-size:var(--size-md-4); max-inline-size:100%; }
+    .app-preview-side { inline-size:var(--size-md-2); block-size:var(--size-md-4); border:var(--border-thin) solid var(--c-border); }
+}

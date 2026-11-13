@@ -1,0 +1,80 @@
+/* ==========================================================================
+   pagination.css
+
+   Default generated DOM:
+
+   <nav id="orders-pages" class="ui-pagination" aria-label="Pagination">          (hidden with 0–1 pages)
+     <div class="ui-pagination-pages">
+       <button type="button" class="ui-pagination-page" data-page="1" aria-label="Page 1">1</button>
+       <span class="ui-pagination-ellipsis" aria-hidden="true">…</span>
+       <button type="button" class="ui-pagination-page ui-pagination-current" data-page="35" aria-label="Page 35" aria-current="page">35</button>
+       …
+     </div>
+     <div class="ui-pagination-arrows"> → Buttons (tertiary icon, chevrons): previous, next </div>   (hidden below arrowVisibilityThreshold)
+     <div class="ui-pagination-go-to">                                                              (showGoToPage; hidden below goToPageThreshold)
+       <label class="ui-pagination-go-to-label" for="orders-pages-go-to">Go to page</label>
+       <input id="orders-pages-go-to" class="ui-pagination-go-to-input" type="text" inputmode="numeric">
+       <span id="orders-pages-go-to-error" class="ui-pagination-go-to-error" hidden></span>
+     </div>
+   </nav>
+
+   Aligned to the end (logical, so to the left in right-to-left languages). The go-to-page input matches the
+   pagination's control height; its width is a character count (4ch + padding), a proportion of the font.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font; page buttons (round), the current page, "…", the go-to field */
+    .ui-pagination { font-family:var(--font-ui); font-weight:var(--fw-ui); }
+    .ui-pagination-page { font:inherit; background-color:transparent; border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); color:var(--c-text); font-size:var(--fs-control); line-height:var(--lh-compact); transition:background-color var(--transition-1); }
+    .ui-pagination-page:hover { background-color:var(--c-surface-hover); }
+    .ui-pagination-current { background-color:var(--c-surface-muted); font-weight:var(--fw-ui-strong); }
+    .ui-pagination-ellipsis { color:var(--c-muted); font-size:var(--fs-control); }
+    .ui-pagination-go-to-label { color:var(--c-muted); font-size:var(--fs-label); }
+    .ui-pagination-go-to-input { font:inherit; border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); font-size:var(--fs-control); }
+    .ui-pagination-go-to-input:focus { border-color:var(--c-accent); }
+    .ui-pagination-go-to-input[aria-invalid="true"] { border-color:var(--c-danger); }
+    .ui-pagination-go-to-error { color:var(--c-danger-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* alignment (end), gaps, padding above and below; button and field sizes */
+    .ui-pagination { justify-content:end; gap:var(--gap-inline-items) var(--padding-panel); padding-block:var(--gap-form-field); }
+    .ui-pagination-pages, .ui-pagination-arrows, .ui-pagination-go-to { gap:var(--gap-inline-items); }
+    .ui-pagination-page, .ui-pagination-ellipsis { min-inline-size:var(--control-height); min-block-size:var(--control-height); }
+    .ui-pagination-page { padding:var(--gap-inline-items); }
+    .ui-pagination-go-to-input { inline-size:calc(4ch + 2 * var(--gap-inline-items)); min-block-size:var(--control-height); padding:0 var(--gap-inline-items); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-pagination { display:flex; flex-wrap:wrap; align-items:center; inline-size:100%; }
+    .ui-pagination[hidden] { display:none; }
+    .ui-pagination-pages, .ui-pagination-arrows, .ui-pagination-go-to { display:flex; align-items:center; }
+    .ui-pagination-arrows[hidden], .ui-pagination-go-to[hidden] { display:none; }
+    .ui-pagination-page, .ui-pagination-ellipsis { display:inline-flex; align-items:center; justify-content:center; }
+    .ui-pagination-page { border:0; cursor:pointer; }
+    .ui-pagination-page:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-pagination-current { cursor:default; }
+    .ui-pagination-go-to-label { white-space:nowrap; }
+    .ui-pagination-go-to-input { box-sizing:border-box; text-align:center; }
+    .ui-pagination-go-to-input:focus { outline:0; }
+    .ui-pagination-go-to-input:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+}

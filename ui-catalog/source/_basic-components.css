@@ -1,0 +1,454 @@
+/* ==========================================================================
+   BASIC COMPONENTS — single-element components
+   --------------------------------------------------------------------------
+   Framework file, common to all projects built on this system.
+
+   Scope: a component belongs here when ONE HTML tag carries the class and
+   the component needs no internal structure — <button class="button">,
+   <input class="input">, <span class="badge">. Anything that requires
+   several coordinated tags (a table, a navigation tree, a labeled field
+   with help and error text) is a composed component and lives in
+   components.css.
+
+   Conventions (identical to components.css):
+
+   1. TOKEN CONTRACT. Each component declares its own custom properties at
+      the top of its base rule, defaulting to the semantic tier. Restyling
+      means re-pointing those tokens, never editing the rules here:
+        components.css:  .button { --button-bg: var(--c-support-1); }
+        inline:          <button class="button" style="--button-bg: var(--c-danger-solid)">
+      Variants are token re-points, not new rule sets.
+
+   2. CONTAINER RESPONSIVENESS. A component adapts to the width of its own
+      container, never to the viewport. Viewport rules belong to the shell
+      (app-shell.css) alone.
+
+   3. ACCESSIBLE REFERENCE MARKUP. The HTML comment above each component is
+      the markup contract the generating code must produce: real controls
+      (<button>, <a>) for anything clickable, ARIA state where the visual
+      state exists.
+
+   4. Uses exclusively tokens from design-system.css; kebab-case names.
+   ========================================================================== */
+
+@layer basic-components {
+
+  /* === SKIP LINK ==========================================================
+     First focusable element on the page; jumps keyboard users past the
+     chrome. The workspace carries tabindex="-1" so it can receive focus.
+
+     HTML:
+     <a class="skip-link" href="#main-content">Skip to content</a>
+     ...
+     <section id="main-content" class="workspace-content" tabindex="-1">
+     ========================================================================== */
+
+    .skip-link {
+      position: absolute;
+      inset-block-start: var(--space-sm-3);
+      inset-inline-start: var(--space-sm-3);
+      z-index: 100;
+      transform: translateY(-160%);
+      border-radius: var(--radius-control);
+      background: var(--c-text);
+      color: var(--c-surface);
+      padding: var(--space-md-2) var(--space-md-4);
+      font-weight: var(--fw-bold);
+      text-decoration: none;
+    }
+
+    .skip-link:focus,
+    .skip-link:focus-visible { transform: translateY(0); }
+
+
+  /* === BUTTON =============================================================
+     Anything clickable is a <button> or an <a> — a div or span with a click
+     handler is a bug, not a style choice.
+
+     HTML:
+     <button class="button" type="button">Save</button>
+     <button class="button button-secondary" type="button">Cancel</button>
+     <button class="button button-icon" type="button" aria-label="Logout">
+       <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+     </button>
+     <a class="button" href="/report">Open report</a>
+     ========================================================================== */
+
+    .button {
+      --button-bg:             var(--c-accent);
+      --button-bg-hover:       var(--c-accent-hover);
+      --button-color:          var(--c-on-accent);
+      --button-border:         transparent;
+      --button-height:         var(--control-height);
+      --button-padding-inline: var(--space-md-4);
+      --button-radius:         var(--radius-control);
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--gap-inline-items);
+      min-block-size: var(--button-height);
+      padding: var(--space-md-1) var(--button-padding-inline);
+      border: var(--border-thin) solid var(--button-border);
+      border-radius: var(--button-radius);
+      background: var(--button-bg);
+      color: var(--button-color);
+      font-size: var(--fs-control);
+      font-weight: var(--fw-bold);
+      line-height: var(--lh-compact);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background var(--transition-1), border-color var(--transition-1),
+                  color var(--transition-1);
+    }
+
+    .button:hover { background: var(--button-bg-hover); color: var(--button-color); }
+
+    /* Variants are token re-points. */
+    .button-secondary { --button-bg: var(--c-surface); --button-bg-hover: var(--c-surface-muted);
+                        --button-color: var(--c-text);  --button-border: var(--c-border); }
+
+    .button-danger    { --button-bg: var(--c-danger-solid);
+                        --button-bg-hover: var(--c-danger-solid-hover);
+                        --button-color: var(--c-on-danger); }
+
+    .button-ghost     { --button-bg: transparent; --button-bg-hover: var(--c-surface-muted);
+                        --button-color: var(--c-text); }
+
+    .button-gradient  { background: var(--g-primary); color: var(--c-on-accent); }
+
+    .button-icon { inline-size: var(--button-height); padding: 0; }
+
+    .touch-target { min-inline-size: var(--control-height-touch);
+                    min-block-size: var(--control-height-touch); }
+
+    /* In a narrow container (see the toolbar in components.css), buttons
+       fill the available width — regardless of viewport. */
+    @container toolbar (max-width: 20rem) {
+      .button { inline-size: 100%; }
+      .button-icon { inline-size: var(--button-height); }
+    }
+
+
+  /* === FORM CONTROLS ======================================================
+     The bare controls. The labeled group that wraps them (label + control +
+     help + error) is a composed component: see .field in components.css.
+
+     HTML:
+     <input class="input" type="email" aria-invalid="true" aria-describedby="email-error">
+     <select class="select"> ... </select>
+     <textarea class="textarea"></textarea>
+     ========================================================================== */
+
+    .input, .select, .textarea {
+      --control-bg:     var(--c-surface);
+      --control-border: var(--c-border);
+
+      inline-size: 100%;
+      min-block-size: var(--control-height);
+      border: var(--border-thin) solid var(--control-border);
+      border-radius: var(--radius-control);
+      background: var(--control-bg);
+      color: var(--c-text);
+      padding: var(--padding-control);
+      font-size: var(--fs-control);
+      transition: border-color var(--transition-1);
+    }
+
+    .textarea { min-block-size: var(--textarea-min-height); resize: vertical; }
+
+    .input:focus, .select:focus, .textarea:focus { --control-border: var(--c-accent); }
+
+    .input[aria-invalid="true"],
+    .select[aria-invalid="true"],
+    .textarea[aria-invalid="true"] { --control-border: var(--c-danger); }
+
+    .input[disabled], .select[disabled], .textarea[disabled]
+      { --control-bg: var(--c-surface-muted); }
+
+
+  /* === LABEL / HELP TEXT ==================================================
+     HTML:
+     <span class="label">Email</span>
+     <span class="help-text">Use your work email.</span>
+     ========================================================================== */
+
+    .label { color: var(--c-text); font-size: var(--fs-label); font-weight: var(--fw-bold); }
+
+    .help-text { color: var(--c-muted); font-size: var(--fs-label); }
+
+
+/* === BADGE ==============================================================
+      A badge STATES a fact, it is read-only and it is never interactive. 
+      The icon is decoration, so the icon is aria-hidden. 
+ 
+      HTML:
+      <span class="badge badge-success">Active</span>
+ 
+      <span class="badge badge-danger badge-bordered">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        Blocked
+      </span>
+        ========================================================================== */
+    
+       .badge {
+         --badge-bg:     var(--c-surface-muted);
+         --badge-color:  var(--c-text);
+         --badge-border: transparent;          /* .badge-bordered re-points this */
+    
+         display: inline-flex;
+         align-items: center;
+         gap: var(--gap-tight);                /* the gap the icon variant needs */
+         border: var(--border-thin) solid var(--badge-border);
+         border-radius: var(--radius-pill);
+         padding: var(--space-sm-2) var(--space-md-1);
+         background: var(--badge-bg);
+         color: var(--badge-color);
+         font-size: var(--fs-caption);
+         font-weight: var(--fw-extra-bold);
+         line-height: var(--lh-compact);
+         white-space: nowrap;
+       }
+    
+       .badge-success { --badge-bg: var(--c-success-soft); --badge-color: var(--c-success-text);   --badge-border: var(--c-success-border); }
+       .badge-warning { --badge-bg: var(--c-warning-soft); --badge-color: var(--c-warning-text);   --badge-border: var(--c-warning-border); }
+       .badge-danger  { --badge-bg: var(--c-danger-soft);  --badge-color: var(--c-danger-text);    --badge-border: var(--c-danger-border); }
+       .badge-info    { --badge-bg: var(--c-info-soft);    --badge-color: var(--c-info-text);   --badge-border: var(--c-info-border); }
+       .badge-accent  { --badge-bg: var(--c-accent);       --badge-color: var(--c-on-accent); }
+    
+       .badge-bordered { border-color: var(--badge-border); }
+       .badge > i { font-size: 0.9em; }
+
+
+/* === SURFACE: PANEL / CARD ==============================================
+     A single container that holds arbitrary content.
+
+     HTML:
+     <article class="panel">...</article>
+     <article class="card">...</article>
+     ========================================================================== */
+
+    .panel, .card {
+      --surface-bg:     var(--c-surface);
+      --surface-border: var(--c-border);
+      --surface-radius: var(--radius-panel);
+
+      background: var(--surface-bg);
+      border: var(--border-thin) solid var(--surface-border);
+      border-radius: var(--surface-radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel { padding: var(--padding-panel); }
+    .card  { padding: var(--padding-card); }
+
+
+ 
+
+/* === ALERT ==============================================================
+     An in-page message. 
+ 
+     ---- ARIA ----
+ 
+   role="alert"  -> danger. Interrupts: the user must know now.
+   role="status" -> success, warning, info. Announced politely.
+   The icon is aria-hidden: the role already conveys severity, and an icon announcing "error icon" on top of it is noise.
+ 
+     ---- ICONS ----
+ 
+     The default icon per type belongs to the PROJECT's icon set, not to this stylesheet: 
+     Suggested defaults:
+       danger  fa-solid fa-circle-exclamation
+       warning fa-solid fa-triangle-exclamation
+       success fa-solid fa-circle-check
+       info    fa-solid fa-circle-info
+ 
+     HTML — the full form:
+ 
+     <div class="alert alert-danger" role="alert">
+       <i class="alert-icon fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+ 
+       <div class="alert-content">
+         <p class="alert-title">Could not save the project</p>
+         <p class="alert-message">The VAT number is required before activation.</p>
+       </div>
+ 
+       <button type="button" class="alert-dismiss" data-alert-dismiss aria-label="Dismiss: could not save the project">
+         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+       </button>
+     </div>
+ 
+     HTML — success, auto-dismissing after 5s, timer bar visible:
+ 
+     <div class="alert alert-success alert-timed" role="status" style="--alert-duration: 5s">
+       <i class="alert-icon fa-solid fa-circle-check" aria-hidden="true"></i>
+
+       <div class="alert-content"><p class="alert-message">Project saved.</p></div>
+       
+       <button type="button" class="alert-dismiss" data-alert-dismiss aria-label="Dismiss: project saved">
+         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+       </button>
+       <span class="alert-timer" aria-hidden="true"></span>
+     </div>
+ 
+     HTML — minimal (no icon, no dismiss):
+ 
+     <div class="alert alert-info" role="status">
+       <div class="alert-content"><p class="alert-message">Draft saved locally.</p></div>
+     </div>
+     ========================================================================== */
+ 
+    .alert {
+      --alert-bg:              var(--c-surface);
+      --alert-border:          var(--c-border);
+      --alert-color:           var(--c-text);
+      --alert-accent:          var(--c-muted);   /* icon + timer bar */
+      --alert-max-inline-size: 100%;             /* the PAGE narrows this, not a config */
+      --alert-duration:        5s;               /* only used with .alert-timed */
+ 
+      position: relative;
+      overflow: hidden;                          /* clips the timer bar to the radius */
+ 
+      display: grid;
+      grid-template-columns: auto 1fr auto;      /* icon | content | dismiss */
+      align-items: start;
+      gap: var(--gap-inline-items);
+ 
+      inline-size: 100%;
+      max-inline-size: var(--alert-max-inline-size);
+ 
+      border: var(--border-thin) solid var(--alert-border);
+      border-radius: var(--radius-panel);
+      background: var(--alert-bg);
+      color: var(--alert-color);
+      padding: var(--padding-card);
+    }
+ 
+    /* Type. Token re-points; no new rules. */
+    .alert-success { --alert-bg: var(--c-success-soft); --alert-border: var(--c-success-border);
+                     --alert-color: var(--c-success-text); --alert-accent: var(--c-success); }
+    .alert-warning { --alert-bg: var(--c-warning-soft); --alert-border: var(--c-warning-border);
+                     --alert-color: var(--c-warning-text); --alert-accent: var(--c-warning); }
+    .alert-danger  { --alert-bg: var(--c-danger-soft);  --alert-border: var(--c-danger-border);
+                     --alert-color: var(--c-danger-text); --alert-accent: var(--c-danger); }
+    .alert-info    { --alert-bg: var(--c-info-soft);    --alert-border: var(--c-info-border);
+                     --alert-color: var(--c-info-text);  --alert-accent: var(--c-info); }
+ 
+    /* Icon — decoration only; aria-hidden in the markup. */
+    .alert-icon { grid-column: 1; color: var(--alert-accent); font-size: var(--fs-lg); line-height: var(--lh-compact);
+      padding-block-start: 2px;}                  /* optical alignment with the first line */
+    
+ 
+    /* Content. Spans column 2, and column 1 too when there is no icon —
+       so "icon off" needs no extra class: just omit the <i>. */
+    .alert-content { grid-column: 2 / -2; display: grid; gap: var(--gap-tight); min-inline-size: 0; }
+    .alert:not(:has(.alert-icon)) .alert-content { grid-column: 1 / -2; }
+ 
+    .alert-title   { margin: 0; font-weight: var(--fw-bold); }
+    .alert-message { margin: 0; }
+ 
+    /* Dismiss — a real button, with an aria-label that names WHAT is being dismissed. */
+    .alert-dismiss { grid-column: -2; display: inline-flex; align-items: center; justify-content: center; 
+      inline-size: var(--space-lg-3); block-size: var(--space-lg-3); flex-shrink: 0; border: 0; 
+      border-radius: var(--radius-xs); background: transparent; color: inherit; opacity: 0.7; }
+    .alert-dismiss:hover { opacity: 1; background: color-mix(in srgb, var(--alert-color) 10%, transparent); }
+ 
+    /* ---- TIMED ALERTS: success and info only ----
+       .alert-timed is what makes the bar appear and drain. It is deliberately
+       absent from .alert-danger and .alert-warning below: even if a consumer
+       adds the class by mistake, the timer will not run on a message the user
+       must act on. */
+    .alert-timer {
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: 0;
+      block-size: var(--border-thick);
+      background: var(--alert-accent);
+      transform-origin: inline-start;
+      display: none;
+    }
+ 
+    .alert-timed .alert-timer { display: block; animation: alert-drain var(--alert-duration) linear forwards; }
+ 
+    .alert-danger  .alert-timer, .alert-warning .alert-timer { display: none; animation: none; }
+ 
+    /* Hovering or focusing the alert pauses the countdown — required whenever a timer is short. */
+    .alert-timed:hover .alert-timer,
+    .alert-timed:focus-within .alert-timer { animation-play-state: paused; }
+ 
+    @keyframes alert-drain { from { scale: 1 1; } to { scale: 0 1; } }
+ 
+    /* Reduced motion: no draining bar. The alert still auto-dismisses if the page's JS says so. */
+    @media (prefers-reduced-motion: reduce) 
+      { .alert-timed .alert-timer { animation: none; scale: 1 1; opacity: 0.4; } }
+ 
+    /* Narrow container: the dismiss button stays, the layout tightens. */
+    @container (max-width: 24rem) { .alert { padding: var(--gap-toolbar); } }
+
+  /* === EMPTY STATE ========================================================
+     HTML:
+     <div class="empty-state">No records found.</div>
+     ========================================================================== */
+
+    .empty-state { border: var(--border-thin) dashed var(--c-border);
+      border-radius: var(--radius-panel); padding: var(--gap-section);
+      color: var(--c-muted); text-align: center; }
+
+
+  /* === LOADING: SKELETON / SPINNER ========================================
+     A container waiting on data carries aria-busy="true" and removes it when
+     content lands. The global reduced-motion rule stops both animations.
+
+     HTML:
+     <div class="skeleton skeleton-text"></div>
+     <span class="spinner" role="status" aria-label="Loading"></span>
+     ========================================================================== */
+
+    .skeleton {
+      background: linear-gradient(90deg,
+        var(--c-surface-muted) 25%, var(--c-surface-alt) 50%, var(--c-surface-muted) 75%);
+      background-size: 200% 100%;
+      border-radius: var(--radius-xs);
+      animation: skeleton-shimmer 1.4s ease-in-out infinite;
+    }
+
+    .skeleton-text   { block-size: 1em; inline-size: 100%; }
+    .skeleton-title  { block-size: 1.4em; inline-size: 40%; }
+    .skeleton-circle { border-radius: var(--radius-pill);
+      inline-size: var(--control-height); block-size: var(--control-height); }
+
+    @keyframes skeleton-shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+
+    .spinner {
+      display: inline-block;
+      inline-size: 1.25em;
+      block-size: 1.25em;
+      border: var(--border-thick) solid var(--c-surface-muted);
+      border-block-start-color: var(--c-accent);
+      border-radius: var(--radius-pill);
+      animation: spinner-turn 0.8s linear infinite;
+    }
+
+    @keyframes spinner-turn { to { transform: rotate(360deg); } }
+
+
+  /* === FORCED COLORS ======================================================
+     Windows High Contrast and similar modes replace the palette with system
+     colors; controls keep visible boundaries. Global preferences (reduced
+     motion, increased contrast) are handled in app-shell.css; composed
+     components declare their own block in components.css.
+     ========================================================================== */
+
+    @media (forced-colors: active) {
+      .button, .badge, .alert, .input, .select, .textarea {
+        forced-color-adjust: none;
+        border: var(--border-thin) solid var(--c-forced-border);
+      }
+
+      .button { background: var(--c-forced-surface); color: var(--c-forced-text); }
+    }
+
+}

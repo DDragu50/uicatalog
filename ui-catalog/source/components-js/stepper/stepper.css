@@ -1,0 +1,192 @@
+/* ==========================================================================
+   stepper.css
+
+   Default generated DOM (HORIZONTAL, NUMBER, labels END, LINEAR, connectors, compact when narrow):
+
+   <div id="checkout" class="ui-stepper ui-stepper-horizontal ui-stepper-marker-number ui-stepper-label-end ui-stepper-navigation-linear ui-stepper-connectors ui-stepper-compact">
+     <div class="ui-stepper-compact-bar">                                       (shown instead of the list in narrow containers)
+       <span class="ui-stepper-compact-text">Step 2 of 4: Payment</span>
+       <span class="ui-stepper-compact-track" aria-hidden="true"><span class="ui-stepper-compact-fill"></span></span>
+     </div>
+     <div class="ui-stepper-body">
+       <ol class="ui-stepper-list" aria-label="Progress">
+         <li class="ui-stepper-step ui-stepper-complete" data-step="cart" data-index="0" data-status="DONE">
+           <button id="checkout-step-0" class="ui-stepper-trigger" type="button" tabindex="-1" aria-describedby="checkout-step-0-status">
+             <span class="ui-stepper-marker" aria-hidden="true"><i class="fa-solid fa-check"></i></span>   (or <span class="ui-stepper-number">1</span>)
+             <span class="ui-stepper-text">
+               <span id="checkout-step-0-label" class="ui-stepper-label">Cart</span>
+               <span class="ui-stepper-description">3 items</span>                                     (description)
+               <span id="checkout-step-0-status" class="ui-stepper-status ui-stepper-visually-hidden">Done</span>
+             </span>
+           </button>
+           <span class="ui-stepper-connector" aria-hidden="true"></span>                           (not after the last step)
+         </li>
+         <li class="ui-stepper-step ui-stepper-current" … data-status="IN_PROGRESS"><button … aria-current="step" tabindex="0">…</button>…</li>
+       </ol>
+     </div>
+     <div class="ui-stepper-live ui-stepper-visually-hidden" aria-live="polite"></div>
+   </div>
+
+   Conditional structures:
+   - orientation VERTICAL: .ui-stepper-vertical (connectors run down under the markers; no compact bar);
+   - marker ICON / DOT: .ui-stepper-marker-icon (the step's icon) / .ui-stepper-marker-dot (a small dot, no text, no symbols);
+   - labelPlacement BELOW / HIDDEN: .ui-stepper-label-below (HORIZONTAL: text under the marker) / .ui-stepper-label-hidden
+     (.ui-stepper-text visually hidden, the label as the tooltip);
+   - navigation NONE: .ui-stepper-navigation-none, <div class="ui-stepper-trigger"> instead of buttons, no live region;
+   - steps: .ui-stepper-current (aria-current="step"), .ui-stepper-complete (passed, DONE or SKIPPED), .ui-stepper-locked
+     (waits for other steps; button disabled), .ui-stepper-disabled; data-status="NOT_STARTED|IN_PROGRESS|DONE|SKIPPED|WARNING|
+     ERROR|BLOCKED|CANCELLED"; <span class="ui-stepper-optional">(Optional)</span> after an optional step's label;
+   - statusText: .ui-stepper-status without .ui-stepper-visually-hidden;
+   - showContent: .ui-stepper-with-content .ui-stepper-content-separate, <div class="ui-stepper-panels"> after the list with
+     <section class="ui-stepper-panel" tabindex="-1" hidden> per step; contentPosition INLINE (VERTICAL):
+     .ui-stepper-content-inline, the section inside its step after the trigger; each child in <div class="ui-stepper-item">;
+   - showButtons: <div class="ui-stepper-buttons"> after the body: <span class="ui-stepper-button" data-button="back">,
+     <span class="ui-stepper-actions"> with <span class="ui-stepper-action"> Button hosts, <span class="ui-stepper-forward"> with
+     the skip, next and finish hosts (the ones that do not apply are [hidden]); first in the bar <span class="ui-stepper-loader-host">
+     → Loader (SMALL bar, label for screen readers only; with canLeave), placed just above the bar;
+   - waiting for canLeave: .ui-stepper-busy and aria-busy="true" on the root.
+
+   Notes: --ui-stepper-progress (0–1, the share of complete steps) is set by the component on the root and fills the
+   compact bar. The markers are circles (50%). Connectors are lines (background) between the markers; with labels BELOW
+   and in VERTICAL they are positioned from the marker's centre. The compact bar replaces the list below a container
+   width of 36rem (a breakpoint: custom properties do not work in container queries).
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2, or write the same selector with the new value in a stylesheet that
+   loads later, in @layer overrides.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component text; step buttons (no frame of their own; a background under the pointer) */
+    .ui-stepper { color:var(--c-text); font-family:var(--font-ui); font-weight:var(--fw-ui); font-size:var(--fs-control); line-height:var(--lh-compact); }
+    .ui-stepper-trigger { font:inherit; color:inherit; border-top:0; border-right:0; border-bottom:0; border-left:0; background-color:transparent; border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); transition:background-color var(--transition-1); }
+    button.ui-stepper-trigger:hover:not(:disabled) { background-color:var(--c-surface-hover); }
+    /* marker: a circle with the number, icon or status symbol */
+    .ui-stepper-marker { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:50%; border-top-right-radius:50%; border-bottom-right-radius:50%; border-bottom-left-radius:50%; background-color:var(--c-surface); color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); transition:background-color var(--transition-1), border-color var(--transition-1); }
+    .ui-stepper-marker-dot .ui-stepper-marker { background-color:var(--c-border); }
+    /* texts */
+    .ui-stepper-optional { color:var(--c-muted); font-weight:var(--fw-ui); }
+    .ui-stepper-description { color:var(--c-muted); font-size:var(--fs-label); }
+    .ui-stepper-status { color:var(--c-muted); font-size:var(--fs-caption); }
+    .ui-stepper-connector { background-color:var(--c-border); }
+    /* current step: accent ring and strong label */
+    .ui-stepper-current .ui-stepper-marker { border-color:var(--c-accent); color:var(--c-accent); box-shadow:0 0 0 var(--border-thin) var(--c-accent); }
+    .ui-stepper-current .ui-stepper-label { font-weight:var(--fw-ui-strong); }
+    /* statuses */
+    .ui-stepper-step[data-status="IN_PROGRESS"] .ui-stepper-marker { border-color:var(--c-accent); color:var(--c-accent); }
+    .ui-stepper-step[data-status="DONE"] .ui-stepper-marker { border-color:var(--c-accent); background-color:var(--c-accent); color:var(--c-on-accent); }
+    .ui-stepper-step[data-status="SKIPPED"] .ui-stepper-marker { border-top-style:dashed; border-right-style:dashed; border-bottom-style:dashed; border-left-style:dashed; color:var(--c-muted); }
+    .ui-stepper-step[data-status="WARNING"] .ui-stepper-marker { border-color:var(--c-warning); background-color:var(--c-warning-soft); color:var(--c-warning-text); }
+    .ui-stepper-step[data-status="WARNING"] .ui-stepper-status { color:var(--c-warning-text); }
+    .ui-stepper-step[data-status="ERROR"] .ui-stepper-marker { border-color:var(--c-danger); background-color:var(--c-danger-soft); color:var(--c-danger-text); }
+    .ui-stepper-step[data-status="ERROR"] .ui-stepper-label, .ui-stepper-step[data-status="ERROR"] .ui-stepper-status { color:var(--c-danger-text); }
+    .ui-stepper-step[data-status="BLOCKED"] .ui-stepper-marker { background-color:var(--c-surface-muted); color:var(--c-muted); }
+    .ui-stepper-step[data-status="CANCELLED"] .ui-stepper-marker { background-color:var(--c-surface-muted); color:var(--c-muted); }
+    .ui-stepper-step[data-status="CANCELLED"] .ui-stepper-label { color:var(--c-muted); text-decoration:line-through; }
+    .ui-stepper-marker-dot .ui-stepper-step:is([data-status="IN_PROGRESS"], [data-status="DONE"]) .ui-stepper-marker, .ui-stepper-marker-dot .ui-stepper-current .ui-stepper-marker { background-color:var(--c-accent); }
+    .ui-stepper-marker-dot .ui-stepper-step[data-status="WARNING"] .ui-stepper-marker { background-color:var(--c-warning); }
+    .ui-stepper-marker-dot .ui-stepper-step[data-status="ERROR"] .ui-stepper-marker { background-color:var(--c-danger); }
+    /* the line after a complete step */
+    .ui-stepper-complete > .ui-stepper-connector { background-color:var(--c-accent); }
+    /* steps that wait for others, and disabled steps */
+    .ui-stepper-locked .ui-stepper-label { color:var(--c-muted); }
+    .ui-stepper-disabled > .ui-stepper-trigger { opacity:var(--opacity-disabled); }
+    /* compact bar (narrow containers) */
+    .ui-stepper-compact-text { font-size:var(--fs-label); font-weight:var(--fw-ui-strong); }
+    .ui-stepper-compact-track { background-color:var(--c-surface-muted); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); }
+    .ui-stepper-compact-fill { background-color:var(--c-accent); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-stepper { gap:var(--gap-block); }
+    .ui-stepper-trigger { gap:var(--gap-inline-items); padding:var(--gap-tight); }
+    .ui-stepper-marker { inline-size:var(--space-lg-3); block-size:var(--space-lg-3); }
+    .ui-stepper-marker-dot .ui-stepper-marker { inline-size:var(--space-md-3); block-size:var(--space-md-3); margin-block:var(--space-md-1) 0; margin-inline:var(--space-md-1); }
+    .ui-stepper-text { gap:var(--space-sm-1); padding-block:var(--space-sm-2) 0; }
+    /* HORIZONTAL, labels END: a line between the steps, at the marker's centre */
+    .ui-stepper-horizontal .ui-stepper-connector { block-size:var(--border-thick); min-inline-size:var(--space-lg-3); margin-inline:var(--gap-inline-items); margin-block-start:calc(var(--gap-tight) + var(--space-lg-3) / 2 - var(--border-thick) / 2); }
+    /* HORIZONTAL, labels BELOW: the line runs from marker to marker */
+    .ui-stepper-label-below .ui-stepper-connector { inset-block-start:calc(var(--gap-tight) + var(--space-lg-3) / 2 - var(--border-thick) / 2); inset-inline-start:calc(50% + var(--space-lg-3) / 2 + var(--gap-inline-items)); inset-inline-end:calc(-50% + var(--space-lg-3) / 2 + var(--gap-inline-items)); margin:0; }
+    .ui-stepper-label-below .ui-stepper-text { padding-block:0; }
+    /* VERTICAL: the line runs down from the marker to the next step */
+    .ui-stepper-vertical .ui-stepper-step { padding-block-end:var(--gap-block); }
+    .ui-stepper-vertical .ui-stepper-step:last-child { padding-block-end:0; }
+    .ui-stepper-vertical .ui-stepper-connector { inline-size:var(--border-thick); inset-inline-start:calc(var(--gap-tight) + var(--space-lg-3) / 2 - var(--border-thick) / 2); inset-block-start:calc(var(--gap-tight) * 2 + var(--space-lg-3)); inset-block-end:var(--gap-tight); }
+    .ui-stepper-vertical.ui-stepper-marker-dot .ui-stepper-connector { inset-inline-start:calc(var(--gap-tight) + var(--space-md-1) + var(--space-md-3) / 2 - var(--border-thick) / 2); inset-block-start:calc(var(--gap-tight) * 2 + var(--space-md-1) + var(--space-md-3)); }
+    .ui-stepper-horizontal.ui-stepper-marker-dot .ui-stepper-connector { margin-block-start:calc(var(--gap-tight) + var(--space-md-1) + var(--space-md-3) / 2 - var(--border-thick) / 2); }
+    .ui-stepper-label-below.ui-stepper-marker-dot .ui-stepper-connector { inset-block-start:calc(var(--gap-tight) + var(--space-md-1) + var(--space-md-3) / 2 - var(--border-thick) / 2); inset-inline-start:calc(50% + var(--space-md-3) / 2 + var(--space-md-1) + var(--gap-inline-items)); inset-inline-end:calc(-50% + var(--space-md-3) / 2 + var(--space-md-1) + var(--gap-inline-items)); margin:0; }
+    /* content: beside the steps (VERTICAL, SEPARATE) or under the current step (INLINE, aligned with the label) */
+    .ui-stepper-vertical.ui-stepper-content-separate .ui-stepper-body { column-gap:var(--gap-section); row-gap:var(--gap-block); }
+    .ui-stepper-vertical.ui-stepper-content-separate .ui-stepper-list { max-inline-size:var(--size-md-2); }
+    .ui-stepper-horizontal .ui-stepper-body { gap:var(--gap-block); }
+    .ui-stepper-content-inline .ui-stepper-panel { padding-block:var(--gap-tight) 0; padding-inline-start:calc(var(--gap-tight) + var(--space-lg-3) + var(--gap-inline-items)); }
+    /* button bar */
+    .ui-stepper-buttons, .ui-stepper-actions, .ui-stepper-forward { gap:var(--gap-inline-items); }
+    .ui-stepper-loader-host { padding-block-end:var(--gap-tight); }
+    /* compact bar */
+    .ui-stepper-compact-bar { gap:var(--gap-tight); }
+    .ui-stepper-compact-track { block-size:var(--space-sm-2); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-stepper { container-type:inline-size; container-name:stepper; display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-stepper-body { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-stepper-list { display:flex; min-inline-size:0; margin:0; padding:0; list-style:none; }
+    .ui-stepper-step { position:relative; display:flex; min-inline-size:0; }
+    .ui-stepper-trigger { display:flex; align-items:flex-start; min-inline-size:0; margin:0; text-align:start; }
+    button.ui-stepper-trigger { cursor:pointer; }
+    button.ui-stepper-trigger:disabled { cursor:default; }
+    .ui-stepper-busy button.ui-stepper-trigger { cursor:progress; }
+    .ui-stepper-trigger:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-stepper-marker { display:inline-flex; flex:none; align-items:center; justify-content:center; box-sizing:border-box; }
+    .ui-stepper-text { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-stepper-label { overflow-wrap:break-word; }
+    .ui-stepper-connector { display:block; flex:1 1 auto; }
+    /* HORIZONTAL: steps share the width equally (the line after each step fills its share) */
+    .ui-stepper-horizontal .ui-stepper-list { flex-direction:row; align-items:flex-start; }
+    .ui-stepper-horizontal .ui-stepper-step { flex:1 1 0; align-items:flex-start; }
+    .ui-stepper-horizontal .ui-stepper-trigger { flex:0 1 auto; min-inline-size:min-content; }
+    .ui-stepper-label-below .ui-stepper-step { flex-direction:column; align-items:center; }
+    .ui-stepper-label-below .ui-stepper-trigger { flex-direction:column; align-items:center; text-align:center; }
+    .ui-stepper-label-below .ui-stepper-connector { position:absolute; }
+    /* VERTICAL: steps stacked; the trigger, then the INLINE panel */
+    .ui-stepper-vertical .ui-stepper-list { flex-direction:column; }
+    .ui-stepper-vertical .ui-stepper-step { flex-direction:column; }
+    .ui-stepper-vertical .ui-stepper-connector { position:absolute; }
+    .ui-stepper-vertical.ui-stepper-content-separate .ui-stepper-body { display:grid; grid-template-columns:minmax(0, max-content) minmax(0, 1fr); align-items:start; }
+    .ui-stepper-panel:focus { outline:none; }
+    .ui-stepper-panels { min-inline-size:0; }
+    /* button bar: Back and the actions at the start, Skip / Next / Finish at the end */
+    .ui-stepper-buttons, .ui-stepper-actions, .ui-stepper-forward { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-stepper-forward { margin-inline-start:auto; }
+    /* the Loader line above the bar takes no place (out of the flow) and never catches the pointer */
+    .ui-stepper-buttons { position:relative; }
+    .ui-stepper-loader-host { position:absolute; inset-inline:0; inset-block-end:100%; pointer-events:none; }
+    /* compact bar instead of the list in narrow containers */
+    .ui-stepper-compact-bar { display:none; flex-direction:column; }
+    .ui-stepper-compact-track { display:block; overflow:hidden; }
+    .ui-stepper-compact-fill { display:block; block-size:100%; inline-size:calc(var(--ui-stepper-progress, 0) * 100%); }
+    @container stepper (max-width:36rem) {
+        .ui-stepper-compact .ui-stepper-compact-bar { display:flex; }
+        .ui-stepper-compact .ui-stepper-list { display:none; }
+        .ui-stepper-vertical.ui-stepper-content-separate .ui-stepper-body { grid-template-columns:minmax(0, 1fr); }
+    }
+    .ui-stepper-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    @media (prefers-reduced-motion:reduce) {
+        .ui-stepper-trigger, .ui-stepper-marker { transition:none; }
+    }
+}

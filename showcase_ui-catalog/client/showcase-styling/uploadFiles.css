@@ -1,0 +1,147 @@
+/* ==========================================================================
+   uploadFiles.css
+
+   Default generated DOM (layout BUTTON; DROPZONE puts the choose Button inside .ui-upload-files-dropzone):
+   <div id="files" class="ui-upload-files ui-upload-files-layout-button ui-upload-files-mode-form ui-upload-files-label-top">
+     <span id="files-label" class="ui-upload-files-label">Attachments<span class="ui-upload-files-visually-hidden"> (required)</span></span>
+     <div class="ui-upload-files-control">
+       <input id="files-input" class="ui-upload-files-input" type="file" tabindex="-1" aria-hidden="true" multiple hidden>
+       <div class="ui-upload-files-bar"><span class="ui-upload-files-choose" data-button="choose">Button component</span></div>
+       <div id="files-limits" class="ui-upload-files-limits">PDF or images · up to 10 MB each</div>
+       <div id="files-help" class="ui-upload-files-help">Help text.</div>
+       <ul class="ui-upload-files-list" aria-label="Files">
+         <li class="ui-upload-files-item" data-key="f1" data-status="READY">
+           <span class="ui-upload-files-icon" aria-hidden="true"><i class="fa-regular fa-file-pdf"></i></span>   or <img class="ui-upload-files-preview">
+           <span class="ui-upload-files-text">
+             <span class="ui-upload-files-name">report.pdf</span>                                             or <a> for a saved file with url
+             <span class="ui-upload-files-meta"><span class="ui-upload-files-size">1.2 MB</span><span class="ui-upload-files-status"></span></span>
+             <span class="ui-upload-files-reason" hidden></span>
+             <span class="ui-upload-files-progress">Loader component (AUTO, while uploading)</span>
+           </span>
+           <span class="ui-upload-files-actions"><span class="ui-upload-files-action" data-button="retry|cancel|remove">Button component</span></span>
+         </li>
+       </ul>
+       <div class="ui-upload-files-summary">3 files, 4.2 MB</div>
+       <div id="files-error" class="ui-upload-files-error" hidden></div>
+     </div>
+     <div class="ui-upload-files-live ui-upload-files-visually-hidden" aria-live="polite"></div>
+     <div class="ui-upload-files-alert ui-upload-files-visually-hidden" aria-live="assertive"></div>
+   </div>
+
+   STATES: data-status on each item (READY, WAITING, UPLOADING, DONE, FAILED, CANCELLED, REJECTED);
+   .ui-upload-files-dragover on the drop area while files are dragged over it; .ui-upload-files-invalid with an error;
+   .ui-upload-files-disabled when turned off.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2, or write the same selector with the new value in a stylesheet that
+   loads later, in @layer overrides.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    .ui-upload-files { font-family:var(--font-ui); font-weight:var(--fw-ui); color:var(--c-text); }
+    .ui-upload-files-label { color:var(--c-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-compact); }
+    .ui-upload-files-optional { color:var(--c-muted); font-size:var(--fs-label); font-weight:var(--fw-ui); }
+    .ui-upload-files-mandatory { color:var(--c-danger-text); font-weight:var(--fw-ui-strong); }
+    .ui-upload-files-limits, .ui-upload-files-help, .ui-upload-files-summary { color:var(--c-muted); font-size:var(--fs-label); line-height:var(--lh-body); }
+    .ui-upload-files-error { color:var(--c-danger-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-body); }
+
+    /* the drop area: dashed border at rest, accent while files are dragged over it, red with an error */
+    .ui-upload-files-dropzone {
+        border-top: var(--border-thin) dashed var(--c-border);
+        border-right: var(--border-thin) dashed var(--c-border);
+        border-bottom: var(--border-thin) dashed var(--c-border);
+        border-left: var(--border-thin) dashed var(--c-border);
+        border-top-left-radius: var(--radius-panel);
+        border-top-right-radius: var(--radius-panel);
+        border-bottom-right-radius: var(--radius-panel);
+        border-bottom-left-radius: var(--radius-panel);
+        background-color: var(--c-surface);
+        transition: border-color var(--transition-1), background-color var(--transition-1);
+    }
+    .ui-upload-files-dropzone.ui-upload-files-dragover { border-color:var(--c-accent); background-color:var(--c-selected); }
+    .ui-upload-files-invalid .ui-upload-files-dropzone { border-color:var(--c-danger); }
+    .ui-upload-files-dropzone-icon { color:var(--c-muted); font-size:var(--icon-size-large); }
+    .ui-upload-files-dropzone-text { color:var(--c-text); font-size:var(--fs-control); }
+
+    /* one file: thin line between files */
+    .ui-upload-files-item { border-bottom:var(--border-thin) solid var(--c-border); }
+    .ui-upload-files-item:last-child { border-bottom-width:0; }
+    .ui-upload-files-icon { color:var(--c-muted); font-size:var(--icon-size-medium); }
+    .ui-upload-files-preview { border-top-left-radius:var(--radius-sm); border-top-right-radius:var(--radius-sm); border-bottom-right-radius:var(--radius-sm); border-bottom-left-radius:var(--radius-sm); background-color:var(--c-surface-muted); }
+    .ui-upload-files-name { color:var(--c-text); font-size:var(--fs-control); }
+    a.ui-upload-files-name { color:var(--c-link); text-decoration:var(--link-decoration); text-underline-offset:var(--link-underline-offset); }
+    a.ui-upload-files-name:hover { color:var(--c-link-hover); }
+    .ui-upload-files-meta { color:var(--c-muted); font-size:var(--fs-caption); }
+    .ui-upload-files-reason { color:var(--c-danger-text); font-size:var(--fs-caption); }
+    .ui-upload-files-item[data-status="DONE"] .ui-upload-files-status { color:var(--c-success-text); }
+    .ui-upload-files-item[data-status="FAILED"] .ui-upload-files-status { color:var(--c-danger-text); }
+    .ui-upload-files-item[data-status="REJECTED"] .ui-upload-files-icon,
+    .ui-upload-files-item[data-status="FAILED"] .ui-upload-files-icon { color:var(--c-danger-text); }
+    .ui-upload-files-item[data-status="REJECTED"] .ui-upload-files-name,
+    .ui-upload-files-item[data-status="CANCELLED"] .ui-upload-files-name { color:var(--c-muted); }
+
+    /* a disabled field: label in the secondary colour, drop area dimmed */
+    .ui-upload-files-disabled .ui-upload-files-label, .ui-upload-files-disabled .ui-upload-files-mandatory { color:var(--c-muted); }
+    .ui-upload-files-disabled .ui-upload-files-dropzone { background-color:var(--c-surface-muted); }
+    .ui-upload-files-disabled .ui-upload-files-dropzone-text { color:var(--c-muted); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-upload-files { margin-block-end:var(--gap-section); }
+    .ui-upload-files, .ui-upload-files-control { gap:var(--gap-tight); }
+    .ui-upload-files-label { gap:var(--gap-inline-items); }
+    .ui-upload-files-dropzone { padding:var(--padding-panel); gap:var(--gap-tight); }
+    .ui-upload-files-item { padding-block:var(--space-sm-2); column-gap:var(--gap-toolbar); }
+    .ui-upload-files-icon, .ui-upload-files-preview { inline-size:var(--size-sm-1); block-size:var(--size-sm-1); }
+    .ui-upload-files-meta { column-gap:var(--gap-inline-items); }
+    .ui-upload-files-text { row-gap:var(--space-sm-1); }
+    .ui-upload-files-actions { gap:var(--space-sm-1); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-upload-files { display:grid; min-inline-size:0; max-inline-size:var(--percentage-full); }
+    .ui-upload-files-label { display:flex; align-items:center; flex-wrap:wrap; }
+    .ui-upload-files-control { display:grid; min-inline-size:0; }
+    .ui-upload-files-input { display:none; }
+    .ui-upload-files-bar { display:flex; align-items:center; }
+    .ui-upload-files-dropzone { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+    .ui-upload-files-choose, .ui-upload-files-action { display:inline-flex; }
+    .ui-upload-files-action[hidden] { display:none; }
+
+    .ui-upload-files-list { list-style:none; margin:0; padding:0; min-inline-size:0; }
+    .ui-upload-files-list[hidden], .ui-upload-files-summary[hidden], .ui-upload-files-error[hidden], .ui-upload-files-reason[hidden] { display:none; }
+    .ui-upload-files-item { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; }
+    .ui-upload-files-icon { display:flex; align-items:center; justify-content:center; }
+    .ui-upload-files-preview { display:block; object-fit:cover; }
+    .ui-upload-files-text { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-upload-files-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .ui-upload-files-meta { display:flex; flex-wrap:wrap; }
+    .ui-upload-files-status:empty { display:none; }
+    .ui-upload-files-progress:empty { display:none; }
+    .ui-upload-files-actions { display:flex; align-items:center; }
+
+    .ui-upload-files-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container is at least 36rem wide; narrower, the label returns on top.
+       36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and field: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-upload-files:not(.ui-upload-files-label-top), .ui-upload-files.ui-upload-files-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); align-items:start; }
+        :is(.ui-labels-start .ui-upload-files:not(.ui-upload-files-label-top), .ui-upload-files.ui-upload-files-label-start) > .ui-upload-files-label { min-block-size:var(--control-height); }
+    }
+}

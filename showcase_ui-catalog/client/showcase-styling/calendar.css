@@ -1,0 +1,172 @@
+/* ==========================================================================
+   calendar.css
+
+   Default generated DOM (CUSTOM, DATE, EU format):
+
+   <div class="ui-calendar-wrapper ui-calendar-width-medium ui-calendar-custom">
+     <span id="due-label" class="ui-calendar-label">Due date</span>
+     <div class="ui-calendar-row">
+       <div id="due" class="ui-calendar-box" role="group" aria-labelledby="due-label" data-part="value">
+         <span class="ui-calendar-segments">
+           <span id="due-day" class="ui-calendar-segment ui-calendar-segment-empty" role="spinbutton" tabindex="0" data-key="day">dd</span>
+           <span class="ui-calendar-separator" aria-hidden="true">.</span> … month … year
+         </span>
+         <span class="ui-calendar-button-host" data-button="calendar"> → Button (tertiary icon, calendar) </span>
+       </div>
+     </div>
+     <div id="due-popup" class="ui-calendar-popup" popover="manual" role="dialog"><div class="ui-calendar-body"></div></div>
+     <div id="due-help" class="ui-calendar-help">…</div>  <div id="due-error" class="ui-calendar-error" hidden></div>
+   </div>
+
+   Conditional structures:
+   - range: <fieldset class="… ui-calendar-range"> + <legend> and two span.ui-calendar-part ("From"/"To" sublabel +
+     ui-calendar-box each) + div.ui-calendar-quick-ranges (Buttons);
+   - dialog body: .ui-calendar-header (Buttons: previous, zoom-out title, next) + table.ui-calendar-grid (days with
+     th.ui-calendar-week-head "Week" and th.ui-calendar-week-number, or .ui-calendar-zoom-grid for months, years,
+     decades) + .ui-calendar-time (hour/minute selects) + .ui-calendar-footer (Buttons: Today/Now, Clear, Done);
+   - day states: .ui-calendar-selected, .ui-calendar-in-range, .ui-calendar-range-start/-end, .ui-calendar-today,
+     .ui-calendar-outside, .ui-calendar-highlight (inline --ui-calendar-highlight-bg), [aria-disabled="true"];
+   - NATIVE: input.ui-calendar-field (browser picker and icon) + span.ui-calendar-actions (Buttons Today/Clear);
+   - VIEW: p.ui-calendar-view-value with <time> elements; error shown: .ui-calendar-invalid.
+
+   Colours use the --calendar-* tokens (highlights: per group token, default --calendar-weekend-bg). The dialog
+   position is set by the component (--ui-calendar-popup-top/-left). calc() multipliers of tokens are proportions.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and normal weight; fields, the popup and the day buttons need them explicitly (form fields and buttons do not inherit the page font) */
+    .ui-calendar-wrapper, .ui-calendar-popup, .ui-calendar-day, .ui-calendar-zoom, .ui-calendar-time-select { font-family:var(--font-ui); font-weight:var(--fw-ui); }
+    .ui-calendar-label { color:var(--c-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-compact); }
+    .ui-calendar-invalid > .ui-calendar-label { color:var(--c-danger-text); }
+    .ui-calendar-optional { color:var(--c-muted); font-weight:var(--fw-ui); }
+    .ui-calendar-mandatory { color:var(--c-danger-text); }
+    .ui-calendar-help { color:var(--c-muted); font-size:var(--fs-label); line-height:var(--lh-body); }
+    .ui-calendar-error { color:var(--c-danger-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-body); }
+    .ui-calendar-view-value { color:var(--c-text); font-size:var(--fs-control); }
+    .ui-calendar-relative { color:var(--c-muted); }
+    .ui-calendar-sublabel { color:var(--c-muted); font-size:var(--fs-label); }
+    .ui-calendar-field, .ui-calendar-box { font:inherit; border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); font-size:var(--fs-control); transition:border-color var(--transition-1); }
+    .ui-calendar-field:focus, .ui-calendar-box:focus-within { border-color:var(--c-accent); }
+    .ui-calendar-field[aria-invalid="true"], .ui-calendar-box:has([aria-invalid="true"]) { border-color:var(--c-danger); }
+    .ui-calendar-field:disabled, .ui-calendar-box-disabled { background-color:var(--c-surface-muted); }
+    .ui-calendar-field:disabled, .ui-calendar-box-disabled { color:var(--c-muted); -webkit-text-fill-color:var(--c-muted); }
+
+    /* DISABLED LABEL — the label and the "*" of a disabled field use the secondary text colour.
+       Disabled = state INACTIVE, or inside a disabled fieldset (e.g. ContentGroup disabled:true); :has() looks for a
+       disabled field inside the wrapper (the segmented field is marked .ui-calendar-box-disabled). "(Optional)" and the
+       help text are already --c-muted; the error stays red.
+       To change the colour, edit these two lines (a plain .ui-calendar-label rule elsewhere cannot override them). */
+    .ui-calendar-wrapper:has(.ui-calendar-field:disabled, .ui-calendar-box-disabled) .ui-calendar-label { color:var(--c-muted); }
+    .ui-calendar-wrapper:has(.ui-calendar-field:disabled, .ui-calendar-box-disabled) .ui-calendar-mandatory { color:var(--c-muted); }
+
+    .ui-calendar-segment { border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); }
+    .ui-calendar-segment:focus { background-color:var(--calendar-selected-bg); color:var(--calendar-selected-color); }
+    .ui-calendar-segment-empty { color:var(--c-muted); }
+    .ui-calendar-segment-empty:focus { color:var(--calendar-selected-color); }
+    .ui-calendar-separator { color:var(--c-muted); }
+    .ui-calendar-popup { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); box-shadow:var(--shadow-md); }
+    .ui-calendar-grid th { color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); }
+    .ui-calendar-day, .ui-calendar-zoom { border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); font-size:var(--fs-label); }
+    .ui-calendar-highlight { background-color:var(--ui-calendar-highlight-bg); }   /* set by JS for highlighted dates */
+    .ui-calendar-day:hover, .ui-calendar-zoom:hover { background-color:var(--calendar-day-hover-bg); }
+    .ui-calendar-outside { color:var(--c-muted); }
+    .ui-calendar-today { box-shadow:inset 0 0 0 var(--border-thin) var(--c-accent); font-weight:var(--fw-ui-strong); }
+    .ui-calendar-in-range { background-color:var(--calendar-range-bg); color:var(--calendar-range-color); border-top-left-radius:0; border-top-right-radius:0; border-bottom-right-radius:0; border-bottom-left-radius:0; }
+    .ui-calendar-selected { background-color:var(--calendar-selected-bg); color:var(--calendar-selected-color); font-weight:var(--fw-ui-strong); }
+    .ui-calendar-selected:hover { background-color:var(--calendar-selected-bg); }
+    [aria-disabled="true"].ui-calendar-day, [aria-disabled="true"].ui-calendar-zoom { opacity:var(--opacity-disabled); background-color:transparent; }
+    .ui-calendar-week-head, .ui-calendar-week-number { color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui); }
+    .ui-calendar-time-select { font:inherit; border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-calendar-wrapper { gap:var(--gap-tight); margin:0 0 var(--gap-section); }
+    .ui-calendar-row { gap:var(--gap-inline-items); }
+    .ui-calendar-part { gap:var(--gap-tight); }
+    .ui-calendar-field, .ui-calendar-box { min-block-size:var(--control-height); padding:var(--padding-control); }
+    .ui-calendar-box { gap:var(--gap-tight); padding-inline-end:var(--space-sm-2); }
+    .ui-calendar-segment { padding:0 var(--space-sm-1); }
+    .ui-calendar-actions, .ui-calendar-quick-ranges, .ui-calendar-footer { gap:var(--gap-inline-items); }   /* Buttons of one group */
+    .ui-calendar-width-small { inline-size:var(--percentage-s); }
+    .ui-calendar-width-medium { inline-size:var(--percentage-m); }
+    .ui-calendar-width-large { inline-size:var(--percentage-l); }
+    .ui-calendar-width-full { inline-size:var(--percentage-full); }
+    .ui-calendar-popup { padding:var(--gap-inline-items); }
+    .ui-calendar-body { gap:var(--gap-inline-items); }
+    .ui-calendar-header { gap:var(--gap-inline-items); }
+    .ui-calendar-grid { border-spacing:var(--space-sm-1); }
+    .ui-calendar-day, .ui-calendar-zoom { min-inline-size:var(--control-height); block-size:var(--control-height); }
+    .ui-calendar-zoom { min-inline-size:calc(var(--control-height) * 1.75); }
+    .ui-calendar-week-head, .ui-calendar-week-number { padding-inline-end:var(--gap-toolbar); }
+    .ui-calendar-time { gap:var(--gap-tight); }
+    .ui-calendar-time-select { min-block-size:var(--control-height); padding:0 var(--gap-tight); }
+    /* labels on the left (see part 3): label column width, gap to the field, label lowered to the middle of the first field */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-calendar-wrapper:not(.ui-calendar-label-top), .ui-calendar-wrapper.ui-calendar-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        /* label on the left with width SMALL / MEDIUM / LARGE: the row keeps the full width and the option sizes the field
+           column (a share of the row, never more than the room beside the label) */
+        :is(.ui-labels-start .ui-calendar-wrapper:not(.ui-calendar-label-top), .ui-calendar-wrapper.ui-calendar-label-start).ui-calendar-width-small { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-s), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-calendar-wrapper:not(.ui-calendar-label-top), .ui-calendar-wrapper.ui-calendar-label-start).ui-calendar-width-medium { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-m), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-calendar-wrapper:not(.ui-calendar-label-top), .ui-calendar-wrapper.ui-calendar-label-start).ui-calendar-width-large { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-l), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-calendar-wrapper:not(.ui-calendar-label-top), .ui-calendar-wrapper.ui-calendar-label-start) > .ui-calendar-label { margin-block-start:calc(( var(--control-height) - 1lh ) / 2); }
+    }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-calendar-wrapper { display:grid; min-inline-size:0; padding:0; border:0; }
+    .ui-calendar-label { margin:0; padding:0; }
+    .ui-calendar-view-value { margin:0; }
+    .ui-calendar-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    .ui-calendar-row { display:flex; flex-wrap:wrap; align-items:center; min-inline-size:0; }
+    .ui-calendar-part { display:inline-flex; align-items:center; min-inline-size:0; }
+    /* Shared field look (native input and segmented field) */
+    .ui-calendar-field, .ui-calendar-box { box-sizing:border-box; min-inline-size:0; }
+    .ui-calendar-field:focus, .ui-calendar-box:focus-within { outline:0; }
+    .ui-calendar-field:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-calendar-field:disabled, .ui-calendar-box-disabled { cursor:not-allowed; }
+    .ui-calendar-box { display:inline-flex; align-items:center; justify-content:space-between; padding-block:0; cursor:text; }
+    .ui-calendar-segments { display:inline-flex; align-items:center; white-space:nowrap; font-variant-numeric:tabular-nums; }
+    .ui-calendar-segment { caret-color:transparent; outline:0; }
+    .ui-calendar-actions, .ui-calendar-quick-ranges, .ui-calendar-footer { display:flex; flex-wrap:wrap; }
+    .ui-calendar-done { margin-inline-start:auto; }
+    /* Custom dialog (top layer) */
+    .ui-calendar-popup { position:fixed; inset:auto; margin:0; inset-block-start:var(--ui-calendar-popup-top,0); inset-inline-start:var(--ui-calendar-popup-left,0); box-sizing:border-box; }
+    .ui-calendar-popup:not(:popover-open):not(.ui-calendar-popup-open) { display:none; }
+    .ui-calendar-body { display:grid; }
+    .ui-calendar-header { display:flex; align-items:center; justify-content:space-between; }
+    .ui-calendar-title-host { flex:1 1 auto; display:flex; justify-content:center; }
+    .ui-calendar-grid { border-collapse:separate; }
+    .ui-calendar-grid th { text-align:center; }
+    .ui-calendar-day, .ui-calendar-zoom { padding:0; text-align:center; cursor:pointer; }
+    .ui-calendar-day:focus-visible, .ui-calendar-zoom:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thin)); }
+    [aria-disabled="true"].ui-calendar-day, [aria-disabled="true"].ui-calendar-zoom { text-decoration:line-through; cursor:not-allowed; }
+    .ui-calendar-week-head, .ui-calendar-week-number { text-align:end; }
+    .ui-calendar-time { display:flex; align-items:center; }
+    .ui-calendar-time-select:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-calendar-wrapper:not(.ui-calendar-label-top), .ui-calendar-wrapper.ui-calendar-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-calendar-wrapper:not(.ui-calendar-label-top), .ui-calendar-wrapper.ui-calendar-label-start) > .ui-calendar-label { grid-column:1; float:inline-start; align-self:start; }
+    }
+}

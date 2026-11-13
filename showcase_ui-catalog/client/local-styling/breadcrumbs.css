@@ -1,0 +1,105 @@
+/* ==========================================================================
+   breadcrumbs.css
+
+   Default generated DOM:
+
+   <nav id="path" class="ui-breadcrumbs ui-breadcrumbs-back-on-narrow" aria-label="Breadcrumb">
+     <ol class="ui-breadcrumbs-list">
+       <li class="ui-breadcrumbs-item"><a class="ui-breadcrumbs-link" href="/" data-index="0"><span class="ui-breadcrumbs-label">Home</span></a></li>
+       <li class="ui-breadcrumbs-item ui-breadcrumbs-more"><span class="ui-breadcrumbs-more-host"> → ActionMenu "…" </span></li>   (collapsed levels)
+       <li class="ui-breadcrumbs-item"><a class="ui-breadcrumbs-link" href="/orders" data-index="3">…</a></li>
+       <li class="ui-breadcrumbs-item"><span class="ui-breadcrumbs-current" aria-current="page">Order 1042</span></li>
+     </ol>
+     <a class="ui-breadcrumbs-back" href="/orders" data-index="3"><span class="ui-breadcrumbs-back-icon"></span>Back to Orders</a>   (backLinkOnNarrow)
+   </nav>
+
+   Separators come from CSS between items (.ui-breadcrumbs-separator-{chevron|slash|arrow|dot} on the nav); text
+   separators use an empty alternative text (content: '/' / ''), so screen readers skip them; chevron and arrow mirror
+   in right-to-left languages.
+   Levels with siblings get a tertiary icon Button (chevron) opening ul.ui-breadcrumbs-siblings (links; the level's own page
+   aria-current="true"); 60vh caps the list height. Labels are shortened with "…" beyond a maximum width (full label as tooltip). Below a container width of 30rem
+   the list is replaced by the back link (ui-breadcrumbs-back-on-narrow); the nav is a size container for that.
+   The 30rem container query is a literal because custom properties cannot be used in container queries.
+   The separator chevron is drawn with borders; rotate(45deg) is a geometric constant.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   ui-catalog source and client/local-styling use this file with the app look; client/showcase-styling keeps
+   the original values, which the lines marked [APP] name in brackets (library / original).
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and size; separators; links; the plain (not linked) and the current item */
+    .ui-breadcrumbs { font-family:var(--font-ui); font-weight:var(--fw-ui); font-size:var(--fs-label); }
+    .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { color:var(--c-muted); }
+    /* chevron drawn with two borders (logical sides: it turns with the reading direction) */
+    .ui-breadcrumbs-separator-chevron .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { border-block-start:var(--border-thin) solid var(--c-muted); border-inline-end:var(--border-thin) solid var(--c-muted); }
+    .ui-breadcrumbs-separator-dot .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { font-weight:var(--fw-ui-strong); }
+    .ui-breadcrumbs-link { color:var(--c-accent); text-underline-offset:var(--space-sm-1); border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); }
+    .ui-breadcrumbs-link:hover { text-decoration-thickness:var(--border-thick); }
+    .ui-breadcrumbs-text { color:var(--c-muted); }
+    .ui-breadcrumbs-current { color:var(--c-text); font-weight:var(--fw-ui-strong); }
+    /* sibling list (dropdown of pages at the same level) */
+    .ui-breadcrumbs-siblings { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); box-shadow:var(--shadow-md); }
+    .ui-breadcrumbs-sibling { border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); color:var(--c-text); }
+    .ui-breadcrumbs-sibling:hover { background-color:var(--c-surface-hover); }
+    .ui-breadcrumbs-sibling[aria-current] { background-color:var(--c-selected); font-weight:var(--fw-ui-strong); }
+    /* "back" link shown instead of the trail on narrow screens (backOnNarrow) */
+    .ui-breadcrumbs-back { color:var(--c-accent); text-underline-offset:var(--space-sm-1); }
+    .ui-breadcrumbs-back-icon { border-block-end:var(--border-thin) solid currentColor; border-inline-start:var(--border-thin) solid currentColor; }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-breadcrumbs-list { gap:var(--gap-tight); }
+    .ui-breadcrumbs-item { gap:var(--gap-tight); }
+    .ui-breadcrumbs-separator-chevron .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { inline-size:var(--space-sm-3); block-size:var(--space-sm-3); }
+    .ui-breadcrumbs-link, .ui-breadcrumbs-text, .ui-breadcrumbs-current { gap:var(--gap-tight); max-inline-size:var(--size-md-2); }
+    .ui-breadcrumbs-siblings { min-inline-size:var(--size-md-1); max-inline-size:var(--size-md-3); margin:var(--space-sm-2) 0 0; padding:var(--gap-tight); }
+    .ui-breadcrumbs-sibling { padding:var(--gap-tight) var(--gap-inline-items); }
+    .ui-breadcrumbs-back { gap:var(--gap-tight); }
+    .ui-breadcrumbs-back-icon { inline-size:var(--space-sm-3); block-size:var(--space-sm-3); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-breadcrumbs { container-type:inline-size; container-name:breadcrumbs; min-inline-size:0; }
+    .ui-breadcrumbs-list { display:flex; flex-wrap:wrap; align-items:center; margin:0; padding:0; list-style:none; }
+    .ui-breadcrumbs-item { display:inline-flex; align-items:center; min-inline-size:0; }
+    /* Separators (decorative CSS content, not read by screen readers) */
+    .ui-breadcrumbs-separator-chevron .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { content:''; transform:scale(0.7) rotate(45deg); }
+    .ui-breadcrumbs-separator-chevron .ui-breadcrumbs-item + .ui-breadcrumbs-item:dir(rtl)::before { transform:scale(0.7) rotate(-135deg); }
+    .ui-breadcrumbs-separator-slash .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { content:'/' / ''; }
+    .ui-breadcrumbs-separator-arrow .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { content:'›' / ''; }
+    .ui-breadcrumbs-separator-arrow .ui-breadcrumbs-item + .ui-breadcrumbs-item:dir(rtl)::before { content:'‹' / ''; }
+    .ui-breadcrumbs-separator-dot .ui-breadcrumbs-item + .ui-breadcrumbs-item::before { content:'·' / ''; }
+    .ui-breadcrumbs-link, .ui-breadcrumbs-text, .ui-breadcrumbs-current { display:inline-flex; align-items:center; min-inline-size:0; }
+    .ui-breadcrumbs-label { overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-breadcrumbs-link { text-decoration:underline; }
+    .ui-breadcrumbs-link:focus-visible, .ui-breadcrumbs-back:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-breadcrumbs-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    /* Sibling dropdowns: tertiary icon Button + list of pages at the same level */
+    .ui-breadcrumbs-item { position:relative; }
+    .ui-breadcrumbs-siblings { position:absolute; inset-block-start:100%; inset-inline-start:0; z-index:10; max-block-size:60vh; overflow-y:auto; list-style:none; }
+    .ui-breadcrumbs-siblings[hidden] { display:none; }
+    .ui-breadcrumbs-sibling { display:block; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ui-breadcrumbs-sibling:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thin)); }
+    .ui-breadcrumbs-back { display:none; align-items:center; text-decoration:underline; }
+    .ui-breadcrumbs-back-icon { transform:scale(0.7) rotate(45deg); }
+    .ui-breadcrumbs-back-icon:dir(rtl) { transform:scale(0.7) rotate(-135deg); }
+    @container breadcrumbs (max-width:30rem) { .ui-breadcrumbs-back-on-narrow .ui-breadcrumbs-list { display:none; } }
+    @container breadcrumbs (max-width:30rem) { .ui-breadcrumbs-back-on-narrow .ui-breadcrumbs-back { display:inline-flex; } }
+}

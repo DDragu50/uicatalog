@@ -1,0 +1,55 @@
+/* ==========================================================================
+   app-shell.css — page base: reset and bare-element typography
+
+   Framework file, common to every page built on this system: the showcase app (client/local-styling),
+   its live examples (client/showcase-styling, preview.html) and any project using ui-catalog.
+   Loaded right after design-system.css and before the component stylesheets.
+
+   Contains only what every page needs and no component styles them:
+     - reset (box sizing, body margin, media as blocks);
+     - bare HTML elements: body, h1–h6, p, code, links, focus. No classes.
+   Values are design tokens; WHICH family, size and weight each element uses comes from the typography roles in
+   design-system.css (--font-body / --fw-body, --font-hN / --fs-hN / --fw-hN for each heading level,
+   --font-p / --fs-p / --fw-p / --lh-p, --lh-hN, --font-italic, --fw-strong, --font-code). Change a role there, not here.
+   Margins are 0: the space between blocks belongs to their container (gap).
+
+   Layers: reset and base (declared in design-system.css). Bare elements are in the base layer, below the
+   components layer, so components keep their own text styles (they read --font-ui / --fw-ui… instead).
+   Page layout (columns, header, page width) belongs to the project, e.g. client/app/app.css.
+
+   The 680px media query is a literal because custom properties cannot be used in media queries
+   (the system's typography breakpoint, cssREADME.md).
+   ========================================================================== */
+
+@layer reset {
+    *, *::before, *::after { box-sizing:border-box; }
+    body { margin:0; }
+    img, svg { display:block; max-inline-size:var(--percentage-full); }
+}
+
+@layer base {
+    html { scroll-padding-block-start:var(--page-sticky-offset); }
+    body { background:var(--c-page); color:var(--c-text); font-family:var(--font-body); font-size:var(--fs-body); font-weight:var(--fw-body); line-height:var(--lh-body); }
+
+    h1, h2, h3, h4, h5, h6 { margin:0; color:var(--c-text); }
+    h1 { font-family:var(--font-h1); font-size:var(--fs-h1); font-weight:var(--fw-h1); line-height:var(--lh-h1); }
+    h2 { font-family:var(--font-h2); font-size:var(--fs-h2); font-weight:var(--fw-h2); line-height:var(--lh-h2); }
+    h3 { font-family:var(--font-h3); font-size:var(--fs-h3); font-weight:var(--fw-h3); line-height:var(--lh-h3); }
+    h4 { font-family:var(--font-h4); font-size:var(--fs-h4); font-weight:var(--fw-h4); line-height:var(--lh-h4); }
+    h5 { font-family:var(--font-h5); font-size:var(--fs-h5); font-weight:var(--fw-h5); line-height:var(--lh-h5); }
+    h6 { font-family:var(--font-h6); font-size:var(--fs-h6); font-weight:var(--fw-h6); line-height:var(--lh-h6); }
+    p { margin:0; font-family:var(--font-p); font-size:var(--fs-p); font-weight:var(--fw-p); line-height:var(--lh-p); }
+    b, strong { font-weight:var(--fw-strong); }              /* follows the weight pair (the browser default is relative) */
+    em, i, cite, dfn, var { font-family:var(--font-italic); }
+    code, kbd, pre, samp { font-family:var(--font-code); }
+
+    a { color:var(--c-accent); }
+    a:hover { color:var(--c-accent-hover); }
+    a:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    [tabindex="-1"]:focus { outline:none; }
+
+    @media (max-width:680px) {
+        h1 { font-size:var(--fs-h1-narrow); }
+        h2 { font-size:var(--fs-h2-narrow); }
+    }
+}

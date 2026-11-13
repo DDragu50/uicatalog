@@ -1,0 +1,130 @@
+/* ==========================================================================
+   contentGroup.css
+
+   Default generated DOM (FIELDSET, VERTICAL):
+
+   <fieldset id="address" class="ui-content-group ui-content-group-vertical ui-content-group-frame"
+             style="--ui-content-group-span:1" aria-describedby="address-description">
+     <legend id="address-label" class="ui-content-group-label">Address</legend>
+     <p id="address-description" class="ui-content-group-description">Where we deliver</p>
+     <div class="ui-content-group-content">
+       <div class="ui-content-group-item">…child component or static HTML…</div>
+     </div>
+   </fieldset>
+
+   SECTION (static content):
+   <section id="notice" class="ui-content-group ui-content-group-vertical" aria-labelledby="notice-title">
+     <fieldset class="ui-content-group-frame" role="none">                    (visual frame only)
+       <legend id="notice-label" class="ui-content-group-label">Notice</legend>   (optional)
+       <h3 id="notice-title" class="ui-content-group-title">Important information</h3>  (optional)
+       <p class="ui-content-group-description">…</p>                          (optional)
+       <div class="ui-content-group-content">…items…</div>
+     </fieldset>
+   </section>
+
+   Conditional structures:
+   - label (legend) and description are optional in both semantics; title (heading) exists only for SECTION;
+   - bordered:false: .ui-content-group-bare; disabled:true (FIELDSET): native [disabled] on the fieldset;
+   - direction: .ui-content-group-vertical or .ui-content-group-horizontal on the root.
+
+   The label notches the frame border natively (rendered <legend>), on any background.
+   Spacing: the content area owns the gap between items; child components keep their own margins
+   (design decision), so visible spacing is gap + child margin.
+   Horizontal: items share the row equally and wrap when narrower than --size-md-1.
+   Disabled: controls inside are disabled natively and dim themselves; the group dims only its label and description.
+   --ui-content-group-span: columns spanned in a parent grid (ignored outside a grid); set by the component on the root
+   (style attribute) from the configuration option span. It is the only variable left.
+   The 22rem container query is a literal because custom properties cannot be used in container queries.
+
+   The label (legend) sits on the top border line.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font for the group's own texts (label, title, description); the content keeps its own fonts */
+    .ui-content-group-label, .ui-content-group-title, .ui-content-group-description { font-family: var(--font-ui); }
+    /* the frame (bordered:true): border, corners, background */
+    .ui-content-group-frame {
+        border-top: var(--border-thin) solid var(--c-border);
+        border-right: var(--border-thin) solid var(--c-border);
+        border-bottom: var(--border-thin) solid var(--c-border);
+        border-left: var(--border-thin) solid var(--c-border);
+        border-top-left-radius: var(--radius-control);
+        border-top-right-radius: var(--radius-control);
+        border-bottom-right-radius: var(--radius-control);
+        border-bottom-left-radius: var(--radius-control);
+        background-color: transparent;
+    }
+    /* bordered:false: no frame line */
+    .ui-content-group-bare, .ui-content-group-bare > .ui-content-group-frame {
+        border-top: 0 solid var(--c-border);
+        border-right: 0 solid var(--c-border);
+        border-bottom: 0 solid var(--c-border);
+        border-left: 0 solid var(--c-border);
+    }
+
+    /* label (on the frame line), title (heading, SECTION only), description */
+    .ui-content-group-label { color: var(--c-text); font-size: var(--fs-label); font-weight: var(--fw-ui-strong); line-height: var(--lh-compact); }
+    .ui-content-group-title { color: var(--c-text); font-size: var(--fs-block-title); font-weight: var(--fw-ui-strong); line-height: var(--lh-compact); }
+    .ui-content-group-description { color: var(--c-muted); font-size: var(--fs-caption); }
+
+    /* disabled FIELDSET: label and description dim (the controls inside dim themselves) */
+    .ui-content-group[disabled] > .ui-content-group-label, .ui-content-group[disabled] > .ui-content-group-description { opacity: var(--opacity-disabled); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* space below the group */
+    .ui-content-group { margin: 0 0 var(--space-lg-1); }
+
+    /* inside the frame: padding; gap between label, title, description and content */
+    .ui-content-group-frame { gap: var(--gap-tight); padding: var(--space-lg-1); }
+    .ui-content-group-bare, .ui-content-group-bare > .ui-content-group-frame { padding: 0; }
+
+    /* label: space left and right of the text on the frame line */
+    .ui-content-group-label { padding-inline: var(--space-sm-2); }
+    .ui-content-group-bare .ui-content-group-label { padding-inline: 0; }
+
+    /* items: gap (VERTICAL), gap and minimum width before wrapping (HORIZONTAL) */
+    .ui-content-group-content { gap: var(--gap-tight); }
+    .ui-content-group-horizontal > .ui-content-group-content, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content { gap: var(--gap-form-field); }
+    .ui-content-group-horizontal > .ui-content-group-content > .ui-content-group-item, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content > .ui-content-group-item { flex: 1 1 var(--size-md-1); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-content-group { --ui-content-group-span:1; grid-column:span var(--ui-content-group-span); container-type:inline-size; container-name:content-group; min-inline-size:0; }
+    /* the frame comes after the group rule: a FIELDSET group is its own frame and keeps margin 0 */
+    .ui-content-group-frame { display:grid; min-inline-size:0; margin:0; }
+
+    .ui-content-group-label { margin:0; }
+    .ui-content-group-title { margin:0; }
+    .ui-content-group-description { margin:0; }
+
+    .ui-content-group-content { display:flex; min-inline-size:0; }
+    .ui-content-group-item { min-inline-size:0; }
+    .ui-content-group-vertical > .ui-content-group-content, .ui-content-group-vertical > .ui-content-group-frame > .ui-content-group-content { flex-direction:column; }
+    .ui-content-group-horizontal > .ui-content-group-content, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content { flex-direction:row; flex-wrap:wrap; align-items:flex-start; }
+
+    /* narrow group (below 22rem): HORIZONTAL items stack, with the VERTICAL gap */
+    @container content-group (max-width:22rem) {
+        .ui-content-group-horizontal > .ui-content-group-content, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content { flex-direction:column; align-items:stretch; gap:var(--gap-tight); }
+        .ui-content-group-horizontal > .ui-content-group-content > .ui-content-group-item, .ui-content-group-horizontal > .ui-content-group-frame > .ui-content-group-content > .ui-content-group-item { flex:none; }
+    }
+}

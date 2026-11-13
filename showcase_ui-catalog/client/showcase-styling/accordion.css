@@ -1,0 +1,73 @@
+/* ==========================================================================
+   accordion.css
+
+   Default generated DOM (look JOINED, bordered, ROUNDED):
+
+   <div id="faq" class="ui-accordion ui-accordion-joined ui-accordion-bordered" data-expand-mode="SINGLE">
+     <div class="ui-accordion-item" data-index="0">
+       → CollapsiblePanel, variant PLAIN, headingLevel 3:
+         <section class="ui-collapsible-panel ui-collapsible-panel-plain" data-state="EXPANDED" …>
+           <div class="ui-collapsible-panel-header"><h3 class="ui-collapsible-panel-heading-level"><button …>…</button></h3>…</div>
+           …
+         </section>
+     </div>
+     <div class="ui-accordion-item" data-index="1">…</div>
+   </div>
+
+   Conditional structures:
+   - look SEPARATE: .ui-accordion-separate; each item holds a CollapsiblePanel card (variant DEFAULT unless the item sets
+     another), with bordered and cornerRadius passed to the panel;
+   - bordered:false: no .ui-accordion-bordered (JOINED: no outer line; dividers stay);
+   - cornerRadius NONE: .ui-accordion-square (JOINED frame).
+   - data-expand-mode="SINGLE|MULTIPLE" for reference only (no rule depends on it).
+
+   The Accordion styles only its own elements: the frame (JOINED), the dividers between items, and the space between
+   cards (SEPARATE). The panels keep their own look (CollapsiblePanel owns PLAIN, DEFAULT, COMPACT, INLINE).
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners. Change freely: only the look changes.
+     2. DIMENSIONS  spacing. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout. Do not change.
+   To restyle, change a value in part 1 or 2, or write the same selector with the new value in a stylesheet that
+   loads later, in @layer overrides.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* JOINED: one frame (surface, corners, shadow as a card), a line between items */
+    .ui-accordion-joined {
+        border-top-left-radius: var(--radius-panel);
+        border-top-right-radius: var(--radius-panel);
+        border-bottom-right-radius: var(--radius-panel);
+        border-bottom-left-radius: var(--radius-panel);
+        background-color: var(--c-surface);
+        box-shadow: var(--shadow-sm);
+    }
+    .ui-accordion-joined.ui-accordion-bordered {
+        border-top: var(--border-thin) solid var(--c-border);
+        border-right: var(--border-thin) solid var(--c-border);
+        border-bottom: var(--border-thin) solid var(--c-border);
+        border-left: var(--border-thin) solid var(--c-border);
+    }
+    .ui-accordion-joined.ui-accordion-square { border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; }
+    .ui-accordion-joined > .ui-accordion-item + .ui-accordion-item { border-top: var(--border-thin) solid var(--c-border); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* SEPARATE: space between the cards */
+    .ui-accordion-separate { gap: var(--gap-toolbar); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-accordion { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-accordion-joined { overflow:hidden; }   /* the frame's corners clip the panels */
+    .ui-accordion-item { min-inline-size:0; }
+}

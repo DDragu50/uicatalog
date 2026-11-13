@@ -1,0 +1,146 @@
+/* ==========================================================================
+   table.css
+
+   Default generated DOM:
+
+   <div id="orders" class="ui-table ui-table-sticky ui-table-hover [ui-table-cards] [ui-table-alternate]" style="--ui-table-bar-height:…">
+     <div class="ui-table-bar">
+       <span class="ui-table-counts">600 items, 121–144 visible now, 12 selected</span>
+       <span class="ui-table-selection-links"> → Buttons: "Select all 600 items", "Clear selection" </span>   (selectable)
+       <span class="ui-table-actions"> → span.ui-table-action → Button (one per selection action) </span>                                  (shown with a selection)
+     </div>
+     <table class="ui-table-grid" aria-label="Orders">
+       <colgroup><col style="--ui-table-col:var(--table-column-select)">…</colgroup>
+       <thead><tr>
+         <th class="ui-table-select-cell"><input type="checkbox" class="ui-table-select-page"></th>        (selectable)
+         <th class="ui-table-counter">#</th>
+         <th class="ui-table-align-start" data-field="name" aria-sort="none"><button class="ui-table-sort">Name <span class="ui-table-sort-icon"><i class="fa-solid fa-up-down"></i></span></button></th>
+       </tr>
+       <tr class="ui-table-progress" role="none"><td class="ui-table-progress-cell" role="none" colspan="…"><div class="ui-table-loader-host"> → Loader (EDGE, SMALL bar along the top of this cell) </div></td></tr>
+       </thead>
+       <tbody>
+         <tr data-row-key="42" [class="ui-table-row-selected"]>
+           <td class="ui-table-select-cell"><input type="checkbox" class="ui-table-select-row"></td>
+           <td class="ui-table-counter">121</td>
+           <td class="ui-table-align-start [ui-table-always]" data-label="Name" data-field="name"><span class="ui-table-truncate" title="…">…</span></td>
+           <td … data-render> → consumer content (links, Buttons, ActionMenu) </td>
+         </tr>
+         <tr class="ui-table-message ui-table-message-{empty|loading|error}"><td colspan="…">"Loading…" text, or → Message (INFO: INLINE "No data"; load error INLINE, BLOCK with Retry in server mode)</td></tr>
+       </tbody>
+     </table>
+     <div class="ui-table-footer"><div class="ui-table-pagination-host"> → Pagination </div></div>
+   </div>
+
+   Column widths come from the --table-column-* tokens (via --ui-table-col on each col); the table uses a fixed
+   layout, so visible columns never change with their content. Sticky: the bar sticks below the page's sticky
+   header (--page-sticky-offset), the column header below the bar (--ui-table-bar-height, set by the component).
+   Card mode (decided once, before display): each row is a card of label/value pairs from data-label.
+   Loading: the progress row has no height; its cell holds an EDGE Loader whose line runs under the column header (sticky
+   below it, --ui-table-head-height, set by the component). While data loads after rows were shown, .ui-table-loading on
+   the root dims the rows (the component makes tbody inert); without rows the "Loading…" row is shown.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   ui-catalog source and client/local-styling use this file with the app look; client/showcase-styling keeps
+   the original values, which the lines marked [APP] name in brackets (library / original).
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and normal weight */
+    .ui-table { font-family:var(--font-ui); font-weight:var(--fw-ui); }
+    /* bar above the table: background (needed while sticky), counts text */
+    .ui-table-bar { background-color:var(--c-surface); }
+    .ui-table-counts { color:var(--c-muted); font-size:var(--fs-label); }
+    /* grid: text size (cells --fs-label, column header --fs-caption), row lines, column header, row counter, sort button
+       and icon (accent while sorted) */
+    .ui-table-grid { font-size:var(--fs-label); }
+    /* the rows sit on the surface colour (as the bar above), so the striped rows stand out on any page background
+       (on a --c-page background the zebra grey would otherwise be the same colour) */
+    .ui-table-grid { background-color:var(--c-surface); }
+    .ui-table-grid th, .ui-table-grid td { border-bottom:var(--border-thin) solid var(--c-border); }
+    .ui-table-grid th { background-color:var(--c-surface); color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); }
+    .ui-table-grid .ui-table-counter { color:var(--c-muted); }
+    .ui-table-sort { font:inherit; background-color:transparent; color:inherit; }
+    .ui-table-sort-icon { color:var(--c-muted); font-size:var(--fs-caption); }
+    th[aria-sort="ascending"] .ui-table-sort-icon, th[aria-sort="descending"] .ui-table-sort-icon { color:var(--c-accent); }
+    /* rows, three different colours: every second row (alternate:true) the neutral zebra grey --c-surface-alt; under the
+       pointer (hover:true) the hover grey --c-surface-hover [APP]; selected --c-selected (light blue [APP]), which stays under the
+       pointer, so a selected row never looks unselected. Order matters: alternate, hover, selected. Empty / loading / error row. */
+    .ui-table-alternate tbody tr:nth-child(even):not(.ui-table-row-selected) { background-color:var(--c-surface-alt); }
+    .ui-table-hover tbody tr:not(.ui-table-message):hover { background-color:var(--c-surface-hover); }   /* [APP] grey (library: var(--c-info-soft)) */
+    .ui-table-row-selected, .ui-table-hover tbody tr.ui-table-row-selected:hover { background-color:var(--c-selected); }
+    .ui-table-message td { color:var(--c-muted); }
+    /* rows of the previous view while new data loads */
+    .ui-table-loading tbody td { opacity:var(--opacity-muted); transition:opacity var(--transition-1); }
+    /* line under the sticky column header; card mode: card border and corners, label of each value */
+    .ui-table-sticky thead th { box-shadow:0 var(--border-thin) 0 var(--c-border); }
+    .ui-table-cards tbody tr:not(.ui-table-message) { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); }
+    .ui-table-cards tbody td::before { color:var(--c-muted); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* bar height and spacing; cell padding; card spacing */
+    .ui-table-bar { gap:var(--gap-inline-items); min-block-size:var(--control-height); padding-block:var(--gap-tight); }
+    .ui-table-selection-links, .ui-table-actions { gap:var(--gap-inline-items); }   /* Buttons of one group */
+    .ui-table-grid th, .ui-table-grid td { padding:var(--gap-tight) var(--gap-inline-items); }
+    .ui-table-sort { gap:var(--gap-tight); }
+    .ui-table-message td { padding:var(--gap-block); }
+    .ui-table-cards tbody tr:not(.ui-table-message) { margin-block-end:var(--gap-inline-items); padding:var(--gap-tight) 0; }
+    .ui-table-cards .ui-table-grid tbody td { gap:var(--gap-inline-items); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-table { display:grid; min-inline-size:0; }
+    .ui-table-bar { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-table-selection-links, .ui-table-actions { display:inline-flex; flex-wrap:wrap; align-items:center; }
+    .ui-table-actions { margin-inline-start:auto; }
+    .ui-table-selection-links [hidden], .ui-table-actions [hidden] { display:none; }
+    .ui-table-grid { inline-size:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; }
+    .ui-table-grid col { inline-size:var(--ui-table-col); }   /* --ui-table-col: set by the component from the --table-column-* tokens */
+    .ui-table-grid th, .ui-table-grid td { text-align:start; vertical-align:middle; overflow:hidden; }
+    .ui-table-grid th { white-space:nowrap; }
+    .ui-table-grid .ui-table-align-center { text-align:center; }
+    .ui-table-grid .ui-table-align-end { text-align:end; }
+    .ui-table-grid .ui-table-counter { text-align:end; font-variant-numeric:tabular-nums; }
+    .ui-table-grid .ui-table-select-cell { text-align:center; }
+    .ui-table-truncate { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-table-sort { display:inline-flex; align-items:center; max-inline-size:100%; padding:0; border:0; cursor:pointer; }
+    .ui-table-sort:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-table-message td { text-align:center; }
+    .ui-table-message-host { display:flex; justify-content:center; text-align:start; }
+    .ui-table-footer { display:flex; justify-content:flex-end; }
+    /* Sticky bar and column header, below the page's sticky header */
+    .ui-table-sticky .ui-table-bar { position:sticky; inset-block-start:var(--page-sticky-offset); z-index:2; }
+    .ui-table-sticky thead th { position:sticky; inset-block-start:calc(var(--page-sticky-offset) + var(--ui-table-bar-height,0px)); z-index:1; }
+    /* Progress row: no height of its own; the Loader line overflows its cell downwards, over the first row */
+    .ui-table-grid .ui-table-progress-cell { block-size:0; padding:0; border:0; overflow:visible; line-height:0; }
+    .ui-table-sticky .ui-table-progress-cell { position:sticky; inset-block-start:calc(var(--page-sticky-offset) + var(--ui-table-bar-height,0px) + var(--ui-table-head-height,0px)); z-index:2; }
+    .ui-table-cards .ui-table-progress, .ui-table-cards .ui-table-progress-cell { display:block; }
+    /* Card mode: each row becomes a card of label/value pairs (only ALWAYS columns are rendered) */
+    .ui-table-cards .ui-table-grid, .ui-table-cards tbody, .ui-table-cards tr, .ui-table-cards td { display:block; }
+    .ui-table-cards colgroup, .ui-table-cards thead th:not(.ui-table-select-cell) { display:none; }
+    .ui-table-cards thead, .ui-table-cards thead tr { display:block; }
+    .ui-table-cards .ui-table-grid thead th.ui-table-select-cell { display:block; border:0; text-align:start; }
+    .ui-table-cards tbody tr:not(.ui-table-message) { position:relative; }
+    .ui-table-cards .ui-table-grid tbody td { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); border:0; text-align:start; }
+    .ui-table-cards tbody td::before { content:attr(data-label); }
+    .ui-table-cards tbody td.ui-table-select-cell::before { content:''; }
+    .ui-table-cards .ui-table-message td { display:block; }
+    .ui-table-cards .ui-table-message td::before { content:none; }
+    @media (prefers-reduced-motion:reduce) { .ui-table-loading tbody td { transition:none; } }
+}

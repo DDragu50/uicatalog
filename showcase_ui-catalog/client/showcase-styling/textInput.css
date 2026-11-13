@@ -1,0 +1,166 @@
+/* ==========================================================================
+   textInput.css
+
+   Default generated DOM:
+
+   COMPLETE EDIT STRUCTURE:
+   <div class="ui-text-input-wrapper ui-text-input-width-full">
+     <label class="ui-text-input-label" for="input-id">Label</label>
+     <div class="ui-text-input-control">
+       <input id="input-id" name="input-id" class="ui-text-input-field" type="text" autocomplete="off" aria-invalid="false" aria-required="true" aria-describedby="input-id-help">
+       <div class="ui-text-input-icon-area">
+         <i class="ui-text-input-static-icon fa-solid fa-circle-info" aria-hidden="true"></i>
+       </div>
+     </div>
+     <div id="input-id-help" class="ui-text-input-help">Help text.</div>
+     <div id="input-id-error" class="ui-text-input-error" hidden></div>
+   </div>
+
+   CHILD BUTTON HOST (password toggle or configured icon button):
+   <div class="ui-text-input-icon-area">
+     <div class="ui-text-input-icon-button-host">
+       Button component
+     </div>
+   </div>
+
+   NUMBER WITHOUT SPINNER:
+   <input class="ui-text-input-field ui-text-input-number-no-spinner" type="number" min="0" max="100">
+
+   INTEGER WITH NATIVE SPINNER:
+   <input class="ui-text-input-field" type="number" min="0" max="100" step="5">
+
+   .ui-text-input-icon-area is the common trailing container for either a static icon
+   or an interactive child component. Decorative icons are aria-hidden individually;
+   the container remains accessible so interactive content is never hidden.
+
+   REQUIREMENT INDICATOR (appended inside the label):
+   <span class="ui-text-input-optional">(Optional)</span>            non-mandatory field + OPTIONAL_TEXT (texts.optional)
+   <span class="ui-text-input-mandatory" aria-hidden="true">*</span>  mandatory field + MANDATORY_ASTERISK
+   Errors are updated in place and are not a live region: the error element is shown, aria-invalid="true" is set and
+   the error id is appended to aria-describedby.
+
+   The 768px media query is a literal because custom properties cannot be used in media queries.
+
+   The field's minimum height subtracts the control's top and bottom border widths: keep the two in step when
+   you change a border width.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and normal weight for every text of the field; the typed text needs them explicitly
+       (form fields do not inherit the page font). Labels, "*" and the error are --fw-ui-strong (below). */
+    .ui-text-input-wrapper, .ui-text-input-field { font-family: var(--font-ui); font-weight: var(--fw-ui); }
+    .ui-text-input-label { color:var(--c-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-compact); }
+    .ui-text-input-optional { color:var(--c-muted); font-size:var(--fs-label); font-weight:var(--fw-ui); }
+    .ui-text-input-mandatory { color:var(--c-danger-text); font-weight:var(--fw-ui-strong); }
+
+    /* the box around the typed text: border, corners and background, at rest */
+    .ui-text-input-control {
+        border-top: var(--border-thin) solid var(--c-border);
+        border-right: var(--border-thin) solid var(--c-border);
+        border-bottom: var(--border-thin) solid var(--c-border);
+        border-left: var(--border-thin) solid var(--c-border);
+        border-top-left-radius: var(--radius-control);
+        border-top-right-radius: var(--radius-control);
+        border-bottom-right-radius: var(--radius-control);
+        border-bottom-left-radius: var(--radius-control);
+        background-color: var(--c-surface);
+        transition: border-color var(--transition-1);
+    }
+
+    /* the same box while typing, with an invalid value (keep it clearly "error") and disabled */
+    .ui-text-input-control:focus-within { border-color: var(--c-accent); }
+    .ui-text-input-control:has(.ui-text-input-field[aria-invalid="true"]) { border-color: var(--c-danger); }
+    .ui-text-input-control:has(.ui-text-input-field:disabled) { background-color: var(--c-surface-muted); }
+    .ui-text-input-field:disabled { color: var(--c-muted); -webkit-text-fill-color: var(--c-muted); }
+
+    /* DISABLED LABEL — the label and the "*" of a disabled field use the secondary text colour.
+       Disabled = state INACTIVE, or inside a disabled fieldset (e.g. ContentGroup disabled:true); :has() looks for a
+       disabled input inside the wrapper. "(Optional)" and the help text are already --c-muted; the error stays red.
+       To change the colour, edit these two lines (a plain .ui-text-input-label rule elsewhere cannot override them). */
+    .ui-text-input-wrapper:has(.ui-text-input-field:disabled) .ui-text-input-label { color: var(--c-muted); }
+    .ui-text-input-wrapper:has(.ui-text-input-field:disabled) .ui-text-input-mandatory { color: var(--c-muted); }
+
+    .ui-text-input-field { color:var(--c-text); font-size:var(--fs-control); }
+    .ui-text-input-help { color:var(--c-muted); font-size:var(--fs-label); line-height:var(--lh-body); }
+    .ui-text-input-error { color:var(--c-danger-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-body); }
+    .ui-text-input-view-value { color:var(--c-text); font-size:var(--fs-control); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-text-input-wrapper { gap:var(--gap-tight); margin-block-end:var(--gap-section); }
+    .ui-text-input-label { gap:var(--gap-inline-items); }
+    .ui-text-input-control { min-block-size:var(--control-height); }
+    /* control height minus the control's top and bottom border widths (part 1) */
+    .ui-text-input-field { min-block-size:calc(var(--control-height) - (2 * var(--border-thin))); }
+    .ui-text-input-field { padding:var(--padding-control); }
+    .ui-text-input-icon-area { padding-inline:var(--gap-tight); }
+
+    /* width option */
+    .ui-text-input-width-small { inline-size:var(--percentage-s); }
+    .ui-text-input-width-medium { inline-size:var(--percentage-m); }
+    .ui-text-input-width-large { inline-size:var(--percentage-l); }
+    .ui-text-input-width-full { inline-size:var(--percentage-full); }
+    .ui-text-input-width-fit-content { inline-size:fit-content; }
+    .ui-text-input-width-fit-content .ui-text-input-control,
+    .ui-text-input-width-fit-content .ui-text-input-field { inline-size:auto; }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-text-input-wrapper { display:grid; min-inline-size:0; max-inline-size:var(--percentage-full); }
+    .ui-text-input-label { display:flex; align-items:center; margin-block-end:0; }
+
+    .ui-text-input-control { display:flex; align-items:center; inline-size:100%; min-inline-size:0; }
+
+    /* the typed text has no border or background of its own: the box around it (.ui-text-input-control) draws them */
+    .ui-text-input-field { box-sizing:border-box; flex:1 1 auto; inline-size:100%; min-inline-size:0;
+      border:0; outline:0; border-radius:inherit; background:transparent; }
+
+    /* Common trailing area: static icon or interactive child component. */
+    .ui-text-input-icon-area { display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+    .ui-text-input-icon-area:empty { display:none; }
+    .ui-text-input-static-icon { display:block; }
+    .ui-text-input-icon-button-host { display:flex; align-items:center; justify-content:center; }
+
+    .ui-text-input-view-value { margin:0; }
+
+    /* Number spinner */
+    .ui-text-input-number-no-spinner::-webkit-inner-spin-button,
+    .ui-text-input-number-no-spinner::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+    .ui-text-input-number-no-spinner { -moz-appearance:textfield; appearance:textfield; }
+
+    @media (max-width:768px) { .ui-text-input-wrapper { max-inline-size:100%; } }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and field: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        /* label on the left with width SMALL / MEDIUM / LARGE: the row keeps the full width and the option sizes the field
+           column (a share of the row, never more than the room beside the label) */
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start).ui-text-input-width-small { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-s), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start).ui-text-input-width-medium { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-m), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start).ui-text-input-width-large { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-l), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-text-input-wrapper:not(.ui-text-input-label-top), .ui-text-input-wrapper.ui-text-input-label-start) > .ui-text-input-label { grid-column:1; float:inline-start; margin:0; align-self:center; }
+    }
+}

@@ -1,0 +1,8 @@
+/* overrides.css — your corrections of component styles, in the "overrides" layer (it always wins over "components").
+   Prefer changing tokens in ui-catalog/design-system.css; use this file for what tokens cannot express.
+   Never edit the files in ui-catalog/components-js: the integrity check reports such changes. Example:
+
+@layer overrides {
+    .ui-button-primary { text-transform:uppercase; }
+}
+*/

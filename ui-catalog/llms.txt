@@ -1,0 +1,50 @@
+# UI Catalog
+
+> Plain JavaScript components that AI tools configure, not rewrite: the same behaviour on every screen. Thirty components (ES modules and CSS, no framework, no build step), each with a README contract whose every requirement has a test case.
+
+Read AGENTS.md first: its rules win over everything else. Import only from each component's xIndex.js; configure through options, texts and callbacks; never change the component files.
+
+## Read first
+
+- [AGENTS.md](AGENTS.md): rules, quick reference, a table for choosing components
+- [How to use the framework](source/components-js/how-to-use-the-framework.md): loading, rendering, callbacks, forms, React/Vue/Svelte
+- [How to build a design system](source/components-js/how-to-build-a-design-system.md): adapting the tokens to a brand
+- [Component development guidelines](source/components-js/framework-component-development-guidelines.md): creating or changing a component
+
+## Components
+
+- [Accordion](source/components-js/accordion/accordionREADME.md): Accordion stacks several sections of which only the titles are visible; the user opens a section to read or edit its content, such as frequently asked questions, the parts of a settings page or the steps of a long form.
+- [ActionMenu](source/components-js/actionMenu/actionMenuREADME.md): ActionMenu is the small "more" button (three dots) that opens a short list of actions, such as Edit, Duplicate, Download or Delete.
+- [AppHeader](source/components-js/appHeader/appHeaderREADME.md): AppHeader is the top area of every application page.
+- [Badge](source/components-js/badge/badgeREADME.md): Badge shows who someone is (or what something is) at a glance: a picture, initials or icon — with an optional marker such as an "online" dot or a count — next to a name and an optional role or description.
+- [Breadcrumbs](source/components-js/breadcrumbs/breadcrumbsREADME.md): Breadcrumbs show where the user is in the application, as a path from the top level to the current page (e.g. Home › Customers › Northwind › Contracts).
+- [Button](source/components-js/button/buttonREADME.md): Button lets a user start an action, such as saving, submitting a form or opening a dialog.
+- [Calendar](source/components-js/calendar/calendarREADME.md): Calendar is the field for dates and times: a date, a time, a date with time, a month, a week, or a period from one date (or date and time) to another.
+- [CheckboxRadio](source/components-js/checkboxRadio/checkboxRadioREADME.md): CheckboxRadio shows a fixed list of options from which the user picks exactly one (radio buttons) or any number (checkboxes).
+- [Chip](source/components-js/chip/chipREADME.md): Chip is a compact label for short information such as a status, a category, a count or an applied filter.
+- [CollapsiblePanel](source/components-js/collapsiblePanel/collapsiblePanelREADME.md): CollapsiblePanel groups related content under a titled header that the user can open and close.
+- [ContentGroup](source/components-js/contentGroup/contentGroupREADME.md): ContentGroup is a framed block that groups related content the user perceives as one unit: "Personal data", "Address", "Usage settings" or "Important information".
+- [CopyArea](source/components-js/copyArea/copyAreaREADME.md): CopyArea shows content with a Copy button that puts it on the clipboard in one click: code, a value such as an IBAN or an API key, or formatted content such as a standard reply or a table.
+- [Form](source/components-js/form/formREADME.md): Form turns a set of input fields into one unit the user can submit, or into a filter panel that updates results.
+- [Loader](source/components-js/loader/loaderREADME.md): Loader shows that a long action is running (an upload, an export, a report, a server check) and, when the application knows it, how far it has got.
+- [Message](source/components-js/message/messageREADME.md): Message tells users something about the system or their work: that something succeeded, needs attention, failed, or is simply useful to know.
+- [Notification](source/components-js/notification/notificationREADME.md): Notification is a small round element — an icon, a picture or a short text — with an optional marker in one corner that draws attention: a number ("3 new messages"), a coloured dot ("online", "something new") or a short word ("NEW").
+- [NotificationsPanel](source/components-js/notificationsPanel/notificationsPanelREADME.md): NotificationsPanel is the bell that tells users something new happened — and, when they click it, shows the latest notifications in a small panel: "Order ORD-1042 was paid", "Ana approved your invoice".
+- [Pagination](source/components-js/pagination/paginationREADME.md): Pagination lets the user move through long lists (orders, customers, search results) page by page.
+- [SearchBox](source/components-js/searchBox/searchBoxREADME.md): SearchBox is the field where a user types what to look for.
+- [Select](source/components-js/select/selectREADME.md): Select lets a user choose one option, or several, from a predefined list: a country, a role, product colours.
+- [SideNavigation](source/components-js/sideNavigation/sideNavigationREADME.md): SideNavigation is the application's main menu at the side of the screen.
+- [Stepper](source/components-js/stepper/stepperREADME.md): Stepper shows a task split into ordered steps: where the user is, what is done and what is left.
+- [Table](source/components-js/table/tableREADME.md): Table shows lists of records (orders, customers, invoices) in rows and columns.
+- [TextArea](source/components-js/textArea/textAreaREADME.md): TextArea is a multi-line field for free text such as comments, descriptions, notes or reasons.
+- [TextInput](source/components-js/textInput/textInputREADME.md): TextInput is a single-line field where the user types a value: text, e-mail address, password, web address, phone number or number.
+- [Toggle](source/components-js/toggle/toggleREADME.md): Toggle captures one yes/no decision.
+- [Tooltip](source/components-js/tooltip/tooltipREADME.md): Tooltip shows a short text next to an element when the user points at it or reaches it with the keyboard: the name of an icon-only button ("Delete"), the full text of a cut-off name, or a short explanation ("Fill in the required fields first").
+- [TopNavigation](source/components-js/topNavigation/topNavigationREADME.md): TopNavigation is the application's main navigation as a horizontal bar, usually inside the page header.
+- [TreeView](source/components-js/treeView/treeViewREADME.md): TreeView shows information that has parents and children — folders and files, departments and people, categories and products — as a list the user opens level by level.
+- [UploadFiles](source/components-js/uploadFiles/uploadFilesREADME.md): UploadFiles lets the user add files to a form: an invoice, a contract, photos of a damage, a profile picture.
+
+## Optional
+
+- [llms-full.txt](llms-full.txt): all of the above in one file
+- [DEPENDENCIES.md](DEPENDENCIES.md): browsers, fonts, icons and tools

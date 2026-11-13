@@ -1,0 +1,159 @@
+/* ==========================================================================
+   topNavigation.css
+
+   Default generated DOM:
+
+   <nav id="top-nav" class="ui-top-nav ui-top-nav-current-{underline|pill|tab}" aria-label="Main">
+     <span class="ui-top-nav-menu-host"> → Button (menu, below 48rem) </span>
+     <ul class="ui-top-nav-bar">
+       <li class="ui-top-nav-item [ui-top-nav-current-branch]" data-top="0">
+         <a class="ui-top-nav-link" href="/dashboard" [aria-current="page"]>…label…</a>                       (link)
+         (parent without own page: <button class="ui-top-nav-link ui-top-nav-trigger" aria-expanded aria-controls>…<span class="ui-top-nav-chevron"></span></button>)
+         (parent with own page: link + <button class="ui-top-nav-toggle" aria-expanded aria-controls aria-label="Projects pages">)
+         <div id="top-nav-p0" class="ui-top-nav-panel ui-top-nav-panel-{list-style|mega}" hidden>
+           LIST: <ul class="ui-top-nav-panel-list"><li><a class="ui-top-nav-entry">…</a></li><li class="ui-top-nav-group">…</li></ul>
+           MEGA: <div class="ui-top-nav-column"><p class="ui-top-nav-group-label">…</p><ul>…entries with descriptions…</ul></div> …
+         </div>
+       </li>
+       <li class="ui-top-nav-item ui-top-nav-more" hidden><button class="ui-top-nav-link ui-top-nav-trigger ui-top-nav-more-button">More</button><div class="ui-top-nav-panel …">…</div></li>
+     </ul>
+     <div id="top-nav-mobile" class="ui-top-nav-mobile" hidden><ul class="ui-top-nav-mobile-list">…expandable sections…</ul></div>
+   </nav>
+
+   Current page styles share one logic (aria-current on the page, .ui-top-nav-current-branch on its top item):
+   UNDERLINE (accent bar under the item), PILL (soft rounded background), TAB (raised tab joined to the bar's line).
+   Under the pointer each style uses its own shape (decision 190): UNDERLINE a muted bar under the item (no background),
+   PILL the same pill shape and wider side padding as the current item, TAB square bottom corners like the tab.
+   "More" is emphasized with an outlined pill. Panels open below their item, MEGA too (decision 191), moved to end alignment when they do not fit.
+   Below 48rem (a literal: custom properties cannot be used in media queries) the bar is replaced by the menu Button
+   and the expandable panel. Chevrons are drawn with borders; rotate()/scale() values are geometric; z-index 10 keeps
+   panels above page content.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font, normal weight and text size */
+    .ui-top-nav { font-family:var(--font-ui); font-weight:var(--fw-ui); font-size:var(--fs-control); }
+    /* top-level links and dropdown buttons: corners, text; the small arrow button of a split item; under the pointer; disabled */
+    .ui-top-nav-link, .ui-top-nav-toggle { font:inherit; border:0; background-color:transparent; border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); color:var(--c-text); }
+    .ui-top-nav-toggle { color:var(--c-muted); }
+    .ui-top-nav-link:hover, .ui-top-nav-toggle:hover { background-color:var(--c-surface-hover); }
+    .ui-top-nav-disabled { opacity:var(--opacity-disabled); }
+    /* icon, description, badge, external-link mark, arrow motion; the "More" button */
+    .ui-top-nav-icon { color:var(--c-muted); }
+    .ui-top-nav-description { color:var(--c-muted); font-size:var(--fs-caption); }
+    .ui-top-nav-badge { border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); background-color:var(--c-accent); color:var(--c-on-accent); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); }
+    .ui-top-nav-external { color:var(--c-muted); font-size:var(--fs-caption); }
+    .ui-top-nav-chevron { transition:transform var(--transition-1); }
+    .ui-top-nav-more-button { border-top:var(--border-thin) solid var(--c-accent); border-right:var(--border-thin) solid var(--c-accent); border-bottom:var(--border-thin) solid var(--c-accent); border-left:var(--border-thin) solid var(--c-accent); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); color:var(--c-accent); font-weight:var(--fw-ui-strong); }
+    /* current page: bold, then one of UNDERLINE / PILL / TAB (currentStyle) */
+    .ui-top-nav-current-branch > .ui-top-nav-link, .ui-top-nav-current-branch > .ui-top-nav-trigger { font-weight:var(--fw-ui-strong); }
+    .ui-top-nav-current-underline .ui-top-nav-current-branch::after { block-size:var(--border-thick); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); background-color:var(--c-accent); }
+    .ui-top-nav-current-pill .ui-top-nav-current-branch > .ui-top-nav-link, .ui-top-nav-current-pill .ui-top-nav-current-branch > .ui-top-nav-trigger { border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); background-color:var(--c-selected); }
+    .ui-top-nav-current-tab .ui-top-nav-bar { border-bottom:var(--border-thin) solid var(--c-border); }
+    .ui-top-nav-current-tab .ui-top-nav-current-branch { margin-block-end:calc(-1 * var(--border-thin)); border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-bottom-color:var(--c-surface); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); background-color:var(--c-surface); }
+    .ui-top-nav-current-tab .ui-top-nav-current-branch > .ui-top-nav-link, .ui-top-nav-current-tab .ui-top-nav-current-branch > .ui-top-nav-trigger { color:var(--c-accent); }
+    .ui-top-nav-current-branch.ui-top-nav-more .ui-top-nav-more-button { background-color:var(--c-selected); }
+    /* under the pointer, per currentStyle: UNDERLINE a muted bar instead of the background; PILL the pill shape of the
+       current item; TAB square bottom corners like the tab */
+    .ui-top-nav-current-underline .ui-top-nav-link:not(.ui-top-nav-more-button):hover, .ui-top-nav-current-underline .ui-top-nav-toggle:hover { background-color:transparent; }
+    .ui-top-nav-current-underline .ui-top-nav-item:not(.ui-top-nav-current-branch, .ui-top-nav-more):has(> .ui-top-nav-link:not(.ui-top-nav-disabled):hover, > .ui-top-nav-toggle:hover)::after { block-size:var(--border-thick); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); background-color:var(--c-muted); }
+    .ui-top-nav-current-pill .ui-top-nav-link, .ui-top-nav-current-pill .ui-top-nav-toggle { border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); }
+    .ui-top-nav-current-tab .ui-top-nav-link, .ui-top-nav-current-tab .ui-top-nav-toggle { border-bottom-right-radius:0; border-bottom-left-radius:0; }
+    /* dropdown panels: border, corners, background, shadow; entries; group labels; separator line */
+    .ui-top-nav-panel { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); box-shadow:var(--shadow-md); }
+    .ui-top-nav-entry { border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); color:var(--c-text); }
+    .ui-top-nav-entry:hover { background-color:var(--c-surface-hover); }
+    .ui-top-nav-entry[aria-current="page"] { background-color:var(--c-selected); font-weight:var(--fw-ui-strong); }
+    .ui-top-nav-group-label { color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); text-transform:uppercase; }
+    .ui-top-nav-separator { border-top:var(--border-thin) solid var(--c-border); }
+    /* narrow screens: the expandable panel, its links and group labels */
+    .ui-top-nav-mobile { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); background-color:var(--c-surface); box-shadow:var(--shadow-md); }
+    .ui-top-nav-mobile-link { font:inherit; border:0; background-color:transparent; border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); color:var(--c-text); }
+    .ui-top-nav-mobile-link[aria-current="page"] { background-color:var(--c-selected); font-weight:var(--fw-ui-strong); }
+    .ui-top-nav-mobile-group { color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); text-transform:uppercase; }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* gaps, item heights (touch height on narrow screens) and paddings, badge and arrow sizes, panel widths, mega-menu columns */
+    .ui-top-nav-bar { column-gap:var(--gap-tight); }
+    .ui-top-nav-link, .ui-top-nav-toggle { gap:var(--gap-tight); min-block-size:var(--control-height); padding:0 var(--gap-inline-items); }
+    .ui-top-nav-toggle { padding:0 var(--gap-tight); margin-inline-start:calc(-1 * var(--gap-tight)); }
+    .ui-top-nav-badge { min-inline-size:var(--icon-size-large); padding:0 var(--gap-tight); }
+    .ui-top-nav-chevron { inline-size:var(--space-sm-3); block-size:var(--space-sm-3); }
+    .ui-top-nav-current-underline .ui-top-nav-item::after { inset-inline:var(--gap-inline-items); }
+    /* PILL: wider side padding, the same for every top-level item, so the hover pill and the current pill match */
+    .ui-top-nav-current-pill .ui-top-nav-link { padding:0 var(--space-md-3); }
+    .ui-top-nav-panel { min-inline-size:var(--size-md-2); padding:var(--gap-tight); }
+    .ui-top-nav-entry { gap:var(--gap-inline-items); min-block-size:var(--control-height); padding:var(--gap-tight) var(--gap-inline-items); }
+    .ui-top-nav-group-label { padding:var(--gap-tight) var(--gap-inline-items); }
+    .ui-top-nav-separator { margin:var(--gap-tight) 0; }
+    /* MEGA: as wide as its columns (one per group, at least --size-md-1 each), at most --size-lg-4 and the window width */
+    .ui-top-nav-panel-mega { inline-size:max-content; max-inline-size:min(var(--size-lg-4), calc(100vw - 2 * var(--gap-block))); grid-template-columns:repeat(auto-fit,minmax(var(--size-md-1),1fr)); gap:var(--gap-block); padding:var(--gap-block); box-sizing:border-box; }
+    .ui-top-nav-mobile { padding:var(--gap-tight); }
+    .ui-top-nav-mobile-link { gap:var(--gap-inline-items); min-block-size:var(--control-height-touch); padding:0 var(--gap-inline-items); }
+    .ui-top-nav-mobile-sub { padding-inline-start:var(--gap-block); }
+    .ui-top-nav-mobile-group { padding:var(--gap-tight) var(--gap-block); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-top-nav { position:relative; display:flex; align-items:center; min-inline-size:0; inline-size:100%; }
+    .ui-top-nav-menu-host { display:none; }
+    .ui-top-nav-bar { display:flex; flex:1 1 auto; align-items:stretch; min-inline-size:0; margin:0; padding:0; list-style:none; }
+    /* no overflow clipping: dropdowns hang below; overflow goes to "More" */
+    .ui-top-nav-item { position:relative; display:flex; flex:0 0 auto; align-items:center; }
+    .ui-top-nav-item[hidden] { display:none; }
+    .ui-top-nav-link, .ui-top-nav-toggle { display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; cursor:pointer; }
+    .ui-top-nav-link:focus-visible, .ui-top-nav-toggle:focus-visible, .ui-top-nav-entry:focus-visible, .ui-top-nav-mobile-link:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-top-nav-disabled { cursor:not-allowed; }
+    .ui-top-nav-icon { display:inline-flex; }
+    .ui-top-nav-text { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-top-nav-description { white-space:normal; }
+    .ui-top-nav-badge { text-align:center; }
+    .ui-top-nav-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    /* the arrow is drawn with two borders and turned; logical sides on purpose (they follow the text direction) */
+    .ui-top-nav-chevron { border-inline-end:var(--border-thin) solid currentColor; border-block-end:var(--border-thin) solid currentColor; transform:scale(0.7) rotate(45deg); }
+    [aria-expanded="true"] > .ui-top-nav-chevron { transform:scale(0.7) rotate(225deg); }
+    /* Current page styles */
+    .ui-top-nav-current-underline .ui-top-nav-current-branch::after { content:''; position:absolute; inset-block-end:0; }
+    .ui-top-nav-current-underline .ui-top-nav-item:not(.ui-top-nav-current-branch, .ui-top-nav-more):has(> .ui-top-nav-link:not(.ui-top-nav-disabled):hover, > .ui-top-nav-toggle:hover)::after { content:''; position:absolute; inset-block-end:0; }
+    /* Dropdown panels */
+    .ui-top-nav-panel { position:absolute; inset-block-start:100%; inset-inline-start:0; z-index:10; max-block-size:70vh; overflow-y:auto; }
+    .ui-top-nav-panel[hidden] { display:none; }
+    .ui-top-nav-panel-end { inset-inline-start:auto; inset-inline-end:0; }
+    .ui-top-nav-panel-list { margin:0; padding:0; list-style:none; }
+    .ui-top-nav-entry { display:flex; align-items:center; text-decoration:none; box-sizing:border-box; }
+    .ui-top-nav-group-label { display:block; margin:0; }
+    .ui-top-nav-separator { block-size:0; }
+    .ui-top-nav-panel-mega { display:grid; }
+    /* Narrow screens: menu Button and expandable panel */
+    .ui-top-nav-mobile { position:absolute; inset-block-start:100%; inset-inline:0; z-index:10; max-block-size:80vh; overflow-y:auto; }
+    .ui-top-nav-mobile[hidden], .ui-top-nav-mobile-list[hidden] { display:none; }
+    .ui-top-nav-mobile-list { margin:0; padding:0; list-style:none; }
+    .ui-top-nav-mobile-link { display:flex; align-items:center; inline-size:100%; text-align:start; text-decoration:none; cursor:pointer; box-sizing:border-box; }
+    .ui-top-nav-mobile-link .ui-top-nav-chevron { margin-inline-start:auto; }
+    /* below 48rem the bar is replaced by the menu Button (48rem is a literal: custom properties cannot be used in media queries) */
+    @media (max-width:48rem) {
+        .ui-top-nav-bar { display:none; }
+        .ui-top-nav-menu-host { display:inline-flex; }
+    }
+    @media (prefers-reduced-motion:reduce) { .ui-top-nav-chevron { transition:none; } }
+}

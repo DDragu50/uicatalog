@@ -1,0 +1,109 @@
+/* ==========================================================================
+   chip.css
+
+   Default generated DOM:
+
+   <span class="ui-chip chip-custom"
+         style="--ui-chip-custom-bg:var(--c-surface-muted);--ui-chip-custom-color:var(--c-text)">
+       <i class="..." aria-hidden="true"></i>
+       <span class="ui-chip-label"><b>Role:</b> Admin</span>
+       <button type="button" class="ui-chip-remove" data-chip-remove="role"
+               aria-label="Remove Role: Admin">
+           <span aria-hidden="true">&times;</span>
+       </button>
+   </span>
+
+   Conditional structures:
+   - .ui-chip-custom maps configured design-system tokens to Chip colors;
+   - .ui-chip-success, .ui-chip-warning, .ui-chip-danger and .ui-chip-info use predefined semantic tokens;
+   - <i class="ui-chip-icon-before …"> exists only when iconBefore is configured, <i class="ui-chip-icon-after …"> only when
+     iconAfter is configured; both are decorative, follow the chip text colour and size, and sit at the logical start / end
+     (mirrored in right-to-left); order: icon before, label, icon after, remove button;
+   - .ui-chip-bordered exists when bordered=true;
+   - .ui-chip-remove exists only when removable=true;
+   - .ui-chip-list wraps Chips only when renderChips() manages the collection.
+
+   Shared tag look: --tag-* in design-system.css (size, weight, corners, border width, padding, gap). A CUSTOM chip
+   gets its colours from the configuration: the component writes --ui-chip-custom-bg / --ui-chip-custom-color on
+   the chip (style attribute); they are the only variables left.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   ui-catalog source and client/local-styling use this file with the app look; client/showcase-styling keeps
+   the original values, which the lines marked [APP] name in brackets (library / original).
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* every chip: tag look (design-system.css --tag-*), default colours (type DEFAULT) */
+    .ui-chip {
+        border-top: var(--tag-border-width) solid transparent;
+        border-right: var(--tag-border-width) solid transparent;
+        border-bottom: var(--tag-border-width) solid transparent;
+        border-left: var(--tag-border-width) solid transparent;
+        border-top-left-radius: var(--tag-radius);
+        border-top-right-radius: var(--tag-radius);
+        border-bottom-right-radius: var(--tag-radius);
+        border-bottom-left-radius: var(--tag-radius);
+        background-color: var(--c-surface-muted);
+        color: var(--c-text);
+        font-family: var(--font-ui);
+        font-size: var(--tag-font-size);
+        font-weight: var(--tag-font-weight);
+        line-height: var(--tag-line-height);
+    }
+
+    /* colours per type: background and text */
+    .ui-chip-custom { background-color: var(--ui-chip-custom-bg); color: var(--ui-chip-custom-color); }
+    .ui-chip-success { background-color: var(--c-success-soft); color: var(--c-success-text); }
+    .ui-chip-warning { background-color: var(--c-warning-soft); color: var(--c-warning-text); }
+    .ui-chip-danger { background-color: var(--c-danger-soft); color: var(--c-danger-text); }
+    .ui-chip-info { background-color: var(--c-info-soft); color: var(--c-info-text); }
+
+    /* bordered: border colour per type */
+    .ui-chip-bordered { border-color: var(--c-text); }
+    .ui-chip-bordered.ui-chip-custom { border-color: var(--ui-chip-custom-color); }
+    .ui-chip-bordered.ui-chip-success { border-color: var(--c-success-border); }
+    .ui-chip-bordered.ui-chip-warning { border-color: var(--c-warning-border); }
+    .ui-chip-bordered.ui-chip-danger { border-color: var(--c-danger-border); }
+    .ui-chip-bordered.ui-chip-info { border-color: var(--c-info-border); }
+
+    /* highlighted part of the label (search match) */
+    .ui-chip-label b { font-weight: var(--fw-ui-emphasis); }
+
+    /* remove button "×": corners, size, faded at rest, tinted background under the pointer */
+    .ui-chip-remove { border-top-left-radius: var(--tag-radius); border-top-right-radius: var(--tag-radius); border-bottom-right-radius: var(--tag-radius); border-bottom-left-radius: var(--tag-radius); font-size: var(--fs-label); opacity: var(--opacity-muted); }
+    .ui-chip-remove:hover { background-color: color-mix(in srgb, currentColor 15%, transparent); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-chip-list { gap: var(--tag-gap); }                                         /* between chips */
+    .ui-chip { gap: var(--tag-gap); padding-block: var(--tag-padding-block); padding-inline: var(--tag-padding-inline); }
+    .ui-chip:has(.ui-chip-remove) { padding-inline-end: var(--space-sm-1); }       /* after the remove button */
+    .ui-chip-remove { inline-size: var(--space-lg-1); block-size: var(--space-lg-1); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-chip-list { display:flex; flex-wrap:wrap; }
+    .ui-chip { display:inline-flex; align-items:center; max-inline-size:100%; }
+    .ui-chip-label { min-inline-size:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    /* icons: .9em is a proportion of the chip text */
+    .ui-chip > i { flex-shrink:0; font-size:.9em; }
+    .ui-chip-remove { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; padding:0; border:0; background-color:transparent; color:inherit; line-height:1; cursor:pointer; }
+    .ui-chip-remove:hover { opacity:1; }
+    .ui-chip-remove:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); opacity:1; }
+}

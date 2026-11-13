@@ -1,0 +1,338 @@
+/* ==========================================================================
+   app.css — page layout of the showcase app (not a component)
+
+   Text: only typography roles (--font-/--fs-/--fw-/--lh-<role>, see "TEXT ROLES" in design-system.css); running text
+   inherits the body role and gets no size of its own here.
+   Uses only tokens from local-styling/design-system.css and the cascade layers declared there
+   (layout, and base for the few app-only element rules); it never redeclares the layer list. Loaded after local-styling/app-shell.css
+   (reset and text styles of bare elements) and the component stylesheets. App classes use the
+   prefix "app-"; "ui-" belongs to the components. Component internals are never styled here:
+   the only component class used is .ui-side-nav-rail, to size the side area around the rail, plus
+   .ui-button in the OVERRIDES layer at the end (Home FAQ list).
+   Sections: BASE (what is particular to this app), then the layout of the shell and the pages.
+
+   Page structure (index.html + router). The header background spans the window; header content, menu,
+   page and Customize column sit inside the working area (--workspace-gutter on both sides):
+
+   <div id="app-header-host"> → AppHeader (skip link, logo and name, search, breadcrumbs; top level sticky) </div>
+   <div class="app-layout">                          working area: menu column | page column
+
+     <div id="app-side-host" class="app-side"> → SideNavigation </div>
+     <main id="main" class="app-main">
+       <div id="app-page-host" class="app-page-host">
+         <div class="app-page">
+           <div class="app-reading"> page content: .app-markdown, .app-toolbar, .app-panel-list, .app-facts … </div>
+         </div>
+       </div>
+     </main>
+   </div>
+   <footer id="app-footer" class="app-footer"> p.app-footer-text: copyright icon + year and author (LinkedIn link) + MIT licence link </footer>
+   The body is a column (header, working area, footer): the working area grows, so the footer is at the bottom of the
+   screen when the content is short and after the content otherwise; the menu and right-column lines reach its top line.
+
+   Generated Markdown (.app-markdown): h1–h6, p, ul/ol, blockquote, hr, inline code, links,
+   .app-markdown-code > (.app-markdown-code-language) + pre > code, .app-markdown-table > table; on README pages the pre
+   is replaced by .app-markdown-copy → CopyArea (diagrams with ├ └ │ keep the pre),
+   cell alignment classes .app-markdown-align-center / .app-markdown-align-end.
+
+   Component page (componentPage.js), wide screens: a third column, the Customize section, starts at the
+   header's bottom line like the menu (menu: right border only; Customize: left border only):
+   <div class="app-component">
+     <div class="app-component-main"> h1, .app-component-keywords (Chips, not clickable), .app-lead,
+       .app-facts (uses, used by), .app-definition (README summary),
+       .app-component-section × 2–3: live example (.app-preview.app-live-preview > iframe.app-preview-frame, .app-output-host),
+       states (when the adjustment file has states: p, .app-preview.app-states-preview > iframe),
+       README summary (section.app-readme-summary: .app-readme-part × 3 = h2 + .app-markdown ("When to use", "Key features", "Dependencies"),
+       p.app-readme-more: text + secondary Button "xREADME.md" opening the README page; below 960px also
+       p.app-readme-more.app-variants-more: text + secondary Button "Show variants" opening the Variants page) </div>
+     <aside class="app-component-side">   (wide only)
+       .app-variants-intro (area 1: p.app-variants-intro-text left + icon Button top right, bottom line; sticky)
+       .app-customize-host[hidden until opened] → .app-customize (header sticky below area 1, no bottom line; fields) </aside>
+   </div>
+   README page (documentPage.js), same columns as the component page:
+   <div class="app-columns app-document">
+     <div class="app-columns-main"> header.app-document-header (.app-document-title: h1 file name, visually hidden + p.app-md-source path;
+       .app-document-actions: Return to the component, Download .md / .pdf) + .app-markdown.app-document-content </div>
+     <aside class="app-columns-side app-document-contents"> nav.app-toc (every heading, nested ul.app-toc-parts) </aside>
+   </div>
+   Printing it (Download .pdf) shows only the content.
+   Home page (homePage.js): .app-reading-full.app-home > .app-markdown.app-home-intro (home.md before its columns marker:
+   title, tagline, repositories), .app-home-columns: .app-markdown.app-home-concepts (Core concepts) |
+   section.app-home-faqs (h2 "FAQs", .app-home-faq-host → Accordion: per question div.app-home-faq-answer (Markdown), a CopyArea with a prompt for AI tools when the FAQ has one, and a Button
+   opening the guide's .md file).
+   Search page (searchPage.js): .app-search > h1, section.app-search-section × 2: 1. h2, SearchBox, keyword chips,
+   summary, results Table; 2. h2, .app-panel-list of compact group panels > .app-component-list (name + definition,
+   .app-component-keywords Chips).
+   The component README and the guidelines start with their source line .app-md-source (path + ".md Reader" Button).
+   Customize page: .app-customize-page > .app-customize-host. Search page: .app-search.
+   The customization panel re-points --fs-control, --fs-label and --control-height (token contract, cssREADME.md)
+   so its inputs use smaller text; the menu re-points --fs-control the same way; the component rules are not touched.
+
+   Deliberate literals:
+   - 100vh / 100dvh: height of the side area below the sticky header (viewport unit, layout literal);
+   - 48rem: SideNavigation's drawer breakpoint (the side area gives up its column below it);
+   - 680px: the design system's typography breakpoint (cssREADME.md);
+   - 960px / 961px: the design system's shell breakpoint; below it the customization panel moves to its own page;
+   - z-index 1: keeps the panel header (Render) above the scrolling inputs of the panel;
+   - 0.9em: inline code proportion relative to the surrounding text.
+   ========================================================================== */
+
+/* === BASE ====================================================================
+   Reset and bare-element typography (body, h1–h6, p, code, links) are in local-styling/app-shell.css; the
+   family and weight of each element are the typography roles in local-styling/design-system.css
+   (--font-body / --fw-body, --font-h1…h6 / --fw-h1…h6, --font-p / --fw-p, --font-code).
+   Only what is particular to this app stays here.
+   ============================================================================ */
+@layer base {
+    /* the app fills the window: header, working area (grows), footer; so the footer sits at the bottom of the screen when the
+       content is shorter (not in app-shell.css: the live-example frame grows with its content) */
+    body { display:flex; flex-direction:column; min-block-size:100vh; min-block-size:100dvh; }
+}
+
+@layer layout {
+    /* --- Shell: side area and main area ------------------------------------ */
+    /* grows to the footer; the columns stretch, so the menu's and the right column's lines reach the footer's top line */
+    .app-layout { --app-side-width:var(--size-md-2); flex:1 0 auto; display:grid; grid-template-columns:auto minmax(0,1fr); padding-inline:var(--workspace-gutter); }
+    /* Menu column: right border only, starting at the header's bottom line.
+       Menu text uses the Customize section's size: --fs-control re-pointed to --fs-label (14px).
+       To change it: point --fs-control at another size role (e.g. var(--fs-caption) = 12px);
+       to change the row height, add --control-height (e.g. var(--space-xl-1) = 32px, the Customize inputs). */
+    .app-side { --fs-control:var(--fs-label); position:sticky; inset-block-start:var(--page-sticky-offset); 
+         inline-size:var(--app-side-width); 
+         max-block-size:calc(100vh - var(--page-sticky-offset)); 
+         max-block-size:calc(100dvh - var(--page-sticky-offset)); 
+         border-inline-end:var(--border-thin) solid var(--c-border); background:var(--c-surface); } /* var(--border-thin)  */
+    .app-side:has(.ui-side-nav-rail) { inline-size:auto; }
+    .app-main { display:flex; flex-direction:column; min-inline-size:0; padding:var(--padding-page); }
+    .app-page-host { flex:1 0 auto; display:flex; flex-direction:column; container-type:inline-size; }
+
+    /* --- Page content ------------------------------------------------------- */
+    .app-page { flex:1 0 auto; display:flex; flex-direction:column; gap:var(--gap-block); }
+    .app-reading { display:flex; flex-direction:column; gap:var(--gap-block); max-inline-size:var(--size-lg-4); }
+    .app-reading-full { max-inline-size:none; }   /* home page: the whole width of the page column */
+    .app-form-page { max-inline-size:var(--size-lg-2); }
+    .app-markdown h1 { margin-block-end:var(--gap-toolbar); }
+    .app-lead { color:var(--c-muted); font-family:var(--font-lead); font-size:var(--fs-lead); font-weight:var(--fw-lead); line-height:var(--lh-lead); }   /* text role "lead" */
+    .app-page-message:empty { display:none; }
+
+    /* --- Toolbar (e.g. Expand all / Collapse all) --------------------------- */
+    .app-toolbar { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:var(--gap-toolbar); }
+
+    /* --- Stacked CollapsiblePanels (Search page groups) ----------------------- */
+    .app-panel-list { display:flex; flex-direction:column; gap:var(--gap-toolbar); margin:0; padding:0; list-style:none; }
+
+    /* --- Component lists (Search page, inside the group panels) -------------- */
+    .app-component-list { display:flex; flex-direction:column; gap:var(--gap-section); margin:0; padding:0; list-style:none; }   /* 32px between components, as before the README line */
+    /* Search page, "All components": name (link) and definition in the same size and colour, keyword Chips below */
+    .app-component-list-item { display:flex; flex-direction:column; gap:var(--gap-inline-items); }
+    .app-component-list-text { display:flex; flex-direction:column; gap:var(--gap-tight); color:var(--c-text); }   /* name, definition below; running text: the body role (inherited) */
+    .app-component-list-link, .app-component-list-summary { color:inherit; font-size:inherit; }
+
+    /* --- Uses / used by (component page) ------------------------------------ */
+    .app-facts { display:flex; flex-direction:column; gap:var(--gap-inline-items); margin:0; padding:0; 
+         border:0 solid var(--c-border); border-radius:var(--radius-panel); background:var(--c-surface); }
+    .app-facts-row { display:grid; grid-template-columns:var(--size-md-1) minmax(0,1fr); gap:var(--gap-toolbar); }
+    .app-facts dt { color:var(--c-text); font-weight:var(--fw-ui-strong); }   /* size: the body role (inherited) */
+    .app-facts dd { margin:0; }
+    .app-facts-via { color:var(--c-muted); }   /* "(through CollapsiblePanel)" after an indirect relation */
+    /* definition (README summary) below the list */
+    .app-definition { display:flex; align-items:baseline; gap:var(--gap-inline-items); }
+
+    /* --- Markdown content ---------------------------------------------------- */
+    .app-markdown { min-inline-size:0; overflow-wrap:break-word; }   /* text: the body role (inherited); headings their own roles */
+    .app-markdown > :first-child { margin-block-start:0; }
+    .app-markdown > :last-child { margin-block-end:0; }
+    .app-markdown h2 { margin:var(--gap-section) 0 var(--gap-toolbar); }
+    /* Sections and paragraphs: --gap-section (32px) between them, the space before the README line of the component page */
+    .app-markdown h3 { margin:var(--gap-section) 0 var(--gap-inline-items); }
+    .app-markdown h4, .app-markdown h5, .app-markdown h6 { margin:var(--gap-section) 0 var(--gap-inline-items); }
+    .app-markdown p { margin:0 0 var(--gap-section); }
+    .app-markdown ul, .app-markdown ol { margin:0 0 var(--gap-section); padding-inline-start:var(--space-lg-3); }
+    .app-markdown li { margin-block:var(--gap-tight); }
+    .app-markdown li > ul, .app-markdown li > ol, .app-markdown li > p { margin-block:var(--gap-tight) 0; }
+    .app-markdown blockquote { margin:0 0 var(--gap-section); padding:var(--gap-inline-items) var(--padding-card); border-inline-start:var(--border-heavy) solid var(--c-accent); background:var(--c-surface-alt); }
+    /* README Business analysis: the role definitions under the heading (a block quote) in small, muted text */
+    .app-readme-part .app-markdown blockquote, .app-readme-content blockquote { padding:0; border-inline-start:0; background:transparent; color:var(--c-muted); font-size:var(--fs-caption); }
+    .app-readme-part .app-markdown blockquote p, .app-readme-content blockquote p { margin:0; }
+    .app-markdown hr { margin:var(--gap-block) 0; border:0; border-block-start:var(--border-thin) solid var(--c-border); }
+    .app-markdown code { padding:0 var(--space-sm-2); border-radius:var(--radius-xs); background:var(--c-surface-muted); font-family:var(--font-code); font-size:0.9em; }
+
+    .app-markdown-code { display:flex; flex-direction:column; margin:0 0 var(--gap-section); }
+    .app-markdown-code-language { align-self:flex-start; padding:var(--space-sm-1) var(--gap-inline-items); border-start-start-radius:var(--radius-panel); border-start-end-radius:var(--radius-panel); background:var(--c-code-bg); color:var(--c-code-text); font-family:var(--font-code); font-size:var(--fs-caption); }
+    /* README pages: the code is a CopyArea (decision 189); diagrams (no Copy button) and the language tabs take the same
+       light look, and a tab joins its box */
+    .app-readme-content .app-markdown-code > pre { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); background:var(--copy-area-bg); color:var(--copy-area-color); }
+    .app-readme-content .app-markdown-code-language { position:relative; z-index:1; margin-block-end:calc(-1 * var(--border-thin)); border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); background:var(--copy-area-bg); color:var(--copy-area-color); }
+    .app-markdown-code > pre { margin:0; padding:var(--padding-card); overflow:auto; border-radius:var(--radius-panel); background:var(--c-code-bg); color:var(--c-code-text); font-family:var(--font-code); font-size:var(--fs-label); line-height:var(--lh-body); }
+    .app-markdown-code-language + pre { border-start-start-radius:0; }
+    .app-markdown-code > pre:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .app-markdown-code pre code { padding:0; background:transparent; color:inherit; font-size:inherit; }
+
+    .app-markdown-table { margin:0 0 var(--gap-section); overflow-x:auto; border:var(--border-thin) solid var(--c-border); border-radius:var(--radius-panel); background:var(--c-surface); }
+    .app-markdown-table:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .app-markdown-table table { inline-size:var(--percentage-full); border-collapse:collapse; font-size:var(--fs-label); }
+    .app-markdown-table th, .app-markdown-table td { padding:var(--gap-inline-items) var(--gap-toolbar); border-block-end:var(--border-thin) solid var(--c-border); text-align:start; vertical-align:top; }
+    .app-markdown-table th { background:var(--c-surface-alt); font-weight:var(--fw-ui-strong); white-space:nowrap; }
+    .app-markdown-table tbody tr:last-child td { border-block-end:0; }
+    .app-markdown-table th + th, .app-markdown-table td + td { border-inline-start:var(--border-thin) solid var(--c-border); }
+    .app-markdown-table .app-markdown-align-center { text-align:center; }
+    .app-markdown-table .app-markdown-align-end { text-align:end; }
+
+    /* --- Component page ------------------------------------------------------ */
+    /* Page with a right column (component page: Variants; document page: Contents), same width; the columns reach the footer. */
+    .app-component, .app-columns { --app-customize-width:var(--size-md-3); flex:1 0 auto; display:grid; grid-template-columns:minmax(0,1fr) var(--app-customize-width); gap:var(--gap-section); }
+    .app-component-main, .app-columns-main { display:flex; flex-direction:column; gap:var(--gap-block); min-inline-size:0; }
+    .app-component-section { display:flex; flex-direction:column; gap:var(--gap-toolbar); min-inline-size:0; }
+    .app-definition { margin-block-end:var(--gap-block); }                                  /* after Uses / Used by + definition */
+    .app-component-section:has(> .app-states-preview) { margin-block-end:var(--gap-block); } /* after the states, before README */
+    /* Customize column: left border only, from the header's bottom line, own scroll; the page column gives up its
+       top and end padding on wide screens so the column touches the header and the working area's edge. */
+    .app-component-side, .app-columns-side { position:sticky; inset-block-start:var(--page-sticky-offset); 
+         max-block-size:calc(100vh - var(--page-sticky-offset)); max-block-size:calc(100dvh - var(--page-sticky-offset)); 
+         overflow-y:auto; overscroll-behavior:contain; 
+         border-inline-start:var(--border-thin) solid var(--c-border); background:var(--c-surface); } /* var(--border-thin)  */
+    .app-component-keywords:empty { display:none; }
+    /* Keyword Chips (component page, Search page): static Chips with colorToken --c-muted (text and border softer than
+       the default --c-text), spaced wider than a Chip list */
+    .app-component-keywords { display:flex; flex-wrap:wrap; gap:var(--space-md-1); }   /* 8px, twice the Chip list gap */
+    .app-readme-more.app-variants-more { display:none; }   /* narrow screens only: the Variants line under the README line */
+
+    /* --- Live example frame and output -------------------------------------- */
+    .app-preview { overflow:hidden; block-size:var(--app-preview-box-height,auto); min-block-size:var(--size-md-1); border:0; border-radius:var(--radius-panel); background:var(--c-surface); }   /* live example and states: no frame line */
+    .app-preview-frame { display:block; inline-size:var(--app-preview-width,100%); block-size:var(--app-preview-height,var(--size-md-1)); min-block-size:var(--size-md-1); border:0; transform:scale(var(--app-preview-scale,1)); transform-origin:0 0; }
+    .app-output { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(var(--size-md-2),var(--percentage-full)),1fr)); gap:var(--gap-toolbar); font-size:var(--fs-label); }
+    .app-output-status { grid-column:1 / -1; font-weight:var(--fw-ui-strong); }
+    .app-output-failed .app-output-status { color:var(--c-danger-text); }
+    .app-output-block { min-inline-size:0; }
+    .app-output-title { margin-block-end:var(--gap-tight); color:var(--c-muted); font-size:var(--fs-label); }
+    .app-output-lines { display:flex; flex-direction:column; gap:var(--gap-tight); margin:0; padding:0; list-style:none; }
+    .app-output-lines code { font-family:var(--font-code); font-size:var(--fs-caption); overflow-wrap:anywhere; }
+    .app-output-message code { color:var(--c-danger-text); }
+    .app-output-empty { color:var(--c-muted); }
+
+    /* --- Customization panel (smaller inputs, labels on top) ----------------- */
+    .app-customize { --fs-control:var(--fs-label); --fs-label:var(--fs-caption); --control-height:var(--space-xl-1); display:flex; flex-direction:column; }
+    .app-customize-header { position:sticky; inset-block-start:0; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:var(--gap-toolbar); padding:var(--gap-toolbar) var(--padding-card); border-block-end:var(--border-thin) solid var(--c-border); background:var(--c-surface); }
+    .app-customize-title { font-size:var(--fs-block-title); }
+    .app-customize-fields { display:flex; flex-direction:column; gap:var(--gap-tight); padding:var(--padding-card); }
+    /* Checkbox options (adjustment checkboxes): option text in the panel's control size, same space below as the other inputs. */
+    .app-customize-field-checkbox { margin-block-end:var(--gap-section); font-size:var(--fs-control); }
+    .app-customize-empty { padding:var(--padding-card); color:var(--c-muted); }
+    .app-customize-page .app-customize-host { border:var(--border-thin) solid var(--c-border); border-radius:var(--radius-panel); background:var(--c-surface); }
+
+    /* --- Variants column, area 1: invitation text (as the source line) on the left, the open / close Button at the top
+       right beside it; bottom line; stays at
+       the top of the column; the panel header (Variants, Render) sticks right below it, without its bottom line --- */
+    .app-variants-intro { position:sticky; inset-block-start:0; z-index:2; display:flex; align-items:flex-start; justify-content:space-between; gap:var(--gap-inline-items);
+         padding:var(--gap-toolbar) var(--padding-card); border-block-end:var(--border-thin) solid var(--c-border); background:var(--c-surface); }
+    .app-variants-intro-text { flex:1 1 auto; min-inline-size:0; margin:0; color:var(--c-muted); font-size:var(--fs-caption); }
+    .app-variants-toggle-host { flex:0 0 auto; }   /* the Button at the top right, beside the text */
+    .app-component-side .app-customize-header { inset-block-start:var(--app-variants-intro-height,0px); border-block-end:0; }
+
+    /* --- README summary on the component page: When to use, Key features, Dependencies, then the line with the README Button --- */
+    .app-readme-summary { gap:var(--gap-block); }
+    .app-readme-part h2 { margin-block-end:var(--gap-toolbar); }
+    .app-readme-more { display:flex; flex-wrap:wrap; align-items:center; gap:var(--gap-inline-items); margin:var(--gap-section) 0 0; }   /* more space after the Dependencies table */
+    .app-readme-summary .app-readme-more { justify-content:flex-end; color:var(--c-muted); font-size:var(--fs-caption); }   /* component page: text (muted, caption size) and Button on the right */
+
+    /* --- README page: file name and path on the left, the Buttons on the right; the content below; Contents in the right
+       column (headings nested as in the file); a heading reached from Contents stops below the sticky header --- */
+    .app-document-header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--gap-toolbar); }   /* the path on the Buttons' line */
+    .app-document-title { flex:1 1 0; display:flex; flex-direction:column; gap:var(--gap-inline-items); min-inline-size:0; }   /* the path takes the room left by the Buttons (it wraps), so both stay on one line */
+    .app-document-actions { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:var(--gap-inline-items); margin-inline-start:auto; flex:0 0 auto; }   /* at the end, also when they wrap below the title */
+    .app-document-content :is(h1, h2, h3, h4, h5, h6) { scroll-margin-block-start:calc(var(--page-sticky-offset) + var(--gap-toolbar)); }
+
+    /* --- Source line of a displayed .md file: path (small) on the left, ".md Reader" download on the right --- */
+    .app-md-source { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--gap-inline-items) var(--gap-toolbar); color:var(--c-muted); font-size:var(--fs-caption); }
+    .app-md-source-path { min-inline-size:0; overflow-wrap:anywhere; }
+    .app-md-source-path code { font-family:var(--font-code); }
+
+    /* --- Contents column (document page): links to the headings --- */
+    .app-toc { display:flex; flex-direction:column; gap:var(--gap-toolbar); padding:var(--padding-card); font-size:var(--fs-label); }
+    .app-toc-title { font-size:var(--fs-block-title); }
+    .app-toc-list, .app-toc-parts { display:flex; flex-direction:column; gap:var(--gap-inline-items); margin:0; padding:0; list-style:none; }
+    .app-toc-parts { margin-block-start:var(--gap-inline-items); padding-inline-start:var(--gap-toolbar); }
+    .app-toc-list > li > .app-toc-link { font-weight:var(--fw-ui-strong); }
+    .app-toc-link { color:var(--c-text); text-decoration:none; }
+    .app-toc-link:hover { color:var(--c-accent); text-decoration:underline; }
+
+    /* --- Footer: full width, top line; text aligned with the working area --- */
+    .app-footer { padding:var(--gap-toolbar) var(--workspace-gutter); border-block-start:var(--border-thin) solid var(--c-border); background:var(--c-surface); color:var(--c-text); font-size:var(--fs-label); } /* --c-muted  */
+    .app-footer-text { display:flex; flex-wrap:wrap; align-items:center; gap:var(--gap-inline-items); }
+    .app-footer-link { color:var(--c-link); text-decoration:var(--link-decoration); text-underline-offset:var(--link-underline-offset); }
+    .app-footer-link:hover { color:var(--c-link-hover); }
+
+    /* text only for screen readers (e.g. the README page's h1) */
+    .app-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+
+    /* --- Search page: two sections, one under the other ---------------------- */
+    .app-search { display:flex; flex-direction:column; gap:var(--gap-section); min-inline-size:0; }
+    .app-search-section { display:flex; flex-direction:column; gap:var(--gap-block); min-inline-size:0; }
+    .app-search-section h2, .app-search-summary { margin:0; }
+    /* Home: intro across the page; then Core concepts (1/3) | FAQs (2/3), one below the other when the page is narrower than 48rem.
+       Section titles at the block-title size; each concept a bold title with its text below, 32px apart. */
+    .app-home-columns { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); gap:var(--gap-section); align-items:start; margin-block-start:var(--gap-block); }
+    .app-home h2 { margin:0 0 var(--gap-toolbar); font-size:var(--fs-block-title); }
+    .app-home-concepts ul { padding-inline-start:var(--gap-block); }
+    .app-home-concepts li { margin:0 0 var(--gap-section); }
+    .app-home-concepts li strong { display:inline-block; margin-block-end:var(--gap-tight); }
+    .app-home-faq-answer { margin:0 0 var(--gap-toolbar); }
+    .app-home-faq-host .ui-copy-area { margin-block-end:var(--gap-toolbar); }   /* the prompt for AI tools, before the guide button */
+    @container (max-width:48rem) { .app-home-columns { grid-template-columns:minmax(0,1fr); } }
+
+    /* --- Header search: the size of the Variants inputs (same token re-pointing as .app-customize); icon as the label --- */
+    .ui-app-header-search-host { --fs-control:var(--fs-label); --fs-label:var(--fs-caption); --control-height:var(--space-xl-1); --icon-size-medium:var(--fs-label); }
+
+
+    /* --- Wide screens: three columns on component pages ----------------------- */
+    @media (min-width:961px) {
+        .app-main:has(.app-component), .app-main:has(.app-columns) { padding-block:0; padding-inline-end:0; }
+        .app-component-main, .app-columns-main { padding-block:var(--padding-page); }
+    }
+
+    /* --- Narrow screens ------------------------------------------------------ */
+    @media (max-width:960px) {
+        .app-component, .app-columns { grid-template-columns:minmax(0,1fr); }
+        .app-component-side { display:none; }
+        .app-columns-side { order:-1; position:static; max-block-size:none; border-inline-start:0; border-block-end:var(--border-thin) solid var(--c-border); }
+        .app-document-contents .app-toc-parts .app-toc-parts { display:none; }   /* narrow: README Contents, first two levels only */
+        .app-readme-summary .app-variants-more { display:flex; margin-block-start:var(--gap-toolbar); }
+    }
+    @media (max-width:48rem) {
+        .app-layout { grid-template-columns:minmax(0,1fr); }
+        .app-side { position:static; inline-size:0; block-size:0; border:0; }
+    }
+    /* --- Printing the README page (Download .pdf): only the file's content --- */
+    @media print {
+        body.app-printing-document #app-header-host, body.app-printing-document .app-side, body.app-printing-document .app-footer,
+        body.app-printing-document .app-document-header, body.app-printing-document .app-document-contents { display:none; }
+        body.app-printing-document .app-layout, body.app-printing-document .app-columns { display:block; padding:0; }
+        body.app-printing-document .app-columns-main { padding:0; }
+        body.app-printing-document .app-main { padding:0; }
+        body.app-printing-document .app-reading { max-inline-size:none; }
+        body.app-printing-document .app-markdown-code pre { white-space:pre-wrap; overflow:visible; }   /* long code lines wrap on paper */
+    }
+    @media (max-width:680px) {
+        .app-main { padding:var(--padding-card); }
+        .app-facts-row { grid-template-columns:minmax(0,1fr); gap:0; }
+    }
+}
+
+/* === OVERRIDES ===============================================================
+   Project corrections of component looks, in the overrides layer (cssREADME: a project restyles in @layer overrides,
+   never in the library files). Kept to the minimum. */
+@layer overrides {
+    /* Search page results table: a narrow row-number column; the last visible column takes the remaining width, so the row numbers stay next to the names */
+    .app-search-results .ui-table-grid col:first-child { inline-size:2.5rem; }
+    .app-search-results .ui-table-grid col:last-child { inline-size:auto; }
+    /* Header: the release mark "beta" next to the logo (AppHeader environment, decision 192): handwritten, primary blue,
+       without the pill; slightly tilted like a hand-written note */
+    #app-header .ui-app-header-environment { padding:0; background-color:transparent; color:var(--c-info); font-family:var(--font-hand); font-size:var(--fs-hand); font-weight:var(--fw-hand); line-height:var(--lh-hand); transform:rotate(-6deg); }
+    /* README pages (decision 189): a CopyArea under a language tab has a square top-left corner, joining the tab */
+    .app-readme-content .app-markdown-code-language + .app-markdown-copy .ui-copy-area { border-top-left-radius:0; }
+    /* Printing a README: CopyArea code wraps and is printed whole, without the Copy button */
+    @media print {
+        body.app-printing-document .app-markdown-copy .ui-copy-area-body { max-block-size:none; overflow:visible; white-space:pre-wrap; }
+        body.app-printing-document .app-markdown-copy .ui-copy-area-action { display:none; }
+    }
+}

@@ -1,0 +1,608 @@
+/* ==========================================================================
+   DESIGN SYSTEM — the token layer
+   --------------------------------------------------------------------------
+   The single entry point for restyling the application. Every visual
+   decision (color, spacing, sizing, typography, radius, motion) resolves to
+   a token defined here. No selector in any other file may contain a literal
+   visual value.
+
+   Token architecture, three tiers:
+     1. PRIMITIVES  - raw values (grey ramp, hue ramps, spacing scale...).
+                      Never referenced by other files.
+     2. VARIANTS    - values DERIVED from primitives with color-mix(), so
+                      changing a source color regenerates its whole ramp.
+     3. SEMANTIC    - roles (--c-surface, --padding-panel, --fs-body...).
+                      This is the only tier the other CSS files reference.
+
+   Theming: a theme re-points SEMANTIC tokens only. Components never know a
+   theme exists. Dark mode follows the OS preference by default and can be
+   forced with <html data-theme="dark"> or back with data-theme="light".
+
+   Naming: kebab-case; category prefix; no literal value in a name.
+     --c-*        colors            --g-*        gradients
+     --fs-*       font sizes        --fw-* --lh-* weight / line-height
+     --space-<sm|md|lg|xl>-<n>      spacing, ascending across the family
+     --size-<sm|md|lg|xl>-<n>       element / container dimensions
+     --radius-*   corner radii      --border-*   border widths
+
+   App look: ui-catalog source and client/local-styling use this file; the values marked [APP] differ from
+   client/showcase-styling, which keeps the original values (named in brackets: original / library).
+   ========================================================================== */
+
+/* Inter 4.1 (variable font: every weight from 100 to 900 in one file). Files: client/assets/fonts/Inter-4.1/web/ */
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("../assets/fonts/Inter-4.1/web/InterVariable.woff2") format("woff2");
+}
+@font-face {
+    font-family: "InterItalic";
+    font-style: italic;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("../assets/fonts/Inter-4.1/web/InterVariable-Italic.woff2") format("woff2");
+}
+
+/* Cascade layer order for the whole application, declared once here because
+   this file loads first. Other files add rules into these layers and must
+   never redeclare or reorder this list.
+     tokens      this file
+     reset, base app-shell.css (reset; bare HTML elements: body, headings, paragraphs, links)
+     layout      the application's page layout (e.g. client/app/app.css)
+     components  every component stylesheet (components-js/<name>/<name>.css)
+     overrides   a project's corrections, loaded last */
+@layer tokens, reset, base, layout, components, overrides;
+
+@layer tokens {
+
+  :root {
+    color-scheme: light;
+
+    /* === 1. GREY RAMP (primitives) =========================================
+       The neutral foundation. Slightly cool-tinted so greys sit next to
+       --c-primary without clashing. Number = darkness level.
+       Pure white (#fff) and pure black (#000) are deliberately absent:
+       full-contrast extremes cause eye strain on screens.
+       --c-grey-60 is tuned so that muted text clears WCAG AA (4.5:1) on
+       both --c-surface and --c-page. */
+      --c-grey-05: #f7f8f9;
+      --c-grey-10: #eef0f2;
+      --c-grey-20: #dfe3e7;
+      --c-grey-30: #c8ced4;
+      --c-grey-40: #a8b1ba;
+      --c-grey-50: #8792a0;
+      --c-grey-60: #636d79;
+      --c-grey-70: #525b66;
+      --c-grey-80: #3a424b;
+      --c-grey-90: #232930;
+      --c-grey-95: #161a1f;
+      --c-black:   #000000;   /* pure black: only where maximum contrast is wanted */
+
+    /* === 1. STATUS HUE RAMPS (primitives) ==================================
+       Universally recognizable hues (red = danger, green = success). These
+       stay fixed when the brand palette is swapped. Number = darkness. */
+      --c-red-20:   #fee2e2;  --c-red-40:   #fca5a5;  --c-red-60:   #dc2626;  --c-red-70:   #b91c1c;
+      --c-amber-20: #fef3c7;  --c-amber-40: #fcd34d;  --c-amber-60: #f59e0b;  --c-amber-70: #b45309;
+      --c-green-20: #dcfce7;  --c-green-40: #86efac;  --c-green-60: #16a34a;  --c-green-70: #15803d;
+      --c-blue-20:  #dbeafe;  --c-blue-40:  #93c5fd;  --c-blue-60:  #2563eb;  --c-blue-70:  #1d4ed8;
+
+    /* === 1+2. BRAND COLORS (primitives + derived variants) =================
+       Four source colors. Every variant is DERIVED with color-mix() toward
+       --c-grey-05 (light) or --c-grey-95 (dark), so changing a source color
+       regenerates its whole ramp — nothing else in this file needs editing.
+       Each color carries only the steps it needs: a dark source needs more
+       light variants, a light source more dark ones.
+       "-light-N / -dark-N" always means a LIGHTER/DARKER VARIANT of the
+       color itself — never a theme. Themes re-point semantic tokens below. */
+
+      /* Primary: [APP] the app uses greys only (original: the dark teal-blue #315e71) → mostly light variants, all grey. */
+      --c-primary: var(--c-grey-90);   /* [APP] (library: #315e71) */
+      --c-primary-light-10: color-mix(in srgb, var(--c-primary), var(--c-grey-05) 10%);
+      --c-primary-light-20: color-mix(in srgb, var(--c-primary), var(--c-grey-05) 20%);
+      --c-primary-light-40: color-mix(in srgb, var(--c-primary), var(--c-grey-05) 40%);
+      --c-primary-light-60: color-mix(in srgb, var(--c-primary), var(--c-grey-05) 60%);
+      --c-primary-light-80: color-mix(in srgb, var(--c-primary), var(--c-grey-05) 80%);
+      --c-primary-light-90: color-mix(in srgb, var(--c-primary), var(--c-grey-05) 90%);
+      --c-primary-dark-10:  color-mix(in srgb, var(--c-primary), var(--c-grey-95) 10%);
+      --c-primary-dark-20:  color-mix(in srgb, var(--c-primary), var(--c-grey-95) 20%);
+
+      /* Support 1: bright yellow → mostly dark variants. */
+      --c-support-1: #fdd017;
+      --c-support-1-light-10: color-mix(in srgb, var(--c-support-1), var(--c-grey-05) 10%);
+      --c-support-1-light-30: color-mix(in srgb, var(--c-support-1), var(--c-grey-05) 30%);
+      --c-support-1-light-60: color-mix(in srgb, var(--c-support-1), var(--c-grey-05) 60%);
+      --c-support-1-dark-10:  color-mix(in srgb, var(--c-support-1), var(--c-grey-95) 10%);
+      --c-support-1-dark-20:  color-mix(in srgb, var(--c-support-1), var(--c-grey-95) 20%);
+      --c-support-1-dark-40:  color-mix(in srgb, var(--c-support-1), var(--c-grey-95) 40%);
+      --c-support-1-dark-60:  color-mix(in srgb, var(--c-support-1), var(--c-grey-95) 60%);
+
+      /* Support 2: pale mint → dark variants only. */
+      --c-support-2: #ccffcc;
+      --c-support-2-light-10: color-mix(in srgb, var(--c-support-2), var(--c-grey-05) 10%);
+      --c-support-2-dark-10:  color-mix(in srgb, var(--c-support-2), var(--c-grey-95) 10%);
+      --c-support-2-dark-20:  color-mix(in srgb, var(--c-support-2), var(--c-grey-95) 20%);
+      --c-support-2-dark-40:  color-mix(in srgb, var(--c-support-2), var(--c-grey-95) 40%);
+      --c-support-2-dark-60:  color-mix(in srgb, var(--c-support-2), var(--c-grey-95) 60%);
+      --c-support-2-dark-80:  color-mix(in srgb, var(--c-support-2), var(--c-grey-95) 80%);
+
+      /* Support 3: mid olive → both directions evenly. */
+      --c-support-3: #ada967;
+      --c-support-3-light-20: color-mix(in srgb, var(--c-support-3), var(--c-grey-05) 20%);
+      --c-support-3-light-40: color-mix(in srgb, var(--c-support-3), var(--c-grey-05) 40%);
+      --c-support-3-light-60: color-mix(in srgb, var(--c-support-3), var(--c-grey-05) 60%);
+      --c-support-3-dark-20:  color-mix(in srgb, var(--c-support-3), var(--c-grey-95) 20%);
+      --c-support-3-dark-40:  color-mix(in srgb, var(--c-support-3), var(--c-grey-95) 40%);
+      --c-support-3-dark-60:  color-mix(in srgb, var(--c-support-3), var(--c-grey-95) 60%);
+
+    /* === 2. GRADIENTS (derived) =========================================== */
+      --g-primary:   linear-gradient(135deg, var(--c-primary-light-20),   var(--c-primary-dark-20));
+      --g-support-1: linear-gradient(135deg, var(--c-support-1-light-30), var(--c-support-1-dark-40));
+      --g-support-2: linear-gradient(135deg, var(--c-support-2-light-10), var(--c-support-2-dark-40));
+      --g-support-3: linear-gradient(135deg, var(--c-support-3-light-40), var(--c-support-3-dark-40));
+
+    /* === 3. SEMANTIC COLORS ================================================
+       Roles, not values. Every entry points at a grey, a hue ramp step, or
+       a brand variant above. This is the tier a theme re-points, and the
+       only color tier the other CSS files may reference. */
+      --c-page:           var(--c-grey-05);   /* page behind the cards  [APP] same almost-white as --c-surface (original: --c-grey-10) */
+      --c-surface:        var(--c-grey-05);   /* cards, panels, header, nav */
+      --c-surface-muted:  var(--c-grey-10);   /* disabled fields, secondary hover  [APP] lighter (original: --c-grey-20) */
+      --c-surface-hover:  var(--c-grey-20);   /* row / item hover */
+      --c-surface-alt:    var(--c-grey-10);   /* zebra striping */
+
+      --c-text:           var(--c-black);     /* body text        ~20:1 on surface  [APP] maximum contrast (library: var(--c-grey-95)) */
+      --c-muted:          var(--c-grey-60);   /* secondary text    4.9:1 on surface (AA) */
+      --c-border:         var(--c-grey-30);   /* borders, dividers */
+
+      --c-accent:         var(--c-primary);         /* links, active tab, focused border */
+      --c-accent-hover:   var(--c-grey-70);         /* [APP] a lighter grey, clearly apart from the near-black accent (library: var(--c-primary-dark-20)) */
+      --c-on-accent:      var(--c-grey-05);         /* text on an accent background */
+      --c-selected:       var(--c-blue-20);         /* selected row / item  [APP] primitive blue: the greys are taken by surface, stripe, hover and border, so selected needs its own hue (library: var(--c-primary-light-80)) */
+
+      /* LINKS — one set of tokens for every state of a text link (a link inside text or a path; menu rows, icon
+         links and other control-like links are not text links).
+         Used by Button hierarchy LINK (decision 185). Other components keep their own link look (Breadcrumbs accent +
+         underline, Message links in the message colour, the app's contents list as a navigation list); they can
+         later share one behaviour by pointing their rules at these tokens.
+         Current choices (decision 111): a visited link looks like any other; pressed looks like hover; keyboard focus
+         uses the common focus ring. Dark mode follows, because the colours point at --c-accent / --c-accent-hover. */
+      --c-link:                   var(--c-accent);         /* at rest */
+      --c-link-hover:             var(--c-accent-hover);   /* under the pointer */
+      --c-link-active:            var(--c-accent-hover);   /* while pressed */
+      --c-link-visited:           var(--c-link);           /* already visited: the same as at rest */
+      --c-link-disabled:          var(--c-muted);          /* a link that is not available (aria-disabled) */
+      --link-decoration:          underline;               /* at rest: underlined, so a link never depends on colour alone */
+      --link-decoration-hover:    underline;
+      --link-underline-offset:    var(--space-sm-1);       /* gap between text and underline */
+      --link-underline-thickness: var(--border-thin);      /* at rest */
+      --link-underline-thickness-hover: var(--border-thick); /* under the pointer and while pressed */
+      --link-focus-outline:       var(--focus-outline);    /* keyboard focus: the common focus ring */
+      --link-focus-offset:        var(--focus-offset);
+
+      --select-option-hover-bg:       var(--c-surface-hover);  /* Select option under the pointer or keyboard */
+      --select-option-hover-color:    var(--c-text);
+      --select-option-selected-bg:    var(--c-selected);       /* chosen Select option */
+      --select-option-selected-color: var(--c-text);
+
+      --toggle-track-on-bg:  var(--c-accent);    /* switch track when on */
+      --toggle-track-off-bg: var(--c-muted);     /* switch track when off (>= 3:1 on surface) */
+      --toggle-knob-bg:      var(--c-surface);   /* switch knob */
+
+      --calendar-selected-bg:    var(--c-accent);         /* chosen day / month in the custom calendar */
+      --calendar-selected-color: var(--c-on-accent);
+      --calendar-range-bg:       var(--c-selected);       /* days inside a chosen range */
+      --calendar-range-color:    var(--c-text);
+      --calendar-day-hover-bg:   var(--c-surface-hover);
+      --calendar-weekend-bg:     var(--c-surface-muted);  /* default highlight group (Saturday and Sunday) */
+      --calendar-highlight-bg:   var(--c-warning-soft);   /* highlight groups without their own token */
+
+      --copy-area-bg:    var(--c-surface-muted);   /* CopyArea code box (decision 187) */
+      --copy-area-color: var(--c-text);           /* CopyArea code text */
+
+      --c-code-bg:        var(--c-grey-90);
+      --c-code-text:      var(--c-grey-05);
+      --c-focus:          var(--c-grey-95);         /* focus outline color */
+
+      /* Raised-contrast values, applied under prefers-contrast: more. */
+      --c-contrast-border: var(--c-grey-70);
+      --c-contrast-muted:  var(--c-grey-80);
+
+      /* System keywords required by forced-colors mode. The OS supplies the
+         values; they must not resolve to palette colors. */
+      --c-forced-border:  ButtonText;
+      --c-forced-surface: ButtonFace;
+      --c-forced-text:    ButtonText;
+
+    /* === 3. SEMANTIC STATUS COLORS =========================================
+       Per status: the accent itself, text on the soft background, the soft
+       background, and the border. --c-danger-solid / --c-on-danger cover
+       solid destructive controls (e.g. a delete button). */
+      --c-danger:        var(--c-red-60);
+      --c-danger-text:   var(--c-red-70);
+      --c-danger-soft:   var(--c-red-20);
+      --c-danger-border: var(--c-red-40);
+      --c-danger-solid:       var(--c-red-60);
+      --c-danger-solid-hover: var(--c-red-70);
+      --c-on-danger:          var(--c-grey-05);
+
+      --c-warning:        var(--c-amber-60);
+      --c-warning-text:   var(--c-amber-70);
+      --c-warning-soft:   var(--c-amber-20);
+      --c-warning-border: var(--c-amber-40);
+
+      --c-success:        var(--c-green-60);
+      --c-success-text:   var(--c-green-70);
+      --c-success-soft:   var(--c-green-20);
+      --c-success-border: var(--c-green-40);
+
+      --c-info:        var(--c-blue-60);
+      --c-info-text:   var(--c-blue-70);
+      --c-info-soft:   var(--c-blue-20);
+      --c-info-border: var(--c-blue-40);
+
+    /* === 1. TYPOGRAPHY (primitives) ======================================= */
+      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+      --fs-2xs: 0.625rem;
+      --fs-xs:  0.75rem;
+      --fs-sm:  0.875rem;
+      --fs-md:  1rem;
+      --fs-lg:  1.125rem;
+      --fs-xl:  1.25rem;
+      --fs-2xl: 1.5rem;
+      --fs-3xl: 2rem;
+
+      --fw-thin:        100;
+
+      --fw-extra-light: 200;
+
+      --fw-light:       300;
+
+      --fw-regular:     400;
+
+      --fw-medium:      500;
+
+      --fw-semi-bold:   600;
+
+      --fw-bold:        700;
+
+      --fw-extra-bold:  800;
+
+      --fw-black:       900;
+
+      --lh-body:    1.5;
+      --lh-heading: 1.15;
+      --lh-compact: 1.2;
+
+    /* === 3. SEMANTIC TYPOGRAPHY ============================================ */
+      --fs-label:         var(--fs-sm);    /* form labels, secondary UI text */
+      --fs-caption:       var(--fs-xs);    /* table cells, badges, helper text */
+      --fs-fine:          var(--fs-2xs);   /* smallest legal text */
+      --fs-control:       var(--fs-md);    /* text inside inputs and buttons */
+      --fs-page-title:    var(--fs-3xl);
+      --fs-section-title: var(--fs-2xl);
+      --fs-block-title:   var(--fs-xl);
+      --fs-page-title-narrow:    1.8rem;   /* page title on narrow viewports */
+      --fs-section-title-narrow: 1.35rem;
+
+    /* === 3b. TYPOGRAPHY ROLES ===============================================
+       TEXT ROLES — every kind of text is one role of four tokens, defined together here: family (--font-<role>),
+       size (--fs-<role>), weight (--fw-<role>) and line height (--lh-<role>). app-shell.css (body, h1–h6, p, em,
+       strong, code), the application's layout (e.g. app.css) and every component stylesheet read only roles, never
+       primitives (--font-sans, --fs-sm, --fw-bold, --lh-* values) or literals: change a role here and every text of
+       that kind follows. Running text (paragraphs, list items, descriptions, table text of the page) inherits the
+       body role; the paragraph role points at the body role, so one change of the body role changes all running
+       text. A new kind of text gets a new role here, never a local size or weight. Values: the primitives above.
+         body / p     page text                 --font-body --fs-body --fw-body --lh-body  (p: the same, by reference)
+         lead         larger intro under a title --font-lead --fs-lead --fw-lead --lh-lead
+         h1 … h6      headings                  --font-hN --fs-hN --fw-hN --lh-hN
+         ui           component text            --font-ui; sizes --fs-control / --fs-label / --fs-caption;
+                                                weights --fw-ui / -medium / -strong / -emphasis; --lh-body / --lh-compact
+         code         code and output           --font-code (size: an em proportion of the surrounding text)
+         hand         handwritten accent [APP]  --font-hand --fs-hand --fw-hand --lh-hand
+
+       WEIGHT PAIR — the two weights of all running text. Normal text (page text, paragraphs, component text: menu
+       items, fields, panel headers, table cells) uses --fw-normal; strong text (labels, buttons, current items,
+       <strong>) uses --fw-strong. To compare looks, change only these two lines:
+         regular / bold:      var(--fw-regular) / var(--fw-bold)
+         light / semi-bold:   var(--fw-light)   / var(--fw-semi-bold) */
+      --fw-normal: var(--fw-light);
+      --fw-strong: var(--fw-semi-bold);
+
+      /* body: all running text (inherited); --lh-body is defined with the line-height primitives above */
+      --font-body: var(--font-sans);    --fs-body: var(--fs-sm);    --fw-body: var(--fw-normal);   /* [APP] 14px (library: --fs-md, 16px) */
+      /* p: paragraphs follow the body role (change here only to make paragraphs differ from other running text) */
+      --font-p:    var(--font-body);    --fs-p:    var(--fs-body);  --fw-p:    var(--fw-body);    --lh-p:    var(--lh-body);
+      /* lead: the larger introduction under a page title */
+      --font-lead: var(--font-body);    --fs-lead: var(--fs-lg);    --fw-lead: var(--fw-body);    --lh-lead: var(--lh-body);
+      --font-italic: "InterItalic", var(--font-sans);   /* em, i, cite and italic component text  [APP] the Inter italic file is loaded under this family name (library: var(--font-sans)) */
+
+      /* Headings: one family, size, weight and line height per level; -narrow sizes apply below 680px (app-shell.css);
+         h4–h6 use --fs-md (16px) directly, so they stay larger than the 14px body text */
+      --font-h1:  var(--font-sans);    --fs-h1:  var(--fs-page-title);       --fw-h1:  var(--fw-light);
+      --font-h2:  var(--font-sans);    --fs-h2:  var(--fs-section-title);    --fw-h2:  var(--fw-light);   /* [APP] library: var(--fw-bold) */
+      --font-h3:  var(--font-sans);    --fs-h3:  var(--fs-block-title);      --fw-h3:  var(--fw-light);   /* [APP] library: var(--fw-bold) */
+      --font-h4:  var(--font-sans);    --fs-h4:  var(--fs-md);               --fw-h4:  var(--fw-light);   /* [APP] library: var(--fw-bold) */
+      --font-h5:  var(--font-sans);    --fs-h5:  var(--fs-md);               --fw-h5:  var(--fw-light);   /* [APP] library: var(--fw-bold) */
+      --font-h6:  var(--font-sans);    --fs-h6:  var(--fs-md);               --fw-h6:  var(--fw-light);   /* [APP] library: var(--fw-bold) */
+      --lh-h1: var(--lh-heading);  --lh-h2: var(--lh-heading);  --lh-h3: var(--lh-heading);
+      --lh-h4: var(--lh-heading);  --lh-h5: var(--lh-heading);  --lh-h6: var(--lh-heading);
+      --fs-h1-narrow: var(--fs-page-title-narrow);
+      --fs-h2-narrow: var(--fs-section-title-narrow);
+
+      --font-ui:   var(--font-sans);    /* component text: labels, buttons, fields, menus, tables */
+      --fw-ui:          var(--fw-normal);       /* component text at normal weight: values, options, help, menu items */
+      --fw-ui-medium:   var(--fw-medium);       /* slightly stronger component text: tags */
+      --fw-ui-strong:   var(--fw-strong);       /* labels, buttons, titles, current items */
+      --fw-ui-emphasis: var(--fw-extra-bold);   /* highlighted part of a search match */
+      --font-code: var(--font-mono);   /* code, configuration output */
+      /* hand: handwritten accent (the "beta" mark next to the logo)  [APP] app role, not in the library; system handwriting fonts (Windows, macOS), then any cursive font */
+      --font-hand: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;   --fs-hand: var(--fs-lg);   --fw-hand: var(--fw-regular);   --lh-hand: var(--lh-compact);
+
+    /* === 3c. TAGS ==========================================================
+       Shared look of tag-like elements: Chip (also used by CheckboxRadio presentation CHIP and the keyword chips)
+       and the count pill of Notification. Change a value here and every tag follows. */
+      --tag-font-size:      var(--fs-caption);
+      --tag-font-weight:    var(--fw-ui-medium);
+      --tag-line-height:    var(--lh-compact);
+      --tag-radius:         var(--radius-pill);
+      --tag-border-width:   var(--border-thin);
+      --tag-padding-block:  var(--space-sm-2);
+      --tag-padding-inline: var(--space-sm-3);
+      --tag-gap:            var(--gap-tight);      /* icon, label and remove button; between tags */
+
+    /* === 1. SPACING SCALE (primitives) =====================================
+       --space-<category>-<step>: category sm|md|lg|xl, step ascending.
+       Values ascend across the whole family: sm-1 < ... < xl-3.
+       Not every category needs every step. */
+      --space-sm-1: 2px;
+      --space-sm-2: 4px;
+      --space-sm-3: 6px;   /* [APP] (original: 8px) */
+      --space-md-1: 8px;
+      --space-md-2: 10px;
+      --space-md-3: 12px;
+      --space-md-4: 14px;
+      --space-lg-1: 16px;
+      --space-lg-2: 20px;
+      --space-lg-3: 24px;
+      --space-xl-1: 32px;
+      --space-xl-2: 36px;
+      --space-xl-3: 40px;
+
+    /* === 3. SEMANTIC SPACING ===============================================
+       Roles the components reference. A denser or looser design system
+       re-points these at different steps of the scale; the scale itself
+       and the component rules stay untouched. */
+      --padding-page:     var(--space-lg-3);   /* workspace inset */
+      --padding-panel:    var(--space-lg-2);   /* panel inner padding */
+      --padding-card:     var(--space-lg-1);   /* card inner padding */
+      --padding-control:  var(--space-sm-1) var(--space-md-2);  /* inputs  [APP] (original: var(--space-md-2) var(--space-md-3)) */
+      --padding-cell:     var(--space-md-3);   /* table cells */
+
+      --gap-section:      var(--space-xl-1);   /* between page sections */
+      --gap-block:        var(--space-lg-3);   /* page header, toolbars to content */
+      --gap-form-field:   var(--space-lg-1);   /* between form fields */
+      --gap-toolbar:      var(--space-md-3);   /* between toolbar items */
+      --gap-inline-items: var(--space-sm-3);   /* icon-to-label, chip rows, Buttons of one group */
+      --gap-tight:        var(--space-sm-2);   /* label-to-input, list rows */
+
+      --indent-level:     var(--space-lg-1);   /* one level of tree indentation */
+
+    /* === 1. SIZING SCALE (primitives) ======================================
+       Same convention as spacing. sm = control sizes, md = small blocks,
+       lg = content containers, xl = full page containers. */
+      --size-sm-1: 40px;
+      --size-sm-2: 44px;
+      --size-md-1: 120px;
+      --size-md-2: 280px;
+      --size-md-3: 320px;
+      --size-md-4: 400px;
+      --size-lg-1: 560px;
+      --size-lg-2: 640px;
+      --size-lg-3: 720px;
+      --size-lg-4: 960px;
+      --size-xl-1: 1180px;
+      --size-xl-2: 1360px;
+
+      /* Percentage scale */
+      --percentage-s: 25%;
+      --percentage-m: 50%;
+      --percentage-l: 75%;
+      --percentage-full: 100%;
+
+    /* === 3. SEMANTIC SIZING ================================================ */
+      --page-header-height: 80px;  
+
+
+      --control-height:       var(--size-sm-1);   /* inputs, buttons */
+      --control-height-touch: var(--size-sm-2);   /* minimum touch target */
+      --textarea-min-height:  var(--size-md-1);
+      --form-label-width:     calc(var(--size-md-1) * 1.5);   /* label column when labels are on the left (START) */
+      --table-column-s:       var(--size-md-1);               /* table column widths (column option width) */
+      --table-column-m:       calc(var(--size-md-1) * 1.5);
+      --table-column-l:       calc(var(--size-md-1) * 2);
+      --table-column-xl:      var(--size-md-3);
+      --table-column-counter: calc(var(--size-sm-1) * 1.5);    /* row-number column */
+      --table-column-select:  var(--size-sm-1);                /* checkbox column */
+      --page-sticky-offset:   0px;                             /* height of the page's sticky header; set by the app shell */
+      --toggle-track-width:        var(--size-sm-2);    /* switch, medium */
+      --toggle-track-height:       var(--space-lg-3);
+      --toggle-track-width-small:  var(--space-xl-2);   /* switch, small */
+      --toggle-track-height-small: var(--space-lg-2);
+      --icon-size-small:  var(--fs-caption);      /* icon glyphs: Button, CheckboxRadio */
+      --icon-size-medium: var(--fs-control);
+      --icon-size-large:  var(--fs-block-title);
+      --reading-width:        var(--percentage-l);     /* comfortable text column */
+      --modal-width:          var(--percentage-m);
+      --modal-max-height:     var(--size-lg-3);
+      --copy-area-max-height: var(--size-md-3);   /* CopyArea: taller code or content scrolls (decision 187) */
+
+      --container-sm: var(--percentage-s);
+      --container-md: var(--percentage-m);
+      --container-lg: var(--percentage-l);
+      --container-xl: var(--percentage-full);
+
+      --navigation-width: var(--percentage-s);
+      --header-height:       64px;
+      --footer-height:       48px;
+      --breadcrumb-height:   36px;
+      --workspace-max-width: 1600px;
+      /* [APP] Working area: at least --workspace-margin on each side, never wider than --workspace-max-width.
+         The percentages resolve where the token is used (padding: share of the window width). */
+      --workspace-margin: 5%;
+      --workspace-gutter: max(var(--workspace-margin), (100% - var(--workspace-max-width)) / 2);
+
+    /* === 1. RADIUS / BORDERS / SHADOW / MOTION (primitives) ================ */
+      --radius-xs:   4px;
+      --radius-sm:   6px;
+      --radius-md:   8px;
+      --radius-lg:   12px;
+      --radius-pill: 999px;
+
+      --border-thin:  1px;
+      --border-thick: 2px;
+      --border-heavy: 4px;
+
+      /* Shadows tint with the darkest grey rather than a literal color. */
+      --shadow-color: var(--c-grey-95);
+      /* [APP] flat design: no shadows in the app (originals: 0 2px 8px … 8% / 0 14px 38px … 12%). */
+      --shadow-sm: none;
+      --shadow-md: none;
+
+      --transition-1: 0.2s ease;
+      --spinner-duration: 0.8s;   /* one full turn of a busy spinner */
+      --progress-sweep-duration: 1.6s;   /* one sweep of an indeterminate progress bar (Loader) */
+
+    /* === 3. SEMANTIC RADIUS ================================================ */
+      --radius-control: var(--radius-md);   /* inputs, buttons */
+      --radius-control-small: var(--radius-xs);   /* reduced control corner (Button SMALL radius) */
+      --radius-control-large: var(--radius-lg);   /* enlarged control corner (Button LARGE radius) */
+      --radius-panel:   var(--radius-md);   /* panels, cards, alerts */
+      --radius-modal:   var(--radius-lg);
+
+    /* === MISC ============================================================== */
+      --opacity-disabled: 0.6;
+      --opacity-muted:    0.65;   /* secondary actions at rest, e.g. Chip remove */
+      --sr-only-size: 1px;
+      --modal-backdrop-bg: color-mix(in srgb, var(--c-grey-95) 55%, transparent);
+      --scrim-bg: color-mix(in srgb, var(--c-page) 70%, transparent);   /* a region covered while it is busy (Loader OVERLAY) */
+
+      /* Accessibility focus style: high-contrast dotted outline. */
+      --focus-outline: var(--border-thin) dotted var(--c-focus);
+      --focus-offset:  var(--border-thin);
+  }
+
+  /* === DARK THEME ==========================================================
+     Only the SEMANTIC tier flips; primitives and brand ramps are untouched.
+     Dark mode reads the grey ramp from the other end, lifts the accent to a
+     light brand variant, and rebuilds status soft/border tints against the
+     dark surface so text on them stays readable.
+
+     Two activation paths, identical token set (the two blocks below must be
+     kept in sync):
+       - OS preference, unless the user forced light;
+       - explicit <html data-theme="dark">, which always wins. */
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+
+      --c-page:          var(--c-grey-95);
+      --c-surface:       var(--c-grey-90);
+      --c-surface-muted: var(--c-grey-80);
+      --c-surface-hover: var(--c-grey-80);
+      --c-surface-alt:   var(--c-grey-80);
+
+      --c-text:   var(--c-grey-05);
+      --c-muted:  var(--c-grey-40);
+      --c-border: var(--c-grey-70);
+
+      --c-accent:       var(--c-primary-light-60);
+      --c-accent-hover: var(--c-primary-light-80);
+      --c-on-accent:    var(--c-grey-95);
+      --c-selected:     color-mix(in srgb, var(--c-blue-60) 35%, var(--c-surface));   /* [APP] primitive blue (library: var(--c-primary-dark-20)) */
+
+      --c-code-bg:   var(--c-grey-95);
+      --c-code-text: var(--c-grey-05);
+      --c-focus:     var(--c-grey-05);
+
+      --c-contrast-border: var(--c-grey-40);
+      --c-contrast-muted:  var(--c-grey-30);
+
+      --c-danger:        var(--c-red-40);
+      --c-danger-text:   var(--c-red-20);
+      --c-danger-soft:   color-mix(in srgb, var(--c-red-60) 22%, var(--c-surface));
+      --c-danger-border: color-mix(in srgb, var(--c-red-60) 45%, var(--c-surface));
+
+      --c-warning:        var(--c-amber-40);
+      --c-warning-text:   var(--c-amber-20);
+      --c-warning-soft:   color-mix(in srgb, var(--c-amber-60) 22%, var(--c-surface));
+      --c-warning-border: color-mix(in srgb, var(--c-amber-60) 45%, var(--c-surface));
+
+      --c-success:        var(--c-green-40);
+      --c-success-text:   var(--c-green-20);
+      --c-success-soft:   color-mix(in srgb, var(--c-green-60) 22%, var(--c-surface));
+      --c-success-border: color-mix(in srgb, var(--c-green-60) 45%, var(--c-surface));
+
+      --c-info:        var(--c-blue-40);
+      --c-info-text:   var(--c-blue-20);
+      --c-info-soft:   color-mix(in srgb, var(--c-blue-60) 22%, var(--c-surface));
+      --c-info-border: color-mix(in srgb, var(--c-blue-60) 45%, var(--c-surface));
+
+      --shadow-sm: 0 2px 12px  color-mix(in srgb, var(--shadow-color) 40%, transparent);
+      --shadow-md: 0 16px 44px color-mix(in srgb, var(--shadow-color) 50%, transparent);
+    }
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+
+    --c-page:          var(--c-grey-95);
+    --c-surface:       var(--c-grey-90);
+    --c-surface-muted: var(--c-grey-80);
+    --c-surface-hover: var(--c-grey-80);
+    --c-surface-alt:   var(--c-grey-80);
+
+    --c-text:   var(--c-grey-05);
+    --c-muted:  var(--c-grey-40);
+    --c-border: var(--c-grey-70);
+
+    --c-accent:       var(--c-primary-light-60);
+    --c-accent-hover: var(--c-primary-light-80);
+    --c-on-accent:    var(--c-grey-95);
+    --c-selected:     color-mix(in srgb, var(--c-blue-60) 35%, var(--c-surface));   /* [APP] primitive blue (library: var(--c-primary-dark-20)) */
+
+    --c-code-bg:   var(--c-grey-95);
+    --c-code-text: var(--c-grey-05);
+    --c-focus:     var(--c-grey-05);
+
+    --c-contrast-border: var(--c-grey-40);
+    --c-contrast-muted:  var(--c-grey-30);
+
+    --c-danger:        var(--c-red-40);
+    --c-danger-text:   var(--c-red-20);
+    --c-danger-soft:   color-mix(in srgb, var(--c-red-60) 22%, var(--c-surface));
+    --c-danger-border: color-mix(in srgb, var(--c-red-60) 45%, var(--c-surface));
+
+    --c-warning:        var(--c-amber-40);
+    --c-warning-text:   var(--c-amber-20);
+    --c-warning-soft:   color-mix(in srgb, var(--c-amber-60) 22%, var(--c-surface));
+    --c-warning-border: color-mix(in srgb, var(--c-amber-60) 45%, var(--c-surface));
+
+    --c-success:        var(--c-green-40);
+    --c-success-text:   var(--c-green-20);
+    --c-success-soft:   color-mix(in srgb, var(--c-green-60) 22%, var(--c-surface));
+    --c-success-border: color-mix(in srgb, var(--c-green-60) 45%, var(--c-surface));
+
+    --c-info:        var(--c-blue-40);
+    --c-info-text:   var(--c-blue-20);
+    --c-info-soft:   color-mix(in srgb, var(--c-blue-60) 22%, var(--c-surface));
+    --c-info-border: color-mix(in srgb, var(--c-blue-60) 45%, var(--c-surface));
+
+    --shadow-sm: 0 2px 12px  color-mix(in srgb, var(--shadow-color) 40%, transparent);
+    --shadow-md: 0 16px 44px color-mix(in srgb, var(--shadow-color) 50%, transparent);
+  }
+}

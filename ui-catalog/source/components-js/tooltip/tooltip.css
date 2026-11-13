@@ -1,0 +1,85 @@
+/* ==========================================================================
+   tooltip.css
+
+   Default generated DOM (INVERSE, arrow, one target):
+
+   <div id="save-tip" class="ui-tooltip ui-tooltip-tone-inverse ui-tooltip-with-arrow [ui-tooltip-open]" role="tooltip" popover="manual" data-side="TOP"
+        style="--ui-tooltip-left:…px; --ui-tooltip-top:…px; --ui-tooltip-arrow:…px">
+     <span class="ui-tooltip-text">Save</span>
+     <kbd class="ui-tooltip-shortcut" [hidden]>Ctrl+S</kbd>                    (shortcut)
+     <span class="ui-tooltip-arrow" aria-hidden="true"></span>                 (arrow)
+   </div>
+
+   Conditional structures:
+   - tone SURFACE: .ui-tooltip-tone-surface (a light panel with a border; the arrow takes the border too);
+   - targets (a group of elements): aria-hidden="true" instead of role="tooltip" (the elements carry their own text);
+   - shown: .ui-tooltip-open, and :popover-open where the browser supports popovers (top layer);
+   - data-side="TOP|BOTTOM|LEFT|RIGHT": the physical side the tooltip is on (the arrow points the other way);
+   - components with tooltipMode TOOLTIP put the tooltip's container in <span class="ui-tooltip-host"> (display:contents).
+
+   Notes: --ui-tooltip-left, --ui-tooltip-top (the position in the window) and --ui-tooltip-arrow (the arrow's distance
+   from the tooltip's left or top edge) are set by the component, which also measures --space-md-1 (gap to the target
+   and margin from the window edges) and --space-md-3 (the arrow's smallest distance from a corner). The arrow is a
+   square turned by 45deg (a geometric constant) and moved half outside the edge (-50%, the inverse of 50%). z-index 50
+   applies only in browsers without popovers (above toasts at 40). The tooltip fades in with the ui-tooltip-in
+   keyframes (opacity 0 → 1). The browser's popover defaults (border, padding, colours, inset, margin) are replaced.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2, or write the same selector with the new value in a stylesheet that
+   loads later, in @layer overrides.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* text and corners; INVERSE: the text colour as background */
+    .ui-tooltip { font-family:var(--font-ui); font-weight:var(--fw-ui); font-size:var(--fs-caption); line-height:var(--lh-compact); border-top-left-radius:var(--radius-xs); border-top-right-radius:var(--radius-xs); border-bottom-right-radius:var(--radius-xs); border-bottom-left-radius:var(--radius-xs); animation:ui-tooltip-in var(--transition-1); }
+    /* no frame (the browser gives popovers a border); SURFACE adds its own below */
+    .ui-tooltip { border-top:0; border-right:0; border-bottom:0; border-left:0; }
+    .ui-tooltip-tone-inverse, .ui-tooltip-tone-inverse .ui-tooltip-arrow { background-color:var(--c-text); color:var(--c-surface); }
+    /* SURFACE: a light panel with a border and a small shadow */
+    .ui-tooltip-tone-surface, .ui-tooltip-tone-surface .ui-tooltip-arrow { background-color:var(--c-surface); color:var(--c-text); }
+    .ui-tooltip-tone-surface { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); box-shadow:var(--shadow-sm); }
+    .ui-tooltip-tone-surface[data-side="TOP"] .ui-tooltip-arrow { border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); }
+    .ui-tooltip-tone-surface[data-side="BOTTOM"] .ui-tooltip-arrow { border-top:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); }
+    .ui-tooltip-tone-surface[data-side="LEFT"] .ui-tooltip-arrow { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); }
+    .ui-tooltip-tone-surface[data-side="RIGHT"] .ui-tooltip-arrow { border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); }
+    /* keyboard shortcut: keys in a thin frame, in the code font */
+    .ui-tooltip-shortcut { font-family:var(--font-code); font-size:var(--fs-caption); border-top:var(--border-thin) solid currentColor; border-right:var(--border-thin) solid currentColor; border-bottom:var(--border-thin) solid currentColor; border-left:var(--border-thin) solid currentColor; border-top-left-radius:var(--radius-xs); border-top-right-radius:var(--radius-xs); border-bottom-right-radius:var(--radius-xs); border-bottom-left-radius:var(--radius-xs); opacity:var(--opacity-muted); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-tooltip { gap:var(--gap-tight); max-inline-size:var(--size-md-2); padding:var(--space-sm-2) var(--space-md-1); }
+    .ui-tooltip-shortcut { padding:0 var(--space-sm-2); }
+    .ui-tooltip-arrow { inline-size:var(--space-md-1); block-size:var(--space-md-1); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    /* a fixed box placed by the component (popover defaults reset: no inset, margin or border of the browser) */
+    .ui-tooltip { position:fixed; inset:auto; left:var(--ui-tooltip-left, 0); top:var(--ui-tooltip-top, 0); z-index:50; margin:0; display:flex; align-items:baseline; box-sizing:border-box; overflow:visible; overflow-wrap:break-word; pointer-events:auto; }
+    .ui-tooltip:not(.ui-tooltip-open) { display:none; }
+    /* the host other components create for their Tooltip takes no place */
+    .ui-tooltip-host { display:contents; }
+    .ui-tooltip-text { min-inline-size:0; }
+    .ui-tooltip-shortcut { flex:none; white-space:nowrap; }
+    .ui-tooltip-shortcut[hidden] { display:none; }
+    .ui-tooltip-arrow { position:absolute; box-sizing:border-box; transform:rotate(45deg); }
+    .ui-tooltip[data-side="TOP"] .ui-tooltip-arrow { top:100%; left:var(--ui-tooltip-arrow); translate:-50% -50%; }
+    .ui-tooltip[data-side="BOTTOM"] .ui-tooltip-arrow { bottom:100%; left:var(--ui-tooltip-arrow); translate:-50% 50%; }
+    .ui-tooltip[data-side="LEFT"] .ui-tooltip-arrow { left:100%; top:var(--ui-tooltip-arrow); translate:-50% -50%; }
+    .ui-tooltip[data-side="RIGHT"] .ui-tooltip-arrow { right:100%; top:var(--ui-tooltip-arrow); translate:50% -50%; }
+    @keyframes ui-tooltip-in { from { opacity:0; } to { opacity:1; } }
+    @media (prefers-reduced-motion:reduce) { .ui-tooltip { animation:none; } }
+}

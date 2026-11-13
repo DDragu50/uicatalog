@@ -1,0 +1,90 @@
+/* ==========================================================================
+   notificationsPanel.css
+
+   Default generated DOM:
+
+   <div id="inbox" class="ui-notifications-panel">
+     <span class="ui-notifications-panel-bell-host"> → Notification (bell, unread count) aria-haspopup="dialog" aria-expanded </span>
+     <div id="inbox-panel" class="ui-notifications-panel-popup" role="dialog" aria-labelledby="inbox-title" [hidden]>
+       <div class="ui-notifications-panel-header"><h2 id="inbox-title" class="ui-notifications-panel-title">Notifications</h2> → Button "Mark all as read" </div>
+       <ul class="ui-notifications-panel-list">
+         <li><a class="ui-notifications-panel-item [ui-notifications-panel-unread]" href="…" data-item="n1">
+           <span class="ui-notifications-panel-icon"><i class="…"></i></span>
+           <span class="ui-notifications-panel-text">Text <span class="ui-notifications-panel-time">5 minutes ago</span><span class="…visually-hidden">, unread</span></span>
+         </a></li>
+         <li class="ui-notifications-panel-empty">You have no notifications.</li>                     (no notifications)
+       </ul>
+       <div class="ui-notifications-panel-footer"><a class="ui-notifications-panel-see-all">See all notifications</a></div>   (seeAllHref / onSeeAll)
+     </div>
+   </div>
+
+   The panel opens below the bell, aligned to its end (left in right-to-left); unread notifications have a soft info
+   background (--c-info-soft) and a dot; icons sit in an accent circle; z-index 35 keeps it above the header (30)
+   and below toasts (40); 88vw / 70vh cap its size.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* the open panel: component font, border, corners, background, shadow; header line; title */
+    .ui-notifications-panel-popup { font-family:var(--font-ui); font-weight:var(--fw-ui); border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); box-shadow:var(--shadow-md); }
+    .ui-notifications-panel-header { border-bottom:var(--border-thin) solid var(--c-border); }
+    .ui-notifications-panel-title { font-family:var(--font-ui); font-size:var(--fs-control); font-weight:var(--fw-ui-strong); line-height:var(--lh-body); }
+    /* items: corners, under the pointer, unread (background, bold, dot), icon circle, text, time; empty text; footer link */
+    .ui-notifications-panel-item { border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); }
+    .ui-notifications-panel-item:hover { background-color:var(--c-surface-hover); }
+    .ui-notifications-panel-unread { background-color:var(--c-info-soft); font-weight:var(--fw-ui-strong); }
+    .ui-notifications-panel-unread::after { background-color:var(--c-accent); }
+    .ui-notifications-panel-icon { background-color:var(--c-accent); color:var(--c-on-accent); }
+    .ui-notifications-panel-text { font-size:var(--fs-label); line-height:var(--lh-body); }
+    .ui-notifications-panel-time { color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui); }
+    .ui-notifications-panel-empty { color:var(--c-muted); font-size:var(--fs-label); }
+    .ui-notifications-panel-footer { border-top:var(--border-thin) solid var(--c-border); }
+    .ui-notifications-panel-see-all { color:var(--c-accent); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* panel distance below the bell and width; paddings; unread dot position and size; icon circle size */
+    .ui-notifications-panel-popup { inset-block-start:calc(100% + var(--gap-tight)); inline-size:min(var(--size-md-4), 88vw); }
+    .ui-notifications-panel-header { gap:var(--gap-inline-items); padding:var(--gap-tight) var(--gap-inline-items) var(--gap-tight) var(--gap-block); }
+    .ui-notifications-panel-list { padding:var(--gap-tight); }
+    .ui-notifications-panel-item { gap:var(--gap-inline-items); padding:var(--gap-inline-items); padding-inline-end:var(--gap-block); }
+    .ui-notifications-panel-unread::after { inset-block-start:calc(var(--gap-inline-items) + var(--space-sm-2)); inset-inline-end:var(--gap-inline-items); inline-size:var(--space-sm-3); block-size:var(--space-sm-3); }
+    .ui-notifications-panel-icon { inline-size:var(--size-sm-1); block-size:var(--size-sm-1); }
+    .ui-notifications-panel-empty { padding:var(--gap-block); }
+    .ui-notifications-panel-footer { padding:var(--gap-tight) var(--gap-block); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-notifications-panel { position:relative; display:inline-flex; }
+    .ui-notifications-panel-popup { position:absolute; inset-inline-end:0; z-index:35; display:flex; flex-direction:column; max-block-size:70vh; overflow:hidden; text-align:start; }
+    .ui-notifications-panel-popup[hidden] { display:none; }
+    .ui-notifications-panel-header { display:flex; align-items:center; justify-content:space-between; }
+    .ui-notifications-panel-title { margin:0; }
+    .ui-notifications-panel-list { flex:1 1 auto; margin:0; list-style:none; overflow-y:auto; }
+    .ui-notifications-panel-item { position:relative; display:flex; align-items:flex-start; color:inherit; text-decoration:none; }
+    .ui-notifications-panel-item:focus-visible, .ui-notifications-panel-see-all:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-notifications-panel-unread::after { content:''; position:absolute; border-top-left-radius:50%; border-top-right-radius:50%; border-bottom-right-radius:50%; border-bottom-left-radius:50%; }
+    .ui-notifications-panel-icon { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; border-top-left-radius:50%; border-top-right-radius:50%; border-bottom-right-radius:50%; border-bottom-left-radius:50%; }
+    .ui-notifications-panel-text { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-notifications-panel-empty { text-align:center; }
+    .ui-notifications-panel-footer { text-align:center; }
+    .ui-notifications-panel-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+}

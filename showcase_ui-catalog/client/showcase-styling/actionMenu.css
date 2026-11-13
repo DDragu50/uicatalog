@@ -1,0 +1,77 @@
+/* ==========================================================================
+   actionMenu.css
+
+   Default generated DOM:
+
+   <span class="ui-action-menu">
+     <span class="ui-action-menu-trigger-host"> → Button (icon, ellipsis; tertiary, or secondary when bordered) id="{id}" aria-haspopup="menu" aria-expanded </span>
+     <ul id="{id}-menu" class="ui-action-menu-list" role="menu" aria-labelledby="{id}" popover="manual">   (top layer)
+       <li role="none"><button class="ui-action-menu-item [ui-action-menu-danger]" role="menuitem" tabindex="-1" data-key="edit" [aria-disabled]>
+         <span class="ui-action-menu-icon" aria-hidden="true"><i class="fa-solid fa-pen"></i></span><span class="ui-action-menu-label">Edit</span></button></li>
+       <li role="none"><a class="ui-action-menu-item" role="menuitem" href="…">…</a></li>          (links)
+       <li class="ui-action-menu-separator" role="separator"></li>
+     </ul>
+   </span>
+
+   The menu position is set by the component (--ui-action-menu-top/-left). Danger actions use the danger text
+   colour; disabled items keep their place with reduced opacity.
+
+   Variables left: --ui-action-menu-top / --ui-action-menu-left, the list position measured and written by the
+   component when the list opens.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* the trigger Button: a filled background, so it stands out from the area behind it (a tertiary Button is
+       otherwise transparent); a darker one under the pointer and while pressed */
+    .ui-action-menu .ui-button { background-color:var(--c-surface-muted); }
+    .ui-action-menu .ui-button:hover:not(:disabled), .ui-action-menu .ui-button:active:not(:disabled) { background-color:var(--c-border); }
+    /* the open list (a floating panel): component font, border, corners, background, shadow */
+    .ui-action-menu-list { font-family:var(--font-ui); font-weight:var(--fw-ui); border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); box-shadow:var(--shadow-md); }
+    /* items: font of the list, corners, size; under the pointer / focused; disabled; danger items; separator line */
+    .ui-action-menu-item { font:inherit; background-color:transparent; color:inherit; border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); font-size:var(--fs-control); }
+    .ui-action-menu-item:hover, .ui-action-menu-item:focus { background-color:var(--c-surface-hover); }
+    .ui-action-menu-item[aria-disabled="true"] { opacity:var(--opacity-disabled); }
+    .ui-action-menu-danger { color:var(--c-danger-text); }
+    .ui-action-menu-separator { border-top:var(--border-thin) solid var(--c-border); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* list width (between the two sizes) and inner padding; item height and padding; icon column; space around separators */
+    .ui-action-menu-list { min-inline-size:var(--size-md-1); max-inline-size:var(--size-md-3); padding:var(--gap-tight); }
+    .ui-action-menu-item { gap:var(--gap-inline-items); min-block-size:var(--control-height); padding:0 var(--gap-inline-items); }
+    .ui-action-menu-icon { inline-size:var(--icon-size-medium); }
+    .ui-action-menu-separator { margin:var(--gap-tight) 0; }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-action-menu { display:inline-flex; }
+    /* position: the component writes --ui-action-menu-top / --ui-action-menu-left (measured) */
+    .ui-action-menu-list { position:fixed; inset:auto; margin:0; inset-block-start:var(--ui-action-menu-top,0); inset-inline-start:var(--ui-action-menu-left,0); list-style:none; box-sizing:border-box; }
+    .ui-action-menu-list:not(:popover-open):not(.ui-action-menu-open) { display:none; }
+    .ui-action-menu-item { display:flex; align-items:center; inline-size:100%; border:0; text-align:start; text-decoration:none; cursor:pointer; box-sizing:border-box; }
+    .ui-action-menu-item:hover, .ui-action-menu-item:focus { outline:0; }
+    .ui-action-menu-item:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thin)); }
+    .ui-action-menu-item[aria-disabled="true"] { cursor:not-allowed; }
+    .ui-action-menu-icon { display:inline-flex; justify-content:center; flex:0 0 auto; }
+    .ui-action-menu-label { flex:1 1 auto; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ui-action-menu-separator { block-size:0; }
+}

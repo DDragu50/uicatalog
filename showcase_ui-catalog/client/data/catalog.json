@@ -1,0 +1,1153 @@
+{
+  "generatedAt": "2026-11-11T13:23:45.036Z",
+  "groups": [
+    {
+      "id": "basic",
+      "label": "Basic components",
+      "icon": "fa-solid fa-cube",
+      "description": "Components that use at most one other component, directly or indirectly.",
+      "components": [
+        "actionMenu",
+        "badge",
+        "button",
+        "calendar",
+        "checkboxRadio",
+        "chip",
+        "contentGroup",
+        "copyArea",
+        "loader",
+        "message",
+        "notification",
+        "pagination",
+        "select",
+        "textArea",
+        "textInput",
+        "toggle",
+        "tooltip",
+        "topNavigation"
+      ]
+    },
+    {
+      "id": "complex",
+      "label": "Complex components",
+      "icon": "fa-solid fa-cubes",
+      "description": "Components built from two or more other components, directly or indirectly.",
+      "components": [
+        "accordion",
+        "appHeader",
+        "breadcrumbs",
+        "collapsiblePanel",
+        "form",
+        "notificationsPanel",
+        "searchBox",
+        "sideNavigation",
+        "stepper",
+        "table",
+        "treeView",
+        "uploadFiles"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "accordion",
+      "name": "Accordion",
+      "summary": "Accordion stacks several sections of which only the titles are visible; the user opens a section to read or edit its content, such as frequently asked questions, the parts of a settings page or the steps of a long form.",
+      "directDependencies": [
+        "collapsiblePanel"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "chip",
+        "collapsiblePanel"
+      ],
+      "dependencyVia": {
+        "button": "collapsiblePanel",
+        "chip": "collapsiblePanel"
+      },
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "containers",
+        "layout",
+        "3 dependencies"
+      ]
+    },
+    {
+      "id": "actionMenu",
+      "name": "ActionMenu",
+      "summary": "ActionMenu is the small \"more\" button (three dots) that opens a short list of actions, such as Edit, Duplicate, Download or Delete.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "appHeader",
+        "breadcrumbs"
+      ],
+      "usedByVia": {
+        "appHeader": "breadcrumbs"
+      },
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "actions",
+        "navigation",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "appHeader",
+      "name": "AppHeader",
+      "summary": "AppHeader is the top area of every application page.",
+      "directDependencies": [
+        "badge",
+        "breadcrumbs",
+        "button",
+        "message",
+        "notification",
+        "notificationsPanel",
+        "searchBox",
+        "topNavigation"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "actionMenu",
+        "badge",
+        "breadcrumbs",
+        "button",
+        "checkboxRadio",
+        "chip",
+        "message",
+        "notification",
+        "notificationsPanel",
+        "searchBox",
+        "topNavigation"
+      ],
+      "dependencyVia": {
+        "actionMenu": "breadcrumbs",
+        "checkboxRadio": "searchBox",
+        "chip": "searchBox"
+      },
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "layout",
+        "navigation",
+        "11 dependencies"
+      ]
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "summary": "Badge shows who someone is (or what something is) at a glance: a picture, initials or icon — with an optional marker such as an \"online\" dot or a count — next to a name and an optional role or description.",
+      "directDependencies": [
+        "notification"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "notification"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [
+        "appHeader"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "state",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "summary": "Breadcrumbs show where the user is in the application, as a path from the top level to the current page (e.g. Home › Customers › Northwind › Contracts).",
+      "directDependencies": [
+        "actionMenu",
+        "button"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "actionMenu",
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [
+        "appHeader"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "navigation",
+        "2 dependencies"
+      ]
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "summary": "Button lets a user start an action, such as saving, submitting a form or opening a dialog.",
+      "directDependencies": [],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [
+        "accordion",
+        "actionMenu",
+        "appHeader",
+        "breadcrumbs",
+        "calendar",
+        "collapsiblePanel",
+        "copyArea",
+        "form",
+        "loader",
+        "message",
+        "notificationsPanel",
+        "pagination",
+        "searchBox",
+        "sideNavigation",
+        "stepper",
+        "table",
+        "textInput",
+        "topNavigation",
+        "treeView",
+        "uploadFiles"
+      ],
+      "usedByVia": {
+        "accordion": "collapsiblePanel"
+      },
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "actions",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "calendar",
+      "name": "Calendar",
+      "summary": "Calendar is the field for dates and times: a date, a time, a date with time, a month, a week, or a period from one date (or date and time) to another.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "inputs",
+        "time/date",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "checkboxRadio",
+      "name": "CheckboxRadio",
+      "summary": "CheckboxRadio shows a fixed list of options from which the user picks exactly one (radio buttons) or any number (checkboxes).",
+      "directDependencies": [
+        "chip"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "chip"
+      ],
+      "dependencyVia": {},
+      "optional": [],
+      "optionalVia": {},
+      "usedBy": [
+        "appHeader",
+        "searchBox"
+      ],
+      "usedByVia": {
+        "appHeader": "searchBox"
+      },
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "inputs",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "chip",
+      "name": "Chip",
+      "summary": "Chip is a compact label for short information such as a status, a category, a count or an applied filter.",
+      "directDependencies": [],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [],
+      "optionalVia": {},
+      "usedBy": [
+        "accordion",
+        "appHeader",
+        "checkboxRadio",
+        "collapsiblePanel",
+        "searchBox"
+      ],
+      "usedByVia": {
+        "accordion": "collapsiblePanel",
+        "appHeader": "searchBox",
+        "searchBox": "checkboxRadio"
+      },
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "state",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "collapsiblePanel",
+      "name": "CollapsiblePanel",
+      "summary": "CollapsiblePanel groups related content under a titled header that the user can open and close.",
+      "directDependencies": [
+        "button",
+        "chip"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "chip"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "accordion"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "containers",
+        "layout",
+        "2 dependencies"
+      ]
+    },
+    {
+      "id": "contentGroup",
+      "name": "ContentGroup",
+      "summary": "ContentGroup is a framed block that groups related content the user perceives as one unit: \"Personal data\", \"Address\", \"Usage settings\" or \"Important information\".",
+      "directDependencies": [],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "containers",
+        "layout",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "copyArea",
+      "name": "CopyArea",
+      "summary": "CopyArea shows content with a Copy button that puts it on the clipboard in one click: code, a value such as an IBAN or an API key, or formatted content such as a standard reply or a table.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "actions",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "form",
+      "name": "Form",
+      "summary": "Form turns a set of input fields into one unit the user can submit, or into a filter panel that updates results.",
+      "directDependencies": [
+        "button",
+        "loader",
+        "message"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "loader",
+        "message"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "containers",
+        "inputs",
+        "3 dependencies"
+      ]
+    },
+    {
+      "id": "loader",
+      "name": "Loader",
+      "summary": "Loader shows that a long action is running (an upload, an export, a report, a server check) and, when the application knows it, how far it has got.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "form",
+        "stepper",
+        "table",
+        "treeView",
+        "uploadFiles"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "state",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "message",
+      "name": "Message",
+      "summary": "Message tells users something about the system or their work: that something succeeded, needs attention, failed, or is simply useful to know.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "appHeader",
+        "form",
+        "searchBox",
+        "sideNavigation",
+        "table",
+        "treeView"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "state",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "notification",
+      "name": "Notification",
+      "summary": "Notification is a small round element — an icon, a picture or a short text — with an optional marker in one corner that draws attention: a number (\"3 new messages\"), a coloured dot (\"online\", \"something new\") or a short word (\"NEW\").",
+      "directDependencies": [],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [
+        "appHeader",
+        "badge",
+        "notificationsPanel"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "state",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "notificationsPanel",
+      "name": "NotificationsPanel",
+      "summary": "NotificationsPanel is the bell that tells users something new happened — and, when they click it, shows the latest notifications in a small panel: \"Order ORD-1042 was paid\", \"Ana approved your invoice\".",
+      "directDependencies": [
+        "button",
+        "notification"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "notification"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "appHeader"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "state",
+        "2 dependencies"
+      ]
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "summary": "Pagination lets the user move through long lists (orders, customers, search results) page by page.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "table"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "data",
+        "navigation",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "searchBox",
+      "name": "SearchBox",
+      "summary": "SearchBox is the field where a user types what to look for.",
+      "directDependencies": [
+        "button",
+        "checkboxRadio",
+        "message"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "checkboxRadio",
+        "chip",
+        "message"
+      ],
+      "dependencyVia": {
+        "chip": "checkboxRadio"
+      },
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "appHeader"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "inputs",
+        "4 dependencies"
+      ]
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "summary": "Select lets a user choose one option, or several, from a predefined list: a country, a role, product colours.",
+      "directDependencies": [],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "inputs",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "sideNavigation",
+      "name": "SideNavigation",
+      "summary": "SideNavigation is the application's main menu at the side of the screen.",
+      "directDependencies": [
+        "button",
+        "message"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "message"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "layout",
+        "navigation",
+        "2 dependencies"
+      ]
+    },
+    {
+      "id": "stepper",
+      "name": "Stepper",
+      "summary": "Stepper shows a task split into ordered steps: where the user is, what is done and what is left.",
+      "directDependencies": [
+        "button",
+        "loader"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "loader"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "containers",
+        "navigation",
+        "state",
+        "2 dependencies"
+      ]
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "summary": "Table shows lists of records (orders, customers, invoices) in rows and columns.",
+      "directDependencies": [
+        "button",
+        "loader",
+        "message",
+        "pagination"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "loader",
+        "message",
+        "pagination"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "data",
+        "4 dependencies"
+      ]
+    },
+    {
+      "id": "textArea",
+      "name": "TextArea",
+      "summary": "TextArea is a multi-line field for free text such as comments, descriptions, notes or reasons.",
+      "directDependencies": [],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "inputs",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "textInput",
+      "name": "TextInput",
+      "summary": "TextInput is a single-line field where the user types a value: text, e-mail address, password, web address, phone number or number.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "inputs",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "toggle",
+      "name": "Toggle",
+      "summary": "Toggle captures one yes/no decision.",
+      "directDependencies": [],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "inputs",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "summary": "Tooltip shows a short text next to an element when the user points at it or reaches it with the keyboard: the name of an icon-only button (\"Delete\"), the full text of a cut-off name, or a short explanation (\"Fill in the required fields first\").",
+      "directDependencies": [],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [],
+      "dependencyVia": {},
+      "optional": [],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [
+        "accordion",
+        "actionMenu",
+        "appHeader",
+        "badge",
+        "breadcrumbs",
+        "button",
+        "calendar",
+        "collapsiblePanel",
+        "copyArea",
+        "form",
+        "loader",
+        "message",
+        "notification",
+        "notificationsPanel",
+        "pagination",
+        "searchBox",
+        "sideNavigation",
+        "stepper",
+        "table",
+        "textInput",
+        "topNavigation",
+        "treeView",
+        "uploadFiles"
+      ],
+      "optionalUsedByVia": {
+        "accordion": "button",
+        "actionMenu": "button",
+        "collapsiblePanel": "button",
+        "copyArea": "button",
+        "form": "button",
+        "loader": "button",
+        "message": "button",
+        "notificationsPanel": "button",
+        "pagination": "button",
+        "searchBox": "button",
+        "textInput": "button",
+        "topNavigation": "button"
+      },
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "no dependency"
+      ]
+    },
+    {
+      "id": "topNavigation",
+      "name": "TopNavigation",
+      "summary": "TopNavigation is the application's main navigation as a horizontal bar, usually inside the page header.",
+      "directDependencies": [
+        "button"
+      ],
+      "directOptional": [],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {
+        "tooltip": "button"
+      },
+      "usedBy": [
+        "appHeader"
+      ],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "basic"
+      ],
+      "keywords": [
+        "basic",
+        "navigation",
+        "1 dependency"
+      ]
+    },
+    {
+      "id": "treeView",
+      "name": "TreeView",
+      "summary": "TreeView shows information that has parents and children — folders and files, departments and people, categories and products — as a list the user opens level by level.",
+      "directDependencies": [
+        "button",
+        "loader",
+        "message"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "loader",
+        "message"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "data",
+        "inputs",
+        "navigation",
+        "3 dependencies"
+      ]
+    },
+    {
+      "id": "uploadFiles",
+      "name": "UploadFiles",
+      "summary": "UploadFiles lets the user add files to a form: an invoice, a contract, photos of a damage, a profile picture.",
+      "directDependencies": [
+        "button",
+        "loader"
+      ],
+      "directOptional": [
+        "tooltip"
+      ],
+      "hasAdjustment": true,
+      "dependencies": [
+        "button",
+        "loader"
+      ],
+      "dependencyVia": {},
+      "optional": [
+        "tooltip"
+      ],
+      "optionalVia": {},
+      "usedBy": [],
+      "usedByVia": {},
+      "optionalUsedBy": [],
+      "optionalUsedByVia": {},
+      "groups": [
+        "complex"
+      ],
+      "keywords": [
+        "complex",
+        "inputs",
+        "2 dependencies"
+      ]
+    }
+  ],
+  "keywords": [
+    "actions",
+    "basic",
+    "complex",
+    "containers",
+    "data",
+    "inputs",
+    "layout",
+    "navigation",
+    "state",
+    "time/date",
+    "no dependency",
+    "1 dependency",
+    "2 dependencies",
+    "3 dependencies",
+    "4 dependencies",
+    "11 dependencies"
+  ]
+}

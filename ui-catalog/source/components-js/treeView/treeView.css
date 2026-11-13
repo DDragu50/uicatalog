@@ -1,0 +1,193 @@
+/* ==========================================================================
+   treeView.css
+
+   Default generated DOM (selectionMode SINGLE, with a label):
+
+   <div id="files" class="ui-tree-view ui-tree-view-selection-single">
+     <div id="files-label" class="ui-tree-view-label">Folder</div>
+     <div class="ui-tree-view-body">
+       <ul id="files-tree" class="ui-tree-view-tree" role="tree" aria-labelledby="files-label" aria-required="true">
+         <li id="files-n1" role="treeitem" class="ui-tree-view-item" data-item="docs" aria-level="1" aria-setsize="2" aria-posinset="1"
+             aria-labelledby="files-n1-text" aria-describedby="files-n1-status" aria-expanded="true" aria-selected="false"
+             tabindex="0" style="--ui-tree-view-level:0">
+           <div class="ui-tree-view-row">
+             <span class="ui-tree-view-toggle" aria-hidden="true"></span>                  (arrow; empty space for items without sub-items)
+             <span class="ui-tree-view-icon" aria-hidden="true"><i class="fa-solid fa-folder"></i></span>   (icon)
+             <span id="files-n1-text" class="ui-tree-view-text">Documents</span>
+             <span class="ui-tree-view-badge">3</span>                                      (badge)
+             <span id="files-n1-status" class="ui-tree-view-status"></span>                 ("Loading…", load error)
+             <span class="ui-tree-view-loader"> → Loader (RING, SMALL) </span>               (a parent whose children load)
+           </div>
+           <ul class="ui-tree-view-group" role="group"> …treeitems… </ul>                (parents; [hidden] when closed)
+         </li>
+       </ul>
+       <div class="ui-tree-view-no-results"> → Message (INLINE, INFO) "No matching items" </div>
+     </div>
+     <div id="files-error" class="ui-tree-view-error" hidden></div>
+     <div class="ui-tree-view-dialog"> → Message (MODAL, DANGER) delete confirmation </div>
+   </div>
+
+   Conditional structures:
+   - selectionMode NONE / MULTIPLE: .ui-tree-view-selection-none / -multiple; NONE has no aria-selected; MULTIPLE has
+     aria-multiselectable on the tree, aria-checked="true|false|mixed" on treeitems and <span class="ui-tree-view-check"> (drawn box);
+   - label: optional; with mandatoryIndicator <span class="ui-tree-view-optional"> or <span class="ui-tree-view-mandatory" aria-hidden="true">*</span>;
+     no label: aria-label on the tree; labelPosition TOP / START: .ui-tree-view-label-top / -start (INHERIT adds none);
+   - actions (application actions on the current item): Button hosts <span class="ui-tree-view-action"> at the start of the toolbar,
+     then <span class="ui-tree-view-toolbar-separator"> when editing tools follow;
+   - editable: .ui-tree-view-editable, <div class="ui-tree-view-toolbar" role="group"> with Button hosts (.ui-tree-view-tool),
+     draggable="true" on enabled treeitems, .ui-tree-view-dragging on the dragged one, data-drop="before|after|inside" on the
+     row under the pointer, <input class="ui-tree-view-rename"> in place of the text while renaming;
+   - search: <div class="ui-tree-view-search"><input class="ui-tree-view-search-input" type="search"></div> above the body;
+     .ui-tree-view-searching on the root while a text is entered; filtered-out treeitems [hidden]; matches in
+     <mark class="ui-tree-view-match">;
+   - guideLines: .ui-tree-view-lines, a vertical line beside every open sub-list (::before of .ui-tree-view-group);
+   - current item (Tab target, toolbar target): .ui-tree-view-current on its treeitem (one at a time; a thin frame on the row);
+   - disabled item: aria-disabled="true"; loading: aria-busy="true" (the status text is for screen readers only and the
+     Loader ring shows after its delay; its host is not displayed while the ring is hidden); load error: .ui-tree-view-load-error;
+   - help: <div id="{id}-help" class="ui-tree-view-help"> after the body; failed validation: .ui-tree-view-invalid,
+     aria-invalid on the tree, the error shown (not a live region).
+
+   Notes: each level indents by one arrow column (--space-lg-3); the guide line runs under the centre of the parent's arrow.
+   --ui-tree-view-level is set by the component on each treeitem (0 = top level). The arrow and the check mark are drawn
+   with borders; rotate() values are geometric. Focus shows on the row (the treeitem itself also holds its sub-list).
+   Drop markers use inset box-shadows (top / bottom lines; they do not depend on the text direction).
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2, or write the same selector with the new value in a stylesheet that
+   loads later, in @layer overrides.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and text; label, optional text, asterisk */
+    .ui-tree-view { color:var(--c-text); font-family:var(--font-ui); font-weight:var(--fw-ui); font-size:var(--fs-control); line-height:var(--lh-compact); }
+    .ui-tree-view-label { font-size:var(--fs-label); font-weight:var(--fw-ui-strong); }
+    .ui-tree-view-optional { color:var(--c-muted); font-weight:var(--fw-ui); }
+    .ui-tree-view-mandatory { color:var(--c-danger-text); }
+    /* search field */
+    .ui-tree-view-search-input { font:inherit; border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); }
+    /* rows: corners, under the pointer, selected (SINGLE), disabled */
+    .ui-tree-view-row { border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); }
+    .ui-tree-view-row:hover { background-color:var(--c-surface-hover); }
+    .ui-tree-view-item[aria-selected="true"] > .ui-tree-view-row { background-color:var(--c-selected); color:var(--c-text); }
+    .ui-tree-view-item[aria-selected="true"] > .ui-tree-view-row .ui-tree-view-text { font-weight:var(--fw-ui-strong); }
+    .ui-tree-view-item[aria-disabled="true"] > .ui-tree-view-row { opacity:var(--opacity-disabled); }
+    /* open/close arrow; opening motion of the arrow */
+    .ui-tree-view-toggle { color:var(--c-muted); }
+    .ui-tree-view-toggle::before { border-right:var(--border-thin) solid currentColor; border-bottom:var(--border-thin) solid currentColor; transition:transform var(--transition-1); }
+    /* checkbox (MULTIPLE): box, ticked and partly ticked (mixed) */
+    .ui-tree-view-check { border-top:var(--border-thin) solid var(--c-muted); border-right:var(--border-thin) solid var(--c-muted); border-bottom:var(--border-thin) solid var(--c-muted); border-left:var(--border-thin) solid var(--c-muted); border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); background-color:var(--c-surface); }
+    .ui-tree-view-item:is([aria-checked="true"], [aria-checked="mixed"]) > .ui-tree-view-row .ui-tree-view-check { border-top-color:var(--c-accent); border-right-color:var(--c-accent); border-bottom-color:var(--c-accent); border-left-color:var(--c-accent); background-color:var(--c-accent); }
+    .ui-tree-view-item[aria-checked="true"] > .ui-tree-view-row .ui-tree-view-check::after { border-inline-end:var(--border-thick) solid var(--c-on-accent); border-block-end:var(--border-thick) solid var(--c-on-accent); }
+    .ui-tree-view-item[aria-checked="mixed"] > .ui-tree-view-row .ui-tree-view-check::after { background-color:var(--c-on-accent); }
+    /* icon, search match, badge, status (loading, load error) */
+    .ui-tree-view-icon { color:var(--c-muted); }
+    .ui-tree-view-match { background-color:transparent; color:inherit; font-weight:var(--fw-ui-emphasis); }
+    .ui-tree-view-badge { border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); background-color:var(--c-accent); color:var(--c-on-accent); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); }
+    .ui-tree-view-status { color:var(--c-muted); font-size:var(--fs-caption); }
+    .ui-tree-view-load-error > .ui-tree-view-row .ui-tree-view-status { color:var(--c-danger-text); }
+    /* rename field */
+    .ui-tree-view-rename { font:inherit; border-top:var(--border-thin) solid var(--c-accent); border-right:var(--border-thin) solid var(--c-accent); border-bottom:var(--border-thin) solid var(--c-accent); border-left:var(--border-thin) solid var(--c-accent); border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); background-color:var(--c-surface); color:var(--c-text); }
+    /* toolbar separator between the application's actions and the editing tools */
+    .ui-tree-view-toolbar-separator { background-color:var(--c-border); }
+    /* guide lines */
+    .ui-tree-view-lines .ui-tree-view-group::before { background-color:var(--c-border); }
+    /* current item (the one Tab reaches and the toolbar acts on): a thin frame, in every selection mode */
+    .ui-tree-view-current > .ui-tree-view-row { box-shadow:inset 0 0 0 var(--border-thin) var(--c-accent); }
+    /* drag and drop (the markers replace the frame while shown): the dragged item; the line before / after a row, or the row itself (inside) */
+    .ui-tree-view-dragging > .ui-tree-view-row { opacity:var(--opacity-disabled); }
+    .ui-tree-view-row[data-drop="before"] { box-shadow:inset 0 var(--border-thick) 0 0 var(--c-accent); }
+    .ui-tree-view-row[data-drop="after"] { box-shadow:inset 0 calc(-1 * var(--border-thick)) 0 0 var(--c-accent); }
+    .ui-tree-view-row[data-drop="inside"] { background-color:var(--c-selected); box-shadow:inset 0 0 0 var(--border-thick) var(--c-accent); }
+    /* validation, help, error */
+    .ui-tree-view-invalid .ui-tree-view-label { color:var(--c-danger-text); }
+    .ui-tree-view-help { color:var(--c-muted); font-size:var(--fs-label); line-height:var(--lh-body); }
+    .ui-tree-view-error { color:var(--c-danger-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-body); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* label, toolbar and search above the tree; help and error below */
+    .ui-tree-view { gap:var(--gap-tight); }
+    .ui-tree-view-toolbar { gap:var(--gap-inline-items); }   /* Buttons of one group */
+    .ui-tree-view-toolbar-separator { inline-size:var(--border-thin); block-size:var(--icon-size-large); margin-inline:var(--gap-tight); }
+    .ui-tree-view-search-input { min-block-size:var(--control-height); padding:var(--padding-control); }
+    .ui-tree-view-no-results { margin-block-start:var(--gap-tight); }
+    /* rows: height, padding (the start padding adds one arrow column per level), gap between the parts */
+    .ui-tree-view-row { gap:var(--gap-inline-items); min-block-size:var(--space-lg-3); padding:var(--gap-tight); padding-inline-start:calc(var(--gap-tight) + var(--ui-tree-view-level,0) * var(--space-lg-3)); }
+    /* arrow column and arrow; checkbox and check mark; icon; badge */
+    .ui-tree-view-toggle { inline-size:var(--space-lg-3); block-size:var(--space-lg-3); margin-inline-end:calc(-1 * var(--gap-inline-items)); }
+    .ui-tree-view-toggle::before { inline-size:var(--space-sm-3); block-size:var(--space-sm-3); }
+    .ui-tree-view-check { inline-size:var(--icon-size-medium); block-size:var(--icon-size-medium); }
+    .ui-tree-view-item[aria-checked="true"] > .ui-tree-view-row .ui-tree-view-check::after { inline-size:var(--space-sm-2); block-size:var(--space-md-1); }
+    .ui-tree-view-item[aria-checked="mixed"] > .ui-tree-view-row .ui-tree-view-check::after { inline-size:var(--space-md-1); block-size:var(--border-thick); }
+    .ui-tree-view-icon { inline-size:var(--icon-size-large); font-size:var(--icon-size-medium); }
+    .ui-tree-view-badge { min-inline-size:var(--icon-size-large); padding:0 var(--gap-tight); }
+    .ui-tree-view-rename { padding:0 var(--gap-tight); }
+    /* guide line: under the centre of the parent's arrow */
+    .ui-tree-view-lines .ui-tree-view-group::before { inline-size:var(--border-thin); inset-inline-start:calc(var(--gap-tight) + var(--ui-tree-view-level,0) * var(--space-lg-3) + var(--space-lg-3) / 2); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-tree-view { display:flex; flex-direction:column; min-inline-size:0; }
+    .ui-tree-view-toolbar { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-tree-view-toolbar-separator { flex:0 0 auto; }
+    .ui-tree-view-search-input { box-sizing:border-box; inline-size:100%; }
+    .ui-tree-view-search-input:focus-visible, .ui-tree-view-rename:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-tree-view-body { min-inline-size:0; }
+    .ui-tree-view-no-results:empty { display:none; }
+    .ui-tree-view-tree, .ui-tree-view-group { margin:0; padding:0; list-style:none; }
+    .ui-tree-view-group { position:relative; }
+    .ui-tree-view-group[hidden], .ui-tree-view-item[hidden] { display:none; }
+    .ui-tree-view-row { display:flex; align-items:center; box-sizing:border-box; cursor:default; user-select:none; }
+    .ui-tree-view-item { outline:none; }   /* the focus ring is drawn on the row (the treeitem also holds its sub-list) */
+    .ui-tree-view-item:focus-visible > .ui-tree-view-row { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-tree-view-item[aria-disabled="true"] > .ui-tree-view-row { cursor:not-allowed; }
+    .ui-tree-view-editable .ui-tree-view-item[draggable="true"] > .ui-tree-view-row { cursor:grab; }
+    /* arrow: two physical borders (right, bottom) turned: closed points to the text end (right; left in right-to-left),
+       open points down in both directions; hidden for items without sub-items */
+    .ui-tree-view-toggle { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; cursor:pointer; }
+    .ui-tree-view-toggle::before { content:''; transform:rotate(-45deg); }
+    .ui-tree-view-toggle:dir(rtl)::before { transform:rotate(135deg); }
+    .ui-tree-view-item[aria-expanded="true"] > .ui-tree-view-row .ui-tree-view-toggle::before { transform:rotate(45deg); }
+    .ui-tree-view-item:not([aria-expanded]) > .ui-tree-view-row .ui-tree-view-toggle { cursor:default; }
+    .ui-tree-view-item:not([aria-expanded]) > .ui-tree-view-row .ui-tree-view-toggle::before { visibility:hidden; }
+    /* checkbox: box with a centred mark (check: two borders turned; mixed: a bar) */
+    .ui-tree-view-check { position:relative; display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; box-sizing:border-box; cursor:pointer; }
+    .ui-tree-view-check::before { content:''; position:absolute; inset:calc(-1 * var(--space-sm-2)); }   /* a larger click area (box + 4px around it) */
+    .ui-tree-view-item[aria-disabled="true"] > .ui-tree-view-row .ui-tree-view-check { cursor:not-allowed; }
+    .ui-tree-view-item:is([aria-checked="true"], [aria-checked="mixed"]) > .ui-tree-view-row .ui-tree-view-check::after { content:''; }
+    .ui-tree-view-item[aria-checked="true"] > .ui-tree-view-row .ui-tree-view-check::after { transform:translateY(-15%) rotate(45deg); }
+    .ui-tree-view-icon { display:inline-flex; flex:0 0 auto; justify-content:center; }
+    .ui-tree-view-text { flex:1 1 auto; min-inline-size:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-tree-view-badge { flex:0 0 auto; text-align:center; }
+    .ui-tree-view-status { flex:0 0 auto; }
+    .ui-tree-view-status:empty { display:none; }
+    .ui-tree-view-item[aria-busy="true"] > .ui-tree-view-row .ui-tree-view-status { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    .ui-tree-view-loader { display:inline-flex; flex:0 0 auto; align-items:center; }
+    .ui-tree-view-loader:not(:has(.ui-loader-shown)) { display:none; }
+    .ui-tree-view-rename { box-sizing:border-box; inline-size:100%; min-inline-size:0; }
+    .ui-tree-view-lines .ui-tree-view-group::before { content:''; position:absolute; inset-block:0; pointer-events:none; }
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and tree: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-tree-view:not(.ui-tree-view-label-top), .ui-tree-view.ui-tree-view-label-start) { display:grid; grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        :is(.ui-labels-start .ui-tree-view:not(.ui-tree-view-label-top), .ui-tree-view.ui-tree-view-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-tree-view:not(.ui-tree-view-label-top), .ui-tree-view.ui-tree-view-label-start) > .ui-tree-view-label { grid-column:1; grid-row:1 / span 6; align-self:start; }
+    }
+    @media (prefers-reduced-motion:reduce) { .ui-tree-view-toggle::before { transition:none; } }
+}

@@ -1,0 +1,10 @@
+# Installed packages and local settings
+node_modules/
+.env
+
+# Contact messages received while testing locally
+server/messages/
+
+# Operating-system files
+.DS_Store
+Thumbs.db

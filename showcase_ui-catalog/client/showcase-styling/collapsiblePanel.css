@@ -1,0 +1,203 @@
+/* ==========================================================================
+   collapsiblePanel.css
+
+   Default generated structure (root: <section id="{id}" class="ui-collapsible-panel">):
+
+.ui-collapsible-panel
+├── .ui-collapsible-panel-header
+│   ├── .ui-collapsible-panel-toggle | .ui-collapsible-panel-heading   (inside h2–h6.ui-collapsible-panel-heading-level with headingLevel)
+│   │   ├── .ui-collapsible-panel-chevron [collapsible only]
+│   │   ├── .ui-collapsible-panel-icon [optional]
+│   │   └── .ui-collapsible-panel-titles
+│   │       ├── .ui-collapsible-panel-title
+│   │       └── .ui-collapsible-panel-description [optional]
+│   ├── .ui-collapsible-panel-chips [when chips configured]
+│   │   └── Chip component
+│   └── .ui-collapsible-panel-actions [when actions configured]
+│       └── span.ui-collapsible-panel-action → Button   (one host per action)
+│           └── Button component
+├── .ui-collapsible-panel-summary
+└── .ui-collapsible-panel-content
+
+Conditional behavior:
+- data-state="COLLAPSED" hides content.
+- data-show-summary-expanded="false" hides summary while expanded.
+- data-status controls panel semantic border styling only.
+- inline, compact and plain variants alter CollapsiblePanel presentation only (plain: no frame, line, background or
+  shadow, default spacing; used inside a container's own frame, e.g. Accordion JOINED).
+- .ui-collapsible-panel-bordered (bordered) adds the thin border; .ui-collapsible-panel-square (cornerRadius NONE)
+  removes the rounded corners. Both only for the card frame (DEFAULT, COMPACT).
+- Content children are rendered into div.ui-collapsible-panel-item hosts inside .ui-collapsible-panel-content.
+- Chip and Button presentation remains owned by their respective components.
+- font-size:1.5em on the chevron is an intentional proportion of the title size, not a design value.
+
+   The status (SUCCESS, WARNING, ERROR, INCOMPLETE) colours the border and the thicker left edge; it is also shown
+   by the panel's icon, never by colour alone. INLINE has no frame (bottom line only), COMPACT less padding.
+   The status edge is on the left (physical side) and does not move to the right in right-to-left languages.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and normal weight for the header and the summary (the title is --fw-ui-strong, below);
+       the content keeps its own fonts */
+    .ui-collapsible-panel-header, .ui-collapsible-panel-summary { font-family: var(--font-ui); font-weight: var(--fw-ui); }
+    /* the panel frame: a thick left edge (status edge, transparent without a status), corners, background, shadow;
+       bordered: a thin border on the other three sides as well; cornerRadius NONE: square corners */
+    .ui-collapsible-panel {
+        border-top: 0 solid var(--c-border);
+        border-right: 0 solid var(--c-border);
+        border-bottom: 0 solid var(--c-border);
+        border-left: var(--border-thick) solid transparent;
+        border-top-left-radius: var(--radius-panel);
+        border-top-right-radius: var(--radius-panel);
+        border-bottom-right-radius: var(--radius-panel);
+        border-bottom-left-radius: var(--radius-panel);
+        background-color: var(--c-surface);
+        box-shadow: var(--shadow-sm);
+    }
+    .ui-collapsible-panel-bordered {
+        border-top: var(--border-thin) solid var(--c-border);
+        border-right: var(--border-thin) solid var(--c-border);
+        border-bottom: var(--border-thin) solid var(--c-border);
+    }
+    .ui-collapsible-panel-square { border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; }
+
+    /* status: border colour (top, right, bottom) and status edge colour (left) */
+    .ui-collapsible-panel[data-status="SUCCESS"] { border-color: var(--c-success-border); border-left-color: var(--c-success); }
+    .ui-collapsible-panel[data-status="WARNING"] { border-color: var(--c-warning-border); border-left-color: var(--c-warning); }
+    .ui-collapsible-panel[data-status="ERROR"] { border-color: var(--c-danger-border); border-left-color: var(--c-danger); }
+    .ui-collapsible-panel[data-status="INCOMPLETE"] { border-color: var(--c-border); border-left-color: var(--c-grey-40); }
+
+    /* INLINE variant: no frame, bottom line only (comes after the status rules, so the line keeps its colour) */
+    .ui-collapsible-panel.ui-collapsible-panel-inline {
+        border-top: 0 solid var(--c-border);
+        border-right: 0 solid var(--c-border);
+        border-bottom: var(--border-thin) solid var(--c-border);
+        border-left: 0 solid var(--c-border);
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        background-color: transparent;
+        box-shadow: none;
+    }
+    /* PLAIN variant: nothing of its own (no frame, line, background, shadow); its container draws the frame */
+    .ui-collapsible-panel.ui-collapsible-panel-plain {
+        border-top: 0 solid transparent;
+        border-right: 0 solid transparent;
+        border-bottom: 0 solid transparent;
+        border-left: 0 solid transparent;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    /* header button: focus ring corners, disabled look */
+    .ui-collapsible-panel-toggle:focus-visible { border-radius: var(--radius-sm); }
+    .ui-collapsible-panel-toggle:disabled { opacity: var(--opacity-disabled); }
+
+    /* arrow, title, description */
+    .ui-collapsible-panel-chevron { color: var(--c-muted); transition: transform var(--transition-1); }
+    .ui-collapsible-panel-title { font-weight: var(--fw-ui-strong); }
+    .ui-collapsible-panel-description { color: var(--c-muted); font-size: var(--fs-label); }
+
+    /* summary (below the header) */
+    .ui-collapsible-panel-summary { font-size: var(--fs-label); }
+    .ui-collapsible-panel-summary-empty { color: var(--c-muted); font-family: var(--font-italic); font-style: italic; }
+
+    /* line between header and content */
+    .ui-collapsible-panel-content { border-top: var(--border-thin) solid var(--c-border); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* header: space around and between arrow, icon and titles */
+    .ui-collapsible-panel-header { gap: var(--gap-inline-items); padding: var(--padding-card) var(--padding-panel); }
+    .ui-collapsible-panel-toggle, .ui-collapsible-panel-heading { gap: var(--gap-inline-items); }
+    .ui-collapsible-panel-titles { gap: var(--space-sm-1); }                      /* title to description */
+
+    /* chips and action Buttons in the header (Buttons of one group: --gap-inline-items) */
+    .ui-collapsible-panel-chips { gap: var(--gap-tight); }
+    .ui-collapsible-panel-actions { gap: var(--gap-inline-items); }
+    .ui-collapsible-panel-chips .ui-chip-list { gap: var(--gap-tight); }
+
+    /* summary and content */
+    .ui-collapsible-panel-summary { gap: var(--gap-tight); padding: 0 var(--padding-panel) var(--padding-card); }
+    .ui-collapsible-panel-content { padding: var(--padding-card) var(--padding-panel) var(--padding-panel); }
+
+    /* INLINE: no left / right padding */
+    .ui-collapsible-panel-inline .ui-collapsible-panel-header,
+    .ui-collapsible-panel-inline .ui-collapsible-panel-summary,
+    .ui-collapsible-panel-inline .ui-collapsible-panel-content { padding-inline: 0; }
+
+    /* COMPACT: smaller padding */
+    .ui-collapsible-panel-compact .ui-collapsible-panel-header { padding: var(--space-sm-3) var(--padding-card); }
+    .ui-collapsible-panel-compact .ui-collapsible-panel-summary { padding: 0 var(--padding-card) var(--space-sm-3); }
+    .ui-collapsible-panel-compact .ui-collapsible-panel-content { padding: var(--gap-toolbar) var(--padding-card) var(--padding-card); }
+
+    /* group wrapper (.ui-collapsible-panel-group): space between panels */
+    .ui-collapsible-panel-group { gap: var(--gap-toolbar); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-collapsible-panel { inline-size:var(--percentage-full); overflow:hidden; container-type:inline-size; container-name:panel; }
+
+    .ui-collapsible-panel-header { display:flex; align-items:flex-start; }
+    /* headingLevel 2–6: the heading around the header control adds no look of its own (no margin, inherited type) */
+    .ui-collapsible-panel-heading-level { display:flex; min-inline-size:0; margin:0; font:inherit; color:inherit; }
+    .ui-collapsible-panel-toggle,
+    .ui-collapsible-panel-heading { display:flex; align-items:flex-start; min-inline-size:0; border:0; background:transparent; padding:0; color:inherit; font:inherit; text-align:start; }
+    .ui-collapsible-panel-toggle { cursor:pointer; }
+    .ui-collapsible-panel-toggle:disabled { cursor:default; }
+    .ui-collapsible-panel-toggle:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+
+    /* arrow: 1.5em is a proportion of the title size; drawn as a character, turned when expanded */
+    .ui-collapsible-panel-chevron { flex-shrink:0; font-size:1.5em; line-height:1; }
+    .ui-collapsible-panel-chevron::before { content:"\203A"; }
+    .ui-collapsible-panel[data-state="EXPANDED"] .ui-collapsible-panel-chevron { transform:rotate(90deg); }
+
+    .ui-collapsible-panel-icon { flex-shrink:0; line-height:1; }
+    .ui-collapsible-panel-titles { display:grid; min-inline-size:0; }
+
+    .ui-collapsible-panel-chips,
+    .ui-collapsible-panel-actions { display:flex; flex-wrap:wrap; align-items:center; flex-shrink:0; }
+    .ui-collapsible-panel-actions { margin-inline-start:auto; }
+    .ui-collapsible-panel-chips .ui-chip-list { display:flex; align-items:center; flex-wrap:wrap; }
+    .ui-collapsible-panel-action { display:flex; }
+
+    .ui-collapsible-panel-summary { display:flex; flex-wrap:wrap; align-items:center; }
+
+    .ui-collapsible-panel[data-state="COLLAPSED"] .ui-collapsible-panel-content { display:none; }
+    .ui-collapsible-panel[data-state="EXPANDED"][data-show-summary-expanded="false"] .ui-collapsible-panel-summary { display:none; }
+    .ui-collapsible-panel-summary[hidden],
+    .ui-collapsible-panel-summary:empty { display:none; }
+
+    .ui-collapsible-panel-group { display:grid; }
+
+    /* narrow panel (below 26rem): chips and action Buttons move to their own row, on the right */
+    @container panel (max-width:26rem) {
+        .ui-collapsible-panel-header { flex-wrap:wrap; }
+        .ui-collapsible-panel-chips,
+        .ui-collapsible-panel-actions { inline-size:var(--percentage-full); justify-content:flex-end; }
+    }
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<title>UI Catalog</title>
+<meta name="description" content="UI Catalog: how each component of the library works and how to use it.">
+<!-- 1. App design tokens (light theme forced by data-theme="light" above) -->
+<link rel="stylesheet" href="local-styling/design-system.css">
+<!-- 1b. Page base: reset and text styles of bare elements (body, h1–h6, p, code, links) -->
+<link rel="stylesheet" href="local-styling/app-shell.css">
+<!-- 2. App styling of the components used by the app -->
+<link rel="stylesheet" href="local-styling/button.css">
+<link rel="stylesheet" href="local-styling/copyArea.css">
+<link rel="stylesheet" href="local-styling/chip.css">
+<link rel="stylesheet" href="local-styling/checkboxRadio.css">
+<link rel="stylesheet" href="local-styling/message.css">
+<link rel="stylesheet" href="local-styling/notification.css">
+<link rel="stylesheet" href="local-styling/notificationsPanel.css">
+<link rel="stylesheet" href="local-styling/badge.css">
+<link rel="stylesheet" href="local-styling/searchBox.css">
+<link rel="stylesheet" href="local-styling/actionMenu.css">
+<link rel="stylesheet" href="local-styling/breadcrumbs.css">
+<link rel="stylesheet" href="local-styling/topNavigation.css">
+<link rel="stylesheet" href="local-styling/appHeader.css">
+<link rel="stylesheet" href="local-styling/sideNavigation.css">
+<link rel="stylesheet" href="local-styling/collapsiblePanel.css">
+<link rel="stylesheet" href="local-styling/accordion.css">
+<link rel="stylesheet" href="local-styling/contentGroup.css">
+<link rel="stylesheet" href="local-styling/textInput.css">
+<link rel="stylesheet" href="local-styling/textArea.css">
+<link rel="stylesheet" href="local-styling/select.css">
+<link rel="stylesheet" href="local-styling/toggle.css">
+<link rel="stylesheet" href="local-styling/pagination.css">
+<link rel="stylesheet" href="local-styling/table.css">
+<link rel="stylesheet" href="local-styling/form.css">
+<!-- 3. Icons (copy in the project) -->
+<link rel="stylesheet" href="vendor/fontawesome-free-7.3.1-web/css/all.min.css">
+<!-- 4. Page layout of the app -->
+<link rel="stylesheet" href="app/app.css">
+</head>
+<body>
+<div id="app-header-host"></div>
+<div class="app-layout">
+<div id="app-side-host" class="app-side"></div>
+<main id="main" class="app-main" tabindex="-1">
+<div id="app-page-host" class="app-page-host"></div>
+<noscript><p>This app needs JavaScript. Turn JavaScript on in your browser and reload the page.</p></noscript>
+</main>
+</div>
+<footer id="app-footer" class="app-footer"></footer>
+<script type="module" src="app/appIndex.js"></script>
+</body>
+</html>

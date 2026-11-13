@@ -1,0 +1,97 @@
+/* ==========================================================================
+   copyArea.css
+
+   Default generated DOM (code, icon Copy button):
+
+   <div id="install" class="ui-copy-area ui-copy-area-code ui-copy-area-button-icon">
+     <pre class="ui-copy-area-body" role="region" tabindex="0" aria-label="Install command" dir="ltr"><code>npm install ui-catalog</code></pre>
+     <span class="ui-copy-area-action" data-button="copy"> → Button (icon, TERTIARY, SMALL: "Copy", after a copy "Copied") </span>
+     <span class="ui-copy-area-message" hidden></span>                               (shown when the copy fails)
+     <span class="ui-copy-area-status ui-copy-area-visually-hidden" role="status"></span>  (announces the result)
+   </div>
+
+   Conditional structures:
+     lineNumbers (CODE):  .ui-copy-area-line-numbers on the root; each line is <span class="ui-copy-area-line">,
+                          numbered by a CSS counter (not selected, not copied).
+     textStyle PLAIN:     <span class="ui-copy-area ui-copy-area-plain …"> (can stand inside running text);
+                          <span class="ui-copy-area-text">…</span> instead of the pre: the text in the component font
+                          with the button after it, no box.
+     content:             .ui-copy-area-content; <div class="ui-copy-area-body" role="region" tabindex="0"
+                          aria-label="…"> holds what the application renders; bordered box without a background.
+     copyButton TEXT:     .ui-copy-area-button-text; the Button shows "Copy" / "Copied" with the icon.
+     failed copy:         the message shows texts.failed (with copyValue: <code class="ui-copy-area-fallback">, selected).
+     while copying:       <div class="ui-copy-area-staging" aria-hidden="true"> is added for a moment (the cleaned copy
+                          of the content, read as plain text and HTML) and removed.
+
+   Deliberate literals (em proportions of the component's own font size):
+     0.9em  code text, slightly smaller than the text around it (the code role has no size of its own);
+     2.5em  minimum width of a line number.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --font-code, --fw-ui, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2, or write the same selector with the new value in a stylesheet that
+   loads later, in @layer overrides.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* code and content: one box with a border and rounded corners; code on its own background */
+    .ui-copy-area-code, .ui-copy-area-content { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-panel); border-top-right-radius:var(--radius-panel); border-bottom-right-radius:var(--radius-panel); border-bottom-left-radius:var(--radius-panel); }
+    .ui-copy-area-code { background-color:var(--copy-area-bg); color:var(--copy-area-color); }
+    .ui-copy-area-content { color:var(--c-text); }
+    .ui-copy-area-code .ui-copy-area-body { font-family:var(--font-code); font-size:0.9em; font-weight:var(--fw-ui); line-height:var(--lh-body); }
+    .ui-copy-area-code .ui-copy-area-body code { font:inherit; color:inherit; }
+    .ui-copy-area-line::before { color:var(--c-muted); }
+    /* plain text: the component font */
+    .ui-copy-area-text { color:var(--c-text); font-family:var(--font-ui); font-size:var(--fs-control); font-weight:var(--fw-ui); line-height:var(--lh-body); }
+    /* failed copy */
+    .ui-copy-area-message { color:var(--c-danger-text); font-family:var(--font-ui); font-size:var(--fs-label); font-weight:var(--fw-ui); line-height:var(--lh-body); }
+    .ui-copy-area-fallback { color:var(--c-text); font-family:var(--font-code); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* code: inner space; the button side is narrower (the button has its own space) */
+    .ui-copy-area-code .ui-copy-area-body { max-block-size:var(--copy-area-max-height); padding:var(--space-md-3); padding-inline-end:var(--gap-inline-items); }
+    .ui-copy-area-content .ui-copy-area-body { max-block-size:var(--copy-area-max-height); padding:var(--padding-card); padding-inline-end:var(--gap-inline-items); }
+    .ui-copy-area-code .ui-copy-area-action, .ui-copy-area-content .ui-copy-area-action { padding:var(--space-sm-2); }
+    .ui-copy-area-plain { column-gap:var(--gap-inline-items); }
+    .ui-copy-area-line::before { min-inline-size:2.5em; margin-inline-end:var(--space-md-3); }
+    .ui-copy-area-message { padding-block-start:var(--gap-tight); }
+    .ui-copy-area-code .ui-copy-area-message, .ui-copy-area-content .ui-copy-area-message { padding:0 var(--space-md-3) var(--space-md-3); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    /* the area and its button side by side; the failure message below both; code and content fill the width */
+    .ui-copy-area { position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"body action" "message message"; box-sizing:border-box; min-inline-size:0; max-inline-size:100%; text-align:start; }
+    .ui-copy-area-code, .ui-copy-area-content { inline-size:100%; }
+    .ui-copy-area-body { grid-area:body; margin:0; overflow:auto; min-inline-size:0; box-sizing:border-box; }
+    pre.ui-copy-area-body { white-space:pre; }
+    /* plain text: the text and the button together on one line (inside running text; a long text wraps, the button stays
+       beside it); the failure message on its own line */
+    .ui-copy-area-plain { display:inline-flex; align-items:center; vertical-align:middle; }
+    .ui-copy-area-plain:has(> .ui-copy-area-message:not([hidden])) { flex-wrap:wrap; }
+    .ui-copy-area-plain .ui-copy-area-message { flex:1 0 100%; }
+    .ui-copy-area-text { grid-area:body; flex:0 1 auto; min-inline-size:0; overflow-wrap:anywhere; }
+    .ui-copy-area-action { grid-area:action; display:inline-flex; align-self:start; }
+    .ui-copy-area-plain .ui-copy-area-action { align-self:center; }
+    .ui-copy-area-message { grid-area:message; display:block; }
+    .ui-copy-area-message[hidden] { display:none; }
+    .ui-copy-area-fallback { overflow-wrap:anywhere; user-select:all; }
+    .ui-copy-area-line-numbers code { counter-reset:ui-copy-area-line; }
+    .ui-copy-area-line::before { counter-increment:ui-copy-area-line; content:counter(ui-copy-area-line); display:inline-block; text-align:end; user-select:none; }
+    .ui-copy-area-body:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-copy-area-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    .ui-copy-area-staging { position:absolute; inline-size:1px; block-size:1px; overflow:hidden; clip-path:inset(50%); }
+}

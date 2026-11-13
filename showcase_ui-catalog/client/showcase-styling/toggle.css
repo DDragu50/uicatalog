@@ -1,0 +1,150 @@
+/* ==========================================================================
+   toggle.css
+
+   Default generated DOM (SWITCH, MEDIUM, stateText ON_OFF, stateDisplay CURRENT):
+
+   <div class="ui-toggle ui-toggle-switch ui-toggle-size-medium" style="--ui-toggle-on-bg:var(--toggle-track-on-bg);--ui-toggle-off-bg:var(--toggle-track-off-bg)">
+     <label class="ui-toggle-label" for="notify">Email notifications</label>
+     <div class="ui-toggle-row">
+       <span class="ui-toggle-control">
+         <input id="notify" name="notify" class="ui-toggle-input" type="checkbox" role="switch">   (native, transparent, on top)
+         <span class="ui-toggle-track" aria-hidden="true"><span class="ui-toggle-knob"></span></span>
+       </span>
+       <span class="ui-toggle-state" aria-hidden="true">Off</span>                (not with stateText NONE)
+     </div>
+     <div id="notify-help" class="ui-toggle-help">…</div>                         (optional)
+   </div>
+
+   Conditional structures:
+   - stateDisplay BOTH: .ui-toggle-display-both; span.ui-toggle-side.ui-toggle-side-off before and
+     span.ui-toggle-side.ui-toggle-side-on after the control (aria-hidden, clickable); the active side is emphasized;
+   - busy: .ui-toggle-busy on the root (knob spinner, static with reduced motion);
+   - RADIO: <fieldset id class="ui-toggle ui-toggle-radio ui-toggle-{horizontal|vertical}" role="radiogroup">
+       <legend class="ui-toggle-label">Question [span.ui-toggle-optional | span.ui-toggle-mandatory]</legend>
+       <div class="ui-toggle-options"><label class="ui-toggle-option"><input class="ui-toggle-radio-input" type="radio"><span class="ui-toggle-option-label">On</span></label>…</div>
+       [div.ui-toggle-help] <div class="ui-toggle-error" hidden></div>
+     </fieldset>   (+ .ui-toggle-invalid while the required error is shown);
+   - VIEW: div.ui-toggle.ui-toggle-view > p.ui-toggle-label + p.ui-toggle-view-value.
+
+   Track colours come from --ui-toggle-on-bg / --ui-toggle-off-bg, mapped to design tokens (defaults
+   --toggle-track-on-bg / --toggle-track-off-bg). The state is shown by knob position and colour together; the knob
+   moves with logical properties (mirrors in right-to-left languages). calc() doubles of tokens are geometric.
+
+   Variables left: --ui-toggle-on-bg / --ui-toggle-off-bg (track colours), written by the component on the root from the
+   configuration (onBackgroundToken / offBackgroundToken); and two geometry helpers set in part 2 per size option and
+   used in part 3: --ui-toggle-width / --ui-toggle-height (the track; the knob size and travel are computed from them).
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and normal weight for every text of the toggle (label, "*", error and the active side are --fw-ui-strong) */
+    .ui-toggle { font-family: var(--font-ui); font-weight: var(--fw-ui); }
+    .ui-toggle-label { color: var(--c-text); font-size: var(--fs-label); font-weight: var(--fw-ui-strong); line-height: var(--lh-compact); }
+    .ui-toggle-optional { color: var(--c-muted); font-weight: var(--fw-ui); }
+    .ui-toggle-mandatory { color: var(--c-danger-text); }
+    .ui-toggle-help { color: var(--c-muted); font-size: var(--fs-label); line-height: var(--lh-body); }
+    .ui-toggle-error { color: var(--c-danger-text); font-size: var(--fs-label); font-weight: var(--fw-ui-strong); line-height: var(--lh-body); }
+    .ui-toggle-invalid > .ui-toggle-label { color: var(--c-danger-text); }
+    .ui-toggle-view-value { color: var(--c-text); font-size: var(--fs-control); }
+
+    /* DISABLED LABEL — the label and the "*" of a disabled toggle use the secondary text colour.
+       Disabled = state INACTIVE, or inside a disabled fieldset (e.g. ContentGroup disabled:true); :has() looks for a
+       disabled switch or radio inside the toggle. "(Optional)" and the help text are already --c-muted; the error stays red.
+       To change the colour, edit these two lines (a plain .ui-toggle-label rule elsewhere cannot override them). */
+    .ui-toggle:has(:is(.ui-toggle-input, .ui-toggle-radio-input):disabled) .ui-toggle-label { color: var(--c-muted); }
+    .ui-toggle:has(:is(.ui-toggle-input, .ui-toggle-radio-input):disabled) .ui-toggle-mandatory { color: var(--c-muted); }
+
+    /* switch: track (colours from the configuration), knob, motion; disabled track */
+    .ui-toggle-track { border-top-left-radius: var(--radius-pill); border-top-right-radius: var(--radius-pill); border-bottom-right-radius: var(--radius-pill); border-bottom-left-radius: var(--radius-pill); background-color: var(--ui-toggle-off-bg); transition: background-color var(--transition-1); }
+    .ui-toggle-knob { border-top-left-radius: var(--radius-pill); border-top-right-radius: var(--radius-pill); border-bottom-right-radius: var(--radius-pill); border-bottom-left-radius: var(--radius-pill); background-color: var(--toggle-knob-bg); box-shadow: var(--shadow-sm); transition: inset-inline-start var(--transition-1); }
+    .ui-toggle-input:checked + .ui-toggle-track { background-color: var(--ui-toggle-on-bg); }
+    .ui-toggle-input:disabled + .ui-toggle-track { opacity: var(--opacity-disabled); }
+    .ui-toggle-state { color: var(--c-text); font-size: var(--fs-control); }
+
+    /* both values visible (Off switch On): the inactive side is muted, the active side strong */
+    .ui-toggle-side { color: var(--c-muted); font-size: var(--fs-control); }
+    .ui-toggle-display-both:has(.ui-toggle-input:checked) .ui-toggle-side-on,
+    .ui-toggle-display-both:not(:has(.ui-toggle-input:checked)) .ui-toggle-side-off { color: var(--c-text); font-weight: var(--fw-ui-strong); }
+    .ui-toggle-display-both:has(.ui-toggle-input:disabled) .ui-toggle-side { opacity: var(--opacity-disabled); }
+
+    /* busy: the knob becomes a spinner ring */
+    .ui-toggle-busy .ui-toggle-knob { border-top: var(--border-thick) solid var(--c-border); border-right: var(--border-thick) solid var(--c-border); border-bottom: var(--border-thick) solid var(--c-border); border-left: var(--border-thick) solid var(--c-border); border-top-color: var(--c-accent); animation: ui-toggle-spin var(--spinner-duration) linear infinite; }
+
+    /* radio buttons (presentation RADIO) */
+    .ui-toggle-option { color: var(--c-text); font-size: var(--fs-control); }
+    .ui-toggle-option:has(.ui-toggle-radio-input:disabled) { opacity: var(--opacity-disabled); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-toggle { gap: var(--gap-tight); margin: 0 0 var(--gap-section); }        /* label, control, help */
+    /* track size per size option: geometry helpers used in part 3 (knob size and travel) */
+    .ui-toggle-size-medium { --ui-toggle-width: var(--toggle-track-width); --ui-toggle-height: var(--toggle-track-height); }
+    .ui-toggle-size-small { --ui-toggle-width: var(--toggle-track-width-small); --ui-toggle-height: var(--toggle-track-height-small); }
+    .ui-toggle-row { gap: var(--gap-inline-items); }                               /* switch to its text */
+    /* space between knob and track edge */
+    .ui-toggle-knob { inset-block-start: var(--border-thick); inset-inline-start: var(--border-thick);
+      inline-size: calc(var(--ui-toggle-height) - 2 * var(--border-thick)); block-size: calc(var(--ui-toggle-height) - 2 * var(--border-thick)); }
+    .ui-toggle-input:checked + .ui-toggle-track .ui-toggle-knob { inset-inline-start: calc(var(--ui-toggle-width) - var(--ui-toggle-height) + var(--border-thick)); }
+    .ui-toggle-options { gap: var(--gap-toolbar); }                                /* HORIZONTAL radio options */
+    .ui-toggle-vertical .ui-toggle-options { gap: var(--gap-tight); }
+    .ui-toggle-option { gap: var(--gap-inline-items); }                            /* radio to its label */
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-toggle { display:grid; min-inline-size:0; padding:0; border:0; }
+    .ui-toggle-label { margin:0; padding:0; }
+    .ui-toggle-view-value { margin:0; }
+
+    /* Switch */
+    .ui-toggle-row { display:flex; align-items:center; }
+    .ui-toggle-control { position:relative; display:inline-flex; flex:0 0 auto; inline-size:var(--ui-toggle-width); block-size:var(--ui-toggle-height); }
+    .ui-toggle-input { position:absolute; inset:0; inline-size:100%; block-size:100%; margin:0; opacity:0; cursor:pointer; z-index:1; }
+    .ui-toggle-input:disabled { cursor:not-allowed; }
+    .ui-toggle-track { position:relative; inline-size:100%; block-size:100%; }
+    .ui-toggle-knob { box-sizing:border-box; position:absolute; }
+    .ui-toggle-input:focus-visible + .ui-toggle-track { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+
+    /* Both values visible: Off (switch) On — the knob moves toward the active value */
+    .ui-toggle-side { cursor:pointer; user-select:none; }
+    .ui-toggle-display-both:has(.ui-toggle-input:disabled) .ui-toggle-side { cursor:not-allowed; }
+
+    .ui-toggle-busy .ui-toggle-input, .ui-toggle-busy .ui-toggle-side { cursor:progress; }
+    @keyframes ui-toggle-spin { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion:reduce) { .ui-toggle-knob, .ui-toggle-track { transition:none; } .ui-toggle-busy .ui-toggle-knob { animation:none; } }
+
+    /* Radio buttons */
+    .ui-toggle-options { display:flex; }
+    .ui-toggle-vertical .ui-toggle-options { flex-direction:column; }
+    .ui-toggle-horizontal .ui-toggle-options { flex-direction:row; flex-wrap:wrap; }
+    .ui-toggle-option { display:inline-flex; align-items:center; cursor:pointer; }
+    .ui-toggle-radio-input { margin:0; }
+    .ui-toggle-option:has(.ui-toggle-radio-input:disabled) { cursor:not-allowed; }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and field: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-toggle:not(.ui-toggle-label-top), .ui-toggle.ui-toggle-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        :is(.ui-labels-start .ui-toggle:not(.ui-toggle-label-top), .ui-toggle.ui-toggle-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-toggle:not(.ui-toggle-label-top), .ui-toggle.ui-toggle-label-start) > .ui-toggle-label { grid-column:1; float:inline-start; margin:0; align-self:center; }
+    }
+}

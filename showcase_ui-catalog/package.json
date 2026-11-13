@@ -1,0 +1,19 @@
+{
+  "name": "showcase-ui-catalog",
+  "version": "0.2.0",
+  "description": "Showcase web app for the ui-catalog component library.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "setup": "node server/sync-components.js && node server/build-catalog.js",
+    "sync": "node server/sync-components.js",
+    "sync:showcase": "node server/sync-components.js --showcase",
+    "catalog": "node server/build-catalog.js",
+    "check": "node server/check-adjustments.js",
+    "start": "node server/server.js",
+    "public": "node server/build-public.js"
+  }
+}

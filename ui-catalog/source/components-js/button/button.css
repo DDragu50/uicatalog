@@ -1,0 +1,188 @@
+/* ==========================================================================
+   button.css
+
+   Default generated DOM:
+
+   Normal button:
+   <button class="ui-button ui-button-button ui-button-primary ui-button-size-medium ui-button-radius-none ui-button-width-fit-content" type="button">
+     <span class="ui-button-icon ui-button-icon-before ui-button-icon-size-medium" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+     <span class="ui-button-label">Continue</span>
+   </button>
+
+   Icon-button:
+   <button class="ui-button ui-button-icon-button ui-button-primary ui-button-size-medium ui-button-icon-radius-circle" type="button" aria-label="Delete item">
+     <span class="ui-button-icon ui-button-icon-only ui-button-icon-size-medium" aria-hidden="true"><i class="fa-solid fa-trash"></i></span>
+   </button>
+
+   Link (href set): the same classes on <a>, plus ui-button-as-link; a disabled link has no href, role="link" and
+   aria-disabled="true". A link that opens in a new tab adds a hidden text and, unless iconAfter is set, an icon:
+   <a class="ui-button … ui-button-as-link" href="…" target="_blank" rel="noopener">
+     <span class="ui-button-label">Guide</span><span class="ui-button-visually-hidden"> (opens in a new tab)</span>
+     <span class="ui-button-icon ui-button-icon-after ui-button-icon-new-tab …" aria-hidden="true"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+   </a>
+
+   Width MIN_WIDTH: the component sets style="--ui-button-min-width:<n>px" on the button (configuration minWidth).
+
+   Part 1 has one block per hierarchy (PRIMARY, SECONDARY, TERTIARY, LINK) with everything that makes its look: border,
+   background, text, under the pointer / pressed, disabled. To change one
+   type, edit only its block. Corners come from the configuration (decision 195): radius (text buttons) and
+   iconButtonRadius (icon buttons) add ui-button-radius-* / ui-button-icon-radius-*, styled in the CORNERS block after
+   the hierarchies. Library defaults: text buttons square (radius NONE, so they read as actions next to rounded chips
+   and tags), icon buttons round (iconButtonRadius CIRCLE).
+
+   The only variable that remains belongs to the component's JavaScript: --ui-button-min-width (width MIN_WIDTH).
+   Sizes: MEDIUM is var(--control-height) high; SMALL and LARGE are one var(--gap-inline-items) lower / higher.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   ui-catalog source and client/local-styling use this file with the app look; client/showcase-styling keeps
+   the original values, which the lines marked [APP] name in brackets (library / original).
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* every button: type family, line height, motion */
+    .ui-button {
+        font-family: var(--font-ui);
+        line-height: var(--lh-compact);
+        transition: background-color var(--transition-1), border-color var(--transition-1), color var(--transition-1);
+    }
+    .ui-button-icon, .ui-button-icon i { line-height: var(--lh-compact); }
+
+    /* text size per control size */
+    .ui-button-size-small { font-size: var(--fs-caption); }
+    .ui-button-size-medium { font-size: var(--fs-label); }
+    .ui-button-size-large { font-size: var(--fs-control); }
+
+    /* PRIMARY ------------------------------------------------------------- */
+    .ui-button-primary {
+        border-top: var(--border-thin) solid var(--c-accent);
+        border-right: var(--border-thin) solid var(--c-accent);
+        border-bottom: var(--border-thin) solid var(--c-accent);
+        border-left: var(--border-thin) solid var(--c-accent);
+        background-color: var(--c-grey-95);   /* [APP] library: var(--c-accent) */
+        color: var(--c-on-accent);
+        font-weight: var(--fw-ui-strong);
+    }
+    .ui-button-primary:hover:not(:disabled,[aria-disabled="true"]), .ui-button-primary:active:not(:disabled,[aria-disabled="true"]) { border-color: var(--c-accent-hover); background-color: var(--c-accent-hover); color: var(--c-on-accent); }
+    .ui-button-primary:is(:disabled,[aria-disabled="true"]) { opacity: var(--opacity-disabled); }
+
+    /* SECONDARY ----------------------------------------------------------- */
+    .ui-button-secondary {
+        border-top: var(--border-thin) solid var(--c-accent);
+        border-right: var(--border-thin) solid var(--c-accent);
+        border-bottom: var(--border-thin) solid var(--c-accent);
+        border-left: var(--border-thin) solid var(--c-accent);
+        background-color: var(--c-surface);
+        color: var(--c-accent);
+        font-weight: var(--fw-ui-strong);
+    }
+    .ui-button-secondary:hover:not(:disabled,[aria-disabled="true"]), .ui-button-secondary:active:not(:disabled,[aria-disabled="true"]) { border-color: var(--c-accent); background-color: var(--c-surface-hover); color: var(--c-text); }
+    .ui-button-secondary:is(:disabled,[aria-disabled="true"]) { opacity: var(--opacity-disabled); }
+
+    /* TERTIARY ------------------------------------------------------------ */
+    .ui-button-tertiary {
+        border-top: var(--border-thin) solid transparent;
+        border-right: var(--border-thin) solid transparent;
+        border-bottom: var(--border-thin) solid transparent;
+        border-left: var(--border-thin) solid transparent;
+        background-color: transparent;
+        color: var(--c-text);
+        font-weight: var(--fw-ui-strong);
+    }
+    .ui-button-tertiary:hover:not(:disabled,[aria-disabled="true"]), .ui-button-tertiary:active:not(:disabled,[aria-disabled="true"]) { border-color: transparent; background-color: var(--c-surface-hover); color: var(--c-text); }
+    .ui-button-tertiary:is(:disabled,[aria-disabled="true"]) { opacity: var(--opacity-disabled); }
+
+    /* CORNERS (radius, iconButtonRadius) ------------------------------------ */
+    .ui-button-radius-none, .ui-button-icon-radius-none { border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; }
+    .ui-button-radius-small, .ui-button-icon-radius-small { border-top-left-radius: var(--radius-control-small); border-top-right-radius: var(--radius-control-small); border-bottom-right-radius: var(--radius-control-small); border-bottom-left-radius: var(--radius-control-small); }
+    .ui-button-radius-medium, .ui-button-icon-radius-medium { border-top-left-radius: var(--radius-control); border-top-right-radius: var(--radius-control); border-bottom-right-radius: var(--radius-control); border-bottom-left-radius: var(--radius-control); }
+    .ui-button-radius-large, .ui-button-icon-radius-large { border-top-left-radius: var(--radius-control-large); border-top-right-radius: var(--radius-control-large); border-bottom-right-radius: var(--radius-control-large); border-bottom-left-radius: var(--radius-control-large); }
+    .ui-button-icon-radius-circle { border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; }
+
+    /* LINK ---------------------------------------------------------------- */
+    /* the look of a text link (link tokens), in the type and size of the text around it */
+    .ui-button.ui-button-link {
+        border-top: 0;
+        border-right: 0;
+        border-bottom: 0;
+        border-left: 0;
+        background-color: transparent;
+        color: var(--c-link);
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+    }
+    .ui-button-link .ui-button-label { text-decoration: var(--link-decoration); text-decoration-thickness: var(--link-underline-thickness); text-underline-offset: var(--link-underline-offset); }
+    .ui-button-link.ui-button-as-link:visited { color: var(--c-link-visited); }
+    .ui-button-link:hover:not(:disabled,[aria-disabled="true"]) { color: var(--c-link-hover); }
+    .ui-button-link:active:not(:disabled,[aria-disabled="true"]) { color: var(--c-link-active); }
+    .ui-button-link:is(:hover,:active):not(:disabled,[aria-disabled="true"]) .ui-button-label { text-decoration: var(--link-decoration-hover); text-decoration-thickness: var(--link-underline-thickness-hover); }
+    .ui-button-link:is(:disabled,[aria-disabled="true"]) { color: var(--c-link-disabled); }
+    .ui-button.ui-button-link .ui-button-icon, .ui-button.ui-button-link .ui-button-icon i { font-size: inherit; line-height: inherit; }   /* icons in the size of the text, also for an icon link */
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-button { gap: var(--gap-inline-items); }                    /* icon to label */
+
+    /* control sizes: height and left / right padding */
+    .ui-button-size-small { min-height: calc(var(--control-height) - var(--gap-inline-items)); padding: 0 var(--gap-toolbar); }
+    .ui-button-size-medium { min-height: var(--control-height); padding: 0 var(--padding-card); }
+    .ui-button-size-large { min-height: calc(var(--control-height) + var(--gap-inline-items)); padding: 0 var(--padding-panel); }
+
+    /* icon-button: square, as high as the control size (comes after the sizes so padding 0 wins) */
+    .ui-button-icon-button { padding: 0; }
+    .ui-button-icon-button.ui-button-size-small { width: calc(var(--control-height) - var(--gap-inline-items)); height: calc(var(--control-height) - var(--gap-inline-items)); min-height: calc(var(--control-height) - var(--gap-inline-items)); }
+    .ui-button-icon-button.ui-button-size-medium { width: var(--control-height); height: var(--control-height); min-height: var(--control-height); }
+    .ui-button-icon-button.ui-button-size-large { width: calc(var(--control-height) + var(--gap-inline-items)); height: calc(var(--control-height) + var(--gap-inline-items)); min-height: calc(var(--control-height) + var(--gap-inline-items)); }
+
+    /* icon sizes (icon size option); an icon-button's icon follows the control size */
+    .ui-button-icon-size-small { font-size: var(--icon-size-small); }
+    .ui-button-icon-size-medium { font-size: var(--icon-size-medium); }
+    .ui-button-icon-size-large { font-size: var(--icon-size-large); }
+    .ui-button-icon-button.ui-button-size-small .ui-button-icon { font-size: var(--icon-size-small); }
+    .ui-button-icon-button.ui-button-size-medium .ui-button-icon { font-size: var(--icon-size-medium); }
+    .ui-button-icon-button.ui-button-size-large .ui-button-icon { font-size: var(--icon-size-large); }
+
+    /* width option */
+    .ui-button-width-fit-content { width: fit-content; max-width: var(--percentage-full); }
+    .ui-button-width-min-width { width: fit-content; min-width: var(--ui-button-min-width); max-width: var(--percentage-full); }
+    .ui-button-width-full { width: var(--percentage-full); }
+
+    /* LINK: no height or padding of its own (after the sizes so it wins); an icon link is as large as its icon */
+    .ui-button.ui-button-link { min-height: 0; padding: 0; }
+    .ui-button.ui-button-link.ui-button-icon-button { width: auto; height: auto; min-height: 0; }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-button { box-sizing:border-box; display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; margin:0; text-align:center; text-decoration:none; white-space:nowrap; vertical-align:middle; cursor:pointer; appearance:none; }
+    .ui-button:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-button:is(:disabled,[aria-disabled="true"]) { cursor:not-allowed; }
+    .ui-button-link { vertical-align:baseline; }
+    .ui-button-link.ui-button-icon-button { aspect-ratio:auto; }
+    .ui-button-link:focus-visible { outline:var(--link-focus-outline); outline-offset:var(--link-focus-offset); }
+    .ui-button-visually-hidden { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    .ui-button-icon-button { aspect-ratio:1 / 1; }
+
+    /* Icons: glyph proportions remain natural; width/height are never stretched. */
+    .ui-button-icon { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; width:auto; height:auto; }
+    .ui-button-icon i { display:inline-block; width:auto; height:auto; }
+
+    /* Label: one line, cut off with "…" when there is no room */
+    .ui-button-label { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}

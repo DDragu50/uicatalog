@@ -1,0 +1,236 @@
+/* ==========================================================================
+   sideNavigation.css
+
+   Default generated DOM:
+
+   <nav id="main-nav" class="ui-side-nav ui-side-nav-level-indentation ui-side-nav-indicator-chevron ui-side-nav-radius-medium [ui-side-nav-rail] [ui-side-nav-drawer-open] [ui-side-nav-searching]" aria-label="Main">
+     <div class="ui-side-nav-header"> → Buttons: rail toggle (desktop), close (drawer) </div>
+     <div class="ui-side-nav-search"><input class="ui-side-nav-search-input" type="search"></div>        (search enabled and above the threshold)
+     <div class="ui-side-nav-scroll">                                                                      (scrolls when the menu is taller than the space)
+       <ul class="ui-side-nav-list ui-side-nav-root">
+         <li class="ui-side-nav-group"><span class="ui-side-nav-group-label">Administration</span><ul class="ui-side-nav-list">…</ul></li>
+         <li class="ui-side-nav-separator" role="separator"></li>
+         <li class="ui-side-nav-item" style="--ui-side-nav-level:0">
+           <div class="ui-side-nav-row [ui-side-nav-current] [ui-side-nav-has-children]">
+             <a class="ui-side-nav-link" href="/projects" [aria-current="page"]>
+               <span class="ui-side-nav-icon"><i class="fa-solid fa-folder"></i></span>   (or an empty .ui-side-nav-initial space)
+               <span class="ui-side-nav-label">Projects</span> <span class="ui-side-nav-badge">3</span> [external hint]
+             </a>
+             <button class="ui-side-nav-toggle" aria-expanded aria-controls><span class="ui-side-nav-chevron"></span></button>   (parent with own page)
+           </div>
+           <div class="ui-side-nav-children [ui-side-nav-children-open]"><ul class="ui-side-nav-list">…</ul></div>
+         </li>
+         (parent without own page: <button class="ui-side-nav-link ui-side-nav-parent" aria-expanded> … chevron </button>)
+         (disabled: <span class="ui-side-nav-link ui-side-nav-disabled" aria-disabled="true">)
+       </ul>
+       <div class="ui-side-nav-no-results"> → Message (INLINE, INFO) "No matching pages" </div>
+     </div>
+     <div class="ui-side-nav-flyout" popover role="group"> sub-items in the rail </div>
+   </nav>
+   <div class="ui-side-nav-overlay" hidden></div>                                                          (drawer backdrop)
+
+   Notes: the navigation fills the height of its container; only .ui-side-nav-scroll scrolls. Branches open with a
+   grid-row transition (none with reduced motion); closed branches are not focusable (visibility:hidden).
+   Expand indicators: CHEVRON (an arrow at the end of a parent row) or PLUS_MINUS (a + / − sign before the icon, drawn
+   with two bars: the vertical bar shrinks when the branch opens; rows without a sign keep an empty space of the same
+   width, .ui-side-nav-sign-space). Corner radius (cornerRadius): rows, links, open/close buttons and BACKGROUND lists
+   use --radius-control (MEDIUM); NONE, SMALL and LARGE re-point them (classes .ui-side-nav-radius-*); the search
+   field and the rail flyout keep --radius-control.
+   Level styles: INDENTATION (--ui-side-nav-level × indent step), TREE (connector lines ├─ └─ from each parent to its
+   sub-items, drawn by ::before/::after of the nested items; one step per level = icon width + icon-to-label gap),
+   BACKGROUND (deeper lists on their own surface). The rail is offered only when all top-level items have icons;
+   a menu where no entry has an icon gets no icon column (the empty spaces are removed; TREE lines then end before the
+   label); rail rules apply to the main list only, so the flyout shows full labels. Below 48rem the navigation becomes a
+   drawer: 85vw / 100vh caps and the z-index values (drawer 39, overlay 38: above AppHeader's pinned header 30 and
+   NotificationsPanel 35, below toasts 40 and dialogs) are layout literals. Keep rows at least 24px high for touch
+   and pointer use. Chevrons are drawn with borders; rotate()/scale() values and the group-label letter spacing are
+   geometric. The focus ring (--focus-outline) must stay visible on every background.
+   Variables kept: --ui-side-nav-level (set by the component on each item), --ui-side-nav-indent (from the level, part 2),
+   --ui-side-nav-flyout-top / -left (flyout position, set by the component).
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font, normal weight, background, text; search field */
+    .ui-side-nav { font-family:var(--font-ui); font-weight:var(--fw-ui); background-color:var(--c-surface); color:var(--c-text); font-size:var(--fs-control); }
+    .ui-side-nav-search-input { font:inherit; border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); }
+    /* group labels; separator line */
+    .ui-side-nav-group-label { color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); text-transform:uppercase; }
+    .ui-side-nav-separator { border-top:var(--border-thin) solid var(--c-border); }
+    /* rows: corners, under the pointer, current page (background, text, bold label), links, disabled */
+    .ui-side-nav-row { border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); }
+    .ui-side-nav-row:hover { background-color:var(--c-surface-hover); color:var(--c-text); }
+    .ui-side-nav-current { background-color:var(--c-selected); color:var(--c-text); }
+    .ui-side-nav-current:hover { background-color:var(--c-surface-hover); color:var(--c-text); }
+    .ui-side-nav-current .ui-side-nav-label { font-weight:var(--fw-ui-strong); }
+    .ui-side-nav-link { font:inherit; background-color:transparent; color:inherit; border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); }
+    .ui-side-nav-disabled { opacity:var(--opacity-disabled); }
+    /* icon (current page: its own colour), label weight, badge, external-link mark */
+    .ui-side-nav-icon { color:var(--c-muted); }
+    .ui-side-nav-current .ui-side-nav-icon { color:var(--c-accent); }
+    .ui-side-nav-label { font-weight:var(--fw-ui); }
+    .ui-side-nav-badge { border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); background-color:var(--c-accent); color:var(--c-on-accent); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); }
+    .ui-side-nav-external { color:var(--c-muted); font-size:var(--fs-caption); }
+    /* expand/collapse button and its arrow; opening motion of sub-items */
+    .ui-side-nav-toggle { background-color:transparent; border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); color:var(--c-muted); }
+    .ui-side-nav-toggle:hover { background-color:var(--c-surface-muted); }
+    .ui-side-nav-chevron { transition:transform var(--transition-1); }
+    .ui-side-nav-children { transition:grid-template-rows var(--transition-1), visibility var(--transition-1); }
+    /* level styles (levelStyle): TREE draws the connector lines in the border colour; BACKGROUND gives sub-items a background */
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::before, .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::after { background-color:var(--c-border); }
+    .ui-side-nav-level-background .ui-side-nav-children { border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface-muted); }
+    /* corner radius (cornerRadius): MEDIUM is the default above (--radius-control); NONE, SMALL and LARGE re-point rows,
+       links, open/close buttons and BACKGROUND lists */
+    .ui-side-nav-radius-none :is(.ui-side-nav-row, .ui-side-nav-link, .ui-side-nav-toggle, .ui-side-nav-children) { border-top-left-radius:0; border-top-right-radius:0; border-bottom-right-radius:0; border-bottom-left-radius:0; }
+    .ui-side-nav-radius-small :is(.ui-side-nav-row, .ui-side-nav-link, .ui-side-nav-toggle, .ui-side-nav-children) { border-top-left-radius:var(--radius-control-small); border-top-right-radius:var(--radius-control-small); border-bottom-right-radius:var(--radius-control-small); border-bottom-left-radius:var(--radius-control-small); }
+    .ui-side-nav-radius-large :is(.ui-side-nav-row, .ui-side-nav-link, .ui-side-nav-toggle, .ui-side-nav-children) { border-top-left-radius:var(--radius-control-large); border-top-right-radius:var(--radius-control-large); border-bottom-right-radius:var(--radius-control-large); border-bottom-left-radius:var(--radius-control-large); }
+    /* PLUS_MINUS sign: colour of its bars; the vertical bar shrinks with the open/close motion */
+    .ui-side-nav-sign { color:var(--c-muted); }
+    .ui-side-nav-sign::before, .ui-side-nav-sign::after { background-color:currentColor; }
+    .ui-side-nav-sign::after { transition:transform var(--transition-1); }
+    /* rail: dot next to icons that have sub-items; flyout panel and its title */
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-has-children .ui-side-nav-icon::after { background-color:var(--c-muted); }
+    .ui-side-nav-flyout { border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-control); border-top-right-radius:var(--radius-control); border-bottom-right-radius:var(--radius-control); border-bottom-left-radius:var(--radius-control); background-color:var(--c-surface); color:var(--c-text); box-shadow:var(--shadow-md); }
+    .ui-side-nav-flyout-title { color:var(--c-muted); font-size:var(--fs-caption); font-weight:var(--fw-ui-strong); text-transform:uppercase; }
+    /* below 48rem (drawer): shadow and sliding motion; the dimmed backdrop */
+    @media (max-width:48rem) {
+        .ui-side-nav { box-shadow:var(--shadow-md); transition:transform var(--transition-1), visibility var(--transition-1); }
+        .ui-side-nav-drawer-open, .ui-side-nav-drawer-open:dir(rtl) { transition:transform var(--transition-1); }
+        .ui-side-nav-overlay { background-color:color-mix(in srgb, var(--shadow-color) 40%, transparent); }
+    }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* paddings and gaps; row height and padding (the start padding adds the level indent); icon, badge, toggle, arrow sizes;
+       rail width and dot position; flyout width; drawer width */
+    .ui-side-nav { inline-size:100%; }   /* fills its container; the drawer width below 48rem is at the end of this part */
+    .ui-side-nav-header { padding:var(--gap-tight); }
+    .ui-side-nav-search { padding:0 var(--gap-inline-items) var(--gap-inline-items); }
+    .ui-side-nav-search-input { min-block-size:var(--control-height); padding:var(--padding-control); }
+    .ui-side-nav-scroll { padding:0 var(--gap-tight) var(--gap-inline-items); }
+    .ui-side-nav-no-results { margin:var(--gap-inline-items); }
+    .ui-side-nav-group { margin-block-start:var(--gap-inline-items); }
+    .ui-side-nav-group-label { padding:var(--gap-tight) var(--gap-inline-items); }
+    .ui-side-nav-separator { margin:var(--gap-tight) var(--gap-inline-items); }
+    .ui-side-nav-link { gap:var(--gap-inline-items); min-block-size:var(--control-height); padding:0 var(--gap-inline-items); padding-inline-start:calc(var(--gap-inline-items) + var(--ui-side-nav-indent,0px)); }
+    .ui-side-nav-icon { inline-size:var(--icon-size-large); }
+    .ui-side-nav-badge { min-inline-size:var(--icon-size-large); padding:0 var(--gap-tight); }
+    .ui-side-nav-toggle { inline-size:var(--control-height); block-size:var(--control-height); }
+    .ui-side-nav-chevron { inline-size:var(--space-sm-3); block-size:var(--space-sm-3); }
+    .ui-side-nav-rail { inline-size:calc(var(--control-height) + 2 * var(--gap-inline-items)); }
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-has-children .ui-side-nav-icon::after { margin-inline-start:var(--icon-size-large); }
+    .ui-side-nav-flyout { min-inline-size:var(--size-md-2); padding:var(--gap-tight); }
+    .ui-side-nav-flyout-title { padding:var(--gap-tight) var(--gap-inline-items); }
+    /* level indent (--ui-side-nav-level is set by the component on each item): INDENTATION one step per level; TREE one
+       step of icon width + icon-to-label gap per level (a sub-item starts under its parent's label); BACKGROUND a small
+       indent from the second level; in the flyout one step per level */
+    .ui-side-nav-level-indentation .ui-side-nav-item { --ui-side-nav-indent:calc(var(--ui-side-nav-level,0) * var(--gap-block)); }
+    .ui-side-nav-level-tree .ui-side-nav-item { --ui-side-nav-indent:calc(var(--ui-side-nav-level,0) * (var(--icon-size-large) + var(--gap-inline-items))); }
+    .ui-side-nav-level-background .ui-side-nav-item { --ui-side-nav-indent:calc(min(var(--ui-side-nav-level,0),1) * var(--gap-inline-items)); }
+    .ui-side-nav-flyout .ui-side-nav-item { --ui-side-nav-indent:calc(var(--ui-side-nav-level,0) * var(--gap-block)); }
+    /* TREE lines: thickness; the vertical line runs under the centre of the parent's icon space (to the middle of the
+       last sub-item's row: └─), the horizontal one from there to the sub-item's icon (through an empty icon space, to
+       the label), ending a small gap before it */
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::before { inline-size:var(--border-thin); inset-inline-start:calc(var(--gap-inline-items) + (var(--ui-side-nav-level,1) - 1) * (var(--icon-size-large) + var(--gap-inline-items)) + var(--icon-size-large) / 2); }
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item:last-child::before { block-size:calc(var(--control-height) / 2); }
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::after { block-size:var(--border-thin); inset-block-start:calc(var(--control-height) / 2); inset-inline-start:calc(var(--gap-inline-items) + (var(--ui-side-nav-level,1) - 1) * (var(--icon-size-large) + var(--gap-inline-items)) + var(--icon-size-large) / 2); inline-size:calc(var(--icon-size-large) / 2 + var(--gap-inline-items) - var(--gap-tight)); }
+    .ui-side-nav-level-tree.ui-side-nav-indicator-chevron:has(.ui-side-nav-icon:not(.ui-side-nav-initial)) .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item:has(> .ui-side-nav-row .ui-side-nav-initial)::after { inline-size:calc(var(--icon-size-large) * 1.5 + 2 * var(--gap-inline-items) - var(--gap-tight)); }
+    /* PLUS_MINUS: the sign column (var(--space-lg-3) wide, also the open/close button's width) starts the row, after the level
+       indent; a gap separates it from the icon; sign bars 12px long, 2px thick */
+    .ui-side-nav-sign, .ui-side-nav-sign-space { inline-size:var(--space-lg-3); }
+    .ui-side-nav-sign { block-size:var(--space-md-3); }
+    .ui-side-nav-sign::before { inline-size:var(--space-md-3); block-size:var(--border-thick); }
+    .ui-side-nav-sign::after { inline-size:var(--border-thick); block-size:var(--space-md-3); }
+    .ui-side-nav-indicator-plus-minus .ui-side-nav-root .ui-side-nav-row { padding-inline-start:calc(var(--gap-inline-items) + var(--ui-side-nav-indent,0px)); }
+    .ui-side-nav-indicator-plus-minus .ui-side-nav-root .ui-side-nav-link { padding-inline-start:0; }
+    .ui-side-nav-indicator-plus-minus .ui-side-nav-root .ui-side-nav-toggle { inline-size:var(--space-lg-3); margin-inline-end:var(--gap-inline-items); }
+    /* PLUS_MINUS with TREE: one step = sign column + gap; the lines join the signs (under the centre of the parent's
+       sign; to a small gap before the sub-item's sign bars, or through an empty sign space, and an empty icon space, to the first thing shown) */
+    .ui-side-nav-level-tree.ui-side-nav-indicator-plus-minus .ui-side-nav-root .ui-side-nav-item { --ui-side-nav-indent:calc(var(--ui-side-nav-level,0) * (var(--space-lg-3) + var(--gap-inline-items))); }
+    .ui-side-nav-level-tree.ui-side-nav-indicator-plus-minus .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::before { inset-inline-start:calc(var(--gap-inline-items) + (var(--ui-side-nav-level,1) - 1) * (var(--space-lg-3) + var(--gap-inline-items)) + var(--space-lg-3) / 2); }
+    .ui-side-nav-level-tree.ui-side-nav-indicator-plus-minus .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::after { inset-inline-start:calc(var(--gap-inline-items) + (var(--ui-side-nav-level,1) - 1) * (var(--space-lg-3) + var(--gap-inline-items)) + var(--space-lg-3) / 2); inline-size:calc(var(--space-lg-3) + var(--gap-inline-items) - var(--space-md-3) / 2 - var(--gap-tight)); }
+    .ui-side-nav-level-tree.ui-side-nav-indicator-plus-minus .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item:has(> .ui-side-nav-row .ui-side-nav-sign-space)::after { inline-size:calc(var(--space-lg-3) * 1.5 + 2 * var(--gap-inline-items) - var(--gap-tight)); }
+    .ui-side-nav-level-tree.ui-side-nav-indicator-plus-minus:has(.ui-side-nav-icon:not(.ui-side-nav-initial)) .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item:has(> .ui-side-nav-row .ui-side-nav-sign-space):has(> .ui-side-nav-row .ui-side-nav-initial)::after { inline-size:calc(var(--space-lg-3) * 1.5 + var(--icon-size-large) + 3 * var(--gap-inline-items) - var(--gap-tight)); }
+    @media (max-width:48rem) { .ui-side-nav { inline-size:min(85vw, var(--size-md-3)); } }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-side-nav { display:flex; flex-direction:column; block-size:100%; min-block-size:0; box-sizing:border-box; }
+    .ui-side-nav-header { display:flex; justify-content:flex-end; }
+    .ui-side-nav-close-host { display:none; }
+    .ui-side-nav-search-input { box-sizing:border-box; inline-size:100%; }
+    .ui-side-nav-search-input:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-side-nav-scroll { flex:1 1 auto; min-block-size:0; overflow-y:auto; overscroll-behavior:contain; }
+    .ui-side-nav-no-results:empty { display:none; }
+    .ui-side-nav-list { margin:0; padding:0; list-style:none; }
+    .ui-side-nav-group-label { display:block; letter-spacing:0.04em; }
+    .ui-side-nav-separator { block-size:0; }
+    [hidden].ui-side-nav-item, [hidden].ui-side-nav-group, [hidden].ui-side-nav-separator { display:none; }
+    .ui-side-nav-row { display:flex; align-items:center; }
+    /* TREE lines: drawn by each nested item of the main list (not in the rail or the flyout) */
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item { position:relative; }
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::before, .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::after { content:''; position:absolute; pointer-events:none; }
+    .ui-side-nav-level-tree .ui-side-nav-root .ui-side-nav-children .ui-side-nav-item::before { inset-block-start:0; block-size:100%; }
+    .ui-side-nav-link { display:flex; flex:1 1 auto; align-items:center; min-inline-size:0; border:0; text-align:start; text-decoration:none; cursor:pointer; box-sizing:border-box; }
+    .ui-side-nav-link:focus-visible, .ui-side-nav-toggle:focus-visible { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thick)); }
+    .ui-side-nav-heading { cursor:default; }
+    .ui-side-nav-disabled { cursor:not-allowed; }
+    .ui-side-nav-icon { display:inline-flex; flex:0 0 auto; justify-content:center; }
+    .ui-side-nav-initial { visibility:hidden; }   /* empty icon space: keeps labels aligned */
+    .ui-side-nav-flyout .ui-side-nav-initial { display:none; }
+    .ui-side-nav:not(:has(.ui-side-nav-icon:not(.ui-side-nav-initial))) .ui-side-nav-initial { display:none; }   /* no entry has an icon: no icon column */
+    .ui-side-nav-label { flex:1 1 auto; min-inline-size:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-side-nav-badge { flex:0 0 auto; text-align:center; }
+    .ui-side-nav-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    .ui-side-nav-toggle { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; border:0; cursor:pointer; }
+    /* the arrow is drawn with two borders and turned; logical sides on purpose (they follow the text direction) */
+    .ui-side-nav-chevron { margin-inline-start:auto; border-inline-end:var(--border-thin) solid currentColor; border-block-end:var(--border-thin) solid currentColor; transform:scale(0.7) rotate(-45deg); }
+    .ui-side-nav-chevron:dir(rtl) { transform:scale(0.7) rotate(135deg); }
+    [aria-expanded="true"] > .ui-side-nav-chevron { transform:scale(0.7) rotate(45deg); }
+    /* PLUS_MINUS sign: two centred bars; open (or searching): the vertical bar is scaled to nothing ("−") */
+    .ui-side-nav-sign, .ui-side-nav-sign-space { display:inline-flex; flex:0 0 auto; position:relative; }
+    .ui-side-nav-sign::before, .ui-side-nav-sign::after { content:''; position:absolute; inset:0; margin:auto; }
+    [aria-expanded="true"] > .ui-side-nav-sign::after, .ui-side-nav-searching .ui-side-nav-sign::after { transform:scaleY(0); }
+    .ui-side-nav-children { display:grid; grid-template-rows:0fr; visibility:hidden; }
+    .ui-side-nav-children > .ui-side-nav-list { overflow:hidden; min-block-size:0; }
+    .ui-side-nav-children-open, .ui-side-nav-searching .ui-side-nav-children { grid-template-rows:1fr; visibility:visible; }
+    /* Collapsed rail (desktop): icons only; sub-items in a flyout */
+    .ui-side-nav-rail .ui-side-nav-header { justify-content:center; }
+    .ui-side-nav-rail .ui-side-nav-root :is(.ui-side-nav-sign, .ui-side-nav-sign-space, .ui-side-nav-label, .ui-side-nav-badge, .ui-side-nav-external, .ui-side-nav-toggle, .ui-side-nav-chevron, .ui-side-nav-group-label, .ui-side-nav-children), .ui-side-nav-rail .ui-side-nav-search { display:none; }
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-link { justify-content:center; padding:0; }
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-row { padding-inline-start:0; }
+    .ui-side-nav-rail .ui-side-nav-root .ui-side-nav-has-children .ui-side-nav-icon::after { content:''; position:absolute; inline-size:var(--space-sm-2); block-size:var(--space-sm-2); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); }
+    /* flyout position: the component writes --ui-side-nav-flyout-top / -left (measured) */
+    .ui-side-nav-flyout { position:fixed; inset:auto; margin:0; inset-block-start:var(--ui-side-nav-flyout-top,0); inset-inline-start:var(--ui-side-nav-flyout-left,0); max-block-size:calc(100vh - 2 * var(--gap-block)); overflow-y:auto; }
+    .ui-side-nav-flyout:not(:popover-open):not(.ui-side-nav-flyout-open) { display:none; }
+    .ui-side-nav-flyout-title { margin:0; }
+    /* Mobile drawer below 48rem (a literal: custom properties cannot be used in media queries) */
+    @media (max-width:48rem) {
+        .ui-side-nav { position:fixed; inset-block:0; inset-inline-start:0; z-index:39; transform:translateX(-100%); visibility:hidden; }
+        .ui-side-nav:dir(rtl) { transform:translateX(100%); }
+        .ui-side-nav-drawer-open, .ui-side-nav-drawer-open:dir(rtl) { transform:none; visibility:visible; }   /* visible at once, so focus can move in */
+        .ui-side-nav-rail-host { display:none; }
+        .ui-side-nav-close-host { display:inline-flex; }
+        .ui-side-nav-overlay { position:fixed; inset:0; z-index:38; }
+        .ui-side-nav-overlay[hidden] { display:none; }
+    }
+    @media (prefers-reduced-motion:reduce) { .ui-side-nav, .ui-side-nav-children, .ui-side-nav-chevron, .ui-side-nav-sign::after { transition:none; } }
+}

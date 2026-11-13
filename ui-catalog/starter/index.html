@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My UI Catalog app</title>
+<!-- 1. Design tokens, then the page base (reset and bare elements). "ui-catalog/" is a copy of the library's
+        source/ folder (see README.md). -->
+<link rel="stylesheet" href="ui-catalog/design-system.css">
+<link rel="stylesheet" href="ui-catalog/app-shell.css">
+<!-- 2. One stylesheet per component used on the page, and per component those use (each README: "Dependencies"). -->
+<link rel="stylesheet" href="ui-catalog/components-js/appHeader/appHeader.css">
+<link rel="stylesheet" href="ui-catalog/components-js/button/button.css">
+<link rel="stylesheet" href="ui-catalog/components-js/textInput/textInput.css">
+<link rel="stylesheet" href="ui-catalog/components-js/select/select.css">
+<link rel="stylesheet" href="ui-catalog/components-js/message/message.css">
+<link rel="stylesheet" href="ui-catalog/components-js/table/table.css">
+<link rel="stylesheet" href="ui-catalog/components-js/pagination/pagination.css">
+<link rel="stylesheet" href="ui-catalog/components-js/loader/loader.css">
+<!-- 3. Icons (Font Awesome; for production, copy it into your project and link the local file). -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<!-- 4. Your page layout (@layer layout) and your corrections of component styles (@layer overrides). -->
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/overrides.css">
+</head>
+<body>
+<div id="header-host"></div>
+<main id="main" class="page">
+<h1>Orders</h1>
+<section class="card" aria-labelledby="new-order-title">
+<h2 id="new-order-title">New order</h2>
+<div class="fields">
+<div id="customer-host"></div>
+<div id="country-host"></div>
+</div>
+<div id="save-host"></div>
+<div id="message-host"></div>
+</section>
+<section class="card" aria-labelledby="orders-title">
+<h2 id="orders-title">Latest orders</h2>
+<div id="table-host"></div>
+</section>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# api/.htaccess
+#
+# CONTACT ENDPOINT ON APACHE HOSTING (cPanel).
+# The app sends the contact form to api/contact; this rule hands that address to contact.php.
+# The Node.js server (server/server.js) answers api/contact itself and does not use this folder.
+
+Options -Indexes
+RewriteEngine On
+RewriteRule ^contact$ contact.php [L]

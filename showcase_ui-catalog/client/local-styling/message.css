@@ -1,0 +1,174 @@
+/* ==========================================================================
+   message.css
+
+   Default generated DOM (BLOCK, INFO):
+
+   <div id="saved" class="ui-message ui-message-block ui-message-type-info [ui-message-bordered] [ui-message-square]" [role="status|alert"] [hidden]>
+     <span class="ui-message-icon" aria-hidden="true"><i class="fa-solid fa-circle-info"></i></span>
+     <div class="ui-message-body">
+       <p id="saved-title" class="ui-message-title">Title</p>                        (optional)
+       <p id="saved-text" class="ui-message-text">Text <a class="ui-message-link">Link</a></p>
+       <ul class="ui-message-details"><li>…</li></ul>                                  (optional)
+       <div class="ui-message-actions"> → Buttons </div>                              (optional)
+       <div class="ui-message-remaining [ui-message-remaining-paused]" style="--ui-message-remaining:0.6">   (remainingIndicator)
+         <span class="ui-message-remaining-bar" aria-hidden="true"><span class="ui-message-remaining-fill"></span></span>   (BAR)
+         <span class="ui-message-remaining-text" aria-hidden="true">Closes in 4 s</span>                              (TEXT)
+         <span class="ui-message-visually-hidden">Closes by itself in 6 seconds.</span>
+       </div>
+     </div>
+     <span class="ui-message-close-host"> → Button (tertiary icon ×) </span>          (closable)
+   </div>
+
+   Layouts: .ui-message-inline (one line, no box), -block (box), -banner (full-width strip, no radius), -toast (floating
+   card inside .ui-message-region-{top-left|top-right|bottom-left|bottom-right} of the application's toast area), -modal
+   (native <dialog> with ::backdrop). Colours per type come from the tone tokens; CUSTOM uses --ui-message-bg/-color/
+   -border (set from design-token names). The type is also shown by its icon, never by colour alone.
+   Toast regions are fixed layers (z-index 40, above AppHeader's 30); 90vw caps their width; the modal is capped at 90vw.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   ui-catalog source and client/local-styling use this file with the app look; client/showcase-styling keeps
+   the original values, which the lines marked [APP] name in brackets (library / original).
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* every message: component font, size and line height (INLINE is smaller) */
+    .ui-message { font-family: var(--font-ui); font-weight: var(--fw-ui); font-size: var(--fs-control); line-height: var(--lh-body); }
+    .ui-message-inline { font-size: var(--fs-label); }
+    .ui-message-icon { font-size: var(--icon-size-medium); }
+    .ui-message-title { font-weight: var(--fw-ui-strong); }
+    /* text (with its link) and details one step smaller than the title, so the title leads */
+    .ui-message-text, .ui-message-details { font-size: var(--fs-label); }
+    .ui-message-link { color: inherit; font-weight: var(--fw-ui-strong); text-decoration: underline; }
+    .ui-message-detail-link { color: inherit; text-decoration: underline; }
+
+    /* boxes (BLOCK, TOAST, MODAL): a thicker coloured left edge and rounded corners; bordered: a thin border on the
+       other three sides as well; cornerRadius NONE: square corners. BANNER: bottom line only */
+    .ui-message-block, .ui-message-toast, .ui-message-modal { border-left: var(--border-thick) solid; border-top-left-radius: var(--radius-control); border-top-right-radius: var(--radius-control); border-bottom-right-radius: var(--radius-control); border-bottom-left-radius: var(--radius-control); }
+    .ui-message-bordered { border-top: var(--border-thin) solid; border-right: var(--border-thin) solid; border-bottom: var(--border-thin) solid; }
+    .ui-message-square { border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; }
+    .ui-message-banner { border-bottom: var(--border-thin) solid; }
+    .ui-message-toast { box-shadow: var(--shadow-md); }
+
+    /* remaining time (remainingIndicator): small text; bar track and fill in the message's text colour, rounded;
+       while paused the fill is lighter */
+    .ui-message-remaining { font-size: var(--fs-caption); }
+    .ui-message-remaining-bar { background-color: color-mix(in srgb, currentColor 20%, transparent); border-top-left-radius: var(--radius-pill); border-top-right-radius: var(--radius-pill); border-bottom-right-radius: var(--radius-pill); border-bottom-left-radius: var(--radius-pill); }
+    .ui-message-remaining-fill { background-color: currentColor; border-top-left-radius: var(--radius-pill); border-top-right-radius: var(--radius-pill); border-bottom-right-radius: var(--radius-pill); border-bottom-left-radius: var(--radius-pill); }
+    .ui-message-remaining-paused .ui-message-remaining-fill { opacity: var(--opacity-disabled); }
+
+    /* colours per type: text, box (border and background), banner, modal edge and icon. backgroundToken / colorToken /
+       borderToken (configuration) win for any type: the component writes them as --ui-message-bg / -color / -border */
+    /* INFO (default type) ------------------------------------------------- */
+    .ui-message { color: var(--ui-message-color, var(--c-info-text)); }
+    .ui-message-block, .ui-message-toast { border-color: var(--ui-message-border, var(--c-info)); background-color: var(--ui-message-bg, var(--c-info-soft)); }
+    .ui-message-banner { border-bottom-color: var(--ui-message-border, var(--c-info)); background-color: var(--ui-message-bg, var(--c-info-soft)); }
+    .ui-message-modal { border-left-color: var(--ui-message-border, var(--c-info)); }
+    .ui-message-modal .ui-message-icon { color: var(--ui-message-border, var(--c-info)); }
+    /* SUCCESS ------------------------------------------------------------- */
+    .ui-message-type-success { color: var(--ui-message-color, var(--c-success-text)); }
+    :is(.ui-message-block, .ui-message-toast).ui-message-type-success { border-color: var(--ui-message-border, var(--c-success)); background-color: var(--ui-message-bg, var(--c-success-soft)); }
+    .ui-message-banner.ui-message-type-success { border-bottom-color: var(--ui-message-border, var(--c-success)); background-color: var(--ui-message-bg, var(--c-success-soft)); }
+    .ui-message-modal.ui-message-type-success { border-left-color: var(--ui-message-border, var(--c-success)); }
+    .ui-message-modal.ui-message-type-success .ui-message-icon { color: var(--ui-message-border, var(--c-success)); }
+    /* WARNING ------------------------------------------------------------- */
+    .ui-message-type-warning { color: var(--ui-message-color, var(--c-warning-text)); }
+    :is(.ui-message-block, .ui-message-toast).ui-message-type-warning { border-color: var(--ui-message-border, var(--c-warning)); background-color: var(--ui-message-bg, var(--c-warning-soft)); }
+    .ui-message-banner.ui-message-type-warning { border-bottom-color: var(--ui-message-border, var(--c-warning)); background-color: var(--ui-message-bg, var(--c-warning-soft)); }
+    .ui-message-modal.ui-message-type-warning { border-left-color: var(--ui-message-border, var(--c-warning)); }
+    .ui-message-modal.ui-message-type-warning .ui-message-icon { color: var(--ui-message-border, var(--c-warning)); }
+    /* DANGER -------------------------------------------------------------- */
+    .ui-message-type-danger { color: var(--ui-message-color, var(--c-danger-text)); }
+    :is(.ui-message-block, .ui-message-toast).ui-message-type-danger { border-color: var(--ui-message-border, var(--c-danger)); background-color: var(--ui-message-bg, var(--c-danger-soft)); }
+    .ui-message-banner.ui-message-type-danger { border-bottom-color: var(--ui-message-border, var(--c-danger)); background-color: var(--ui-message-bg, var(--c-danger-soft)); }
+    .ui-message-modal.ui-message-type-danger { border-left-color: var(--ui-message-border, var(--c-danger)); }
+    .ui-message-modal.ui-message-type-danger .ui-message-icon { color: var(--ui-message-border, var(--c-danger)); }
+
+
+    /* MODAL (after the types: its surface colours win): its own border colour (the left edge keeps the type colour),
+       larger title, backdrop
+       (the backdrop keeps its token value: ::backdrop does not reliably inherit custom properties) */
+    .ui-message-modal { background-color: var(--c-surface); color: var(--c-text); border-top-color: var(--c-border); border-right-color: var(--c-border); border-bottom-color: var(--c-border); box-shadow: var(--shadow-md); }
+    .ui-message-modal .ui-message-title { font-size: var(--fs-block-title); }
+    .ui-message-modal::backdrop { background-color: color-mix(in srgb, var(--shadow-color) 45%, transparent); }
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-message { gap: var(--gap-inline-items); }                                    /* icon to text */
+    .ui-message-body { gap: var(--gap-tight); }                                      /* title, text, details */
+    .ui-message-details { padding-inline-start: var(--gap-block); }
+    .ui-message-actions { gap: var(--gap-inline-items); margin-block-start: var(--gap-tight); }   /* between buttons */
+    .ui-message-close-host { margin-block-start: calc(-1 * var(--space-sm-2)); }
+    .ui-message-block, .ui-message-toast, .ui-message-modal { padding: var(--gap-inline-items) var(--gap-block); }
+    .ui-message-banner { padding: var(--gap-inline-items) var(--gap-block); }
+    .ui-message-banner .ui-message-body { gap: var(--gap-tight) var(--gap-block); }
+    /* toasts: width and distance from the screen edge, gap between toasts; modal: width and padding (never wider than 90% of the screen) */
+    .ui-message-region { gap: var(--gap-inline-items); inline-size: min(var(--size-md-4), 90vw); padding: var(--gap-block); }
+    .ui-message-modal { inline-size: min(var(--size-md-4), 90vw); padding: var(--gap-block); }
+    .ui-message-modal .ui-message-actions { margin-block-start: var(--gap-inline-items); }
+    /* remaining time: space above it and between bar and text; bar thickness */
+    .ui-message-remaining { gap: var(--gap-inline-items); margin-block-start: var(--gap-tight); }
+    .ui-message-remaining-bar { block-size: var(--space-sm-2); }
+    /* the text keeps one width ("Closes in 5 s" and "Paused"), so the bar does not jump when it changes */
+    .ui-message-remaining-text { min-inline-size: var(--size-md-1); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-message { display:flex; align-items:flex-start; box-sizing:border-box; min-inline-size:0; }
+    .ui-message[hidden] { display:none; }
+
+    /* icon: as high as the first text line (font size × line height) */
+    .ui-message-icon { flex:0 0 auto; display:inline-flex; align-items:center; block-size:calc(var(--fs-control) * var(--lh-body)); }
+    .ui-message-body { flex:1 1 auto; min-inline-size:0; display:grid; }
+    .ui-message-title { margin:0; }
+    .ui-message-text { margin:0; }
+    .ui-message-link:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-message-details { margin:0; }
+    .ui-message-detail-link:focus-visible, .ui-message:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-message-actions { display:flex; flex-wrap:wrap; }
+    .ui-message-close-host { flex:0 0 auto; }
+    /* remaining time: bar fills the free width, its fill is as long as the remaining part (--ui-message-remaining, set by
+       the component from 1 to 0); the text keeps its width while the digits change */
+    .ui-message-remaining { display:flex; align-items:center; }
+    .ui-message-remaining-bar { flex:1 1 auto; display:block; overflow:hidden; }
+    .ui-message-remaining-fill { display:block; block-size:100%; inline-size:calc(var(--ui-message-remaining,1) * 100%); }
+    .ui-message-remaining-text { flex:0 0 auto; white-space:nowrap; text-align:end; font-variant-numeric:tabular-nums; }
+    .ui-message-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+
+    .ui-message-inline { align-items:flex-start; }
+    .ui-message-inline .ui-message-icon { block-size:calc(var(--fs-label) * var(--lh-body)); }
+    /* without a title the first line is the (smaller) text */
+    .ui-message:not(:has(.ui-message-title)) .ui-message-icon { block-size:calc(var(--fs-label) * var(--lh-body)); }
+    .ui-message-banner { inline-size:100%; }
+    .ui-message-banner .ui-message-body { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-message-banner .ui-message-actions { margin:0; }
+    .ui-message-banner .ui-message-remaining { flex-basis:100%; }
+
+    /* Toasts: stacked in a corner region of the application's toast area */
+    .ui-message-region { position:fixed; z-index:40; display:flex; flex-direction:column; pointer-events:none; }
+    .ui-message-region > * { pointer-events:auto; }
+    .ui-message-region-top-left { inset-block-start:var(--page-sticky-offset,0px); inset-inline-start:0; }
+    .ui-message-region-top-right { inset-block-start:var(--page-sticky-offset,0px); inset-inline-end:0; }
+    .ui-message-region-bottom-left { inset-block-end:0; inset-inline-start:0; }
+    .ui-message-region-bottom-right { inset-block-end:0; inset-inline-end:0; }
+
+    /* Modal: native dialog */
+    .ui-message-modal { margin:auto; }
+    .ui-message-modal .ui-message-actions { justify-content:flex-end; }
+    .ui-message-modal:not([open]) { display:none; }
+    .ui-message-modal:has(.ui-message-title) .ui-message-icon { block-size:calc(var(--fs-block-title) * var(--lh-body)); }
+}

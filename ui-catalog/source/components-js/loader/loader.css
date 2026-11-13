@@ -1,0 +1,175 @@
+/* ==========================================================================
+   loader.css
+
+   Default generated DOM (BAR, MEDIUM, INLINE, label ABOVE, running, indeterminate):
+
+   <div id="export-busy" class="ui-loader ui-loader-bar ui-loader-size-medium ui-loader-placement-inline ui-loader-label-above ui-loader-indeterminate ui-loader-shown" data-status="RUNNING">
+     <div class="ui-loader-frame">                                              ([hidden] while nothing is shown)
+       <div class="ui-loader-panel">
+         <div class="ui-loader-body">
+           <div id="export-busy-indicator" class="ui-loader-indicator" role="progressbar" aria-labelledby="export-busy-label" aria-valuemin="0" aria-valuemax="100" tabindex="-1">
+             <span class="ui-loader-track" aria-hidden="true"><span class="ui-loader-fill"></span></span>
+           </div>
+           <div class="ui-loader-text">
+             <i class="ui-loader-symbol" aria-hidden="true"></i>                  (BAR: the end-status symbol)
+             <span id="export-busy-label" class="ui-loader-label">Exporting report…</span>
+             <span class="ui-loader-value" aria-hidden="true">45%</span>          (determinate)
+           </div>
+         </div>
+       </div>
+     </div>
+     <div class="ui-loader-live ui-loader-visually-hidden" aria-live="polite"></div>
+     <div class="ui-loader-alert ui-loader-visually-hidden" aria-live="assertive"></div>
+   </div>
+
+   Conditional structures:
+   - shape RING: .ui-loader-ring; the indicator holds <svg class="ui-loader-circle"> with circle.ui-loader-circle-track and
+     circle.ui-loader-circle-arc (pathLength 100; the component writes stroke-dasharray), then <i class="ui-loader-symbol">;
+   - size SMALL / LARGE: .ui-loader-size-small / .ui-loader-size-large;
+   - labelPlacement BELOW / END / HIDDEN: .ui-loader-label-below / -end / -hidden (.ui-loader-text visually hidden);
+   - placement EDGE: .ui-loader-placement-edge (always BAR, SMALL, label HIDDEN; pinned to the top of the target);
+   - placement OVERLAY: .ui-loader-placement-overlay .ui-loader-indicator-{center|top}, <div class="ui-loader-scrim"> first in
+     the frame; while blocking .ui-loader-blocking (the root covers the target; the frame is transparent until shown);
+   - cancellable: <span class="ui-loader-cancel" data-button="cancel"> → Button, after the body (hidden when not running);
+   - value: .ui-loader-indeterminate while there is no value; data-status="IDLE|RUNNING|DONE|ERROR|CANCELLED";
+     .ui-loader-shown while the indicator is shown;
+   - on the target (EDGE while shown, OVERLAY while blocking): .ui-loader-target, plus .ui-loader-target-static when its
+     position was static; aria-busy="true" while an OVERLAY blocks it.
+
+   Notes: --ui-loader-progress (0–1, the share done) is set by the component on the root; it sizes the bar's fill. The
+   indeterminate bar grows from the start and shrinks towards the end (keyframes with 0 and 100% only). rotate(360deg) in
+   the spin keyframes is a geometric constant (one full turn), not a design value. z-index 20 keeps the EDGE line and the
+   OVERLAY layer above the target's own layers (pop-ups use 10); .ui-loader-target isolates them inside the target.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2, or write the same selector with the new value in a stylesheet that
+   loads later, in @layer overrides.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component text: label strong, value muted */
+    .ui-loader { color:var(--c-text); font-family:var(--font-ui); font-weight:var(--fw-ui); font-size:var(--fs-label); line-height:var(--lh-compact); }
+    .ui-loader-size-small { font-size:var(--fs-caption); }
+    .ui-loader-size-large { font-size:var(--fs-control); }
+    .ui-loader-label { font-weight:var(--fw-ui-strong); }
+    .ui-loader-value { color:var(--c-muted); font-variant-numeric:tabular-nums; }
+    /* bar: a muted track and an accent fill */
+    .ui-loader-track { background-color:var(--c-surface-muted); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); }
+    .ui-loader-fill { background-color:var(--c-accent); border-top-left-radius:var(--radius-pill); border-top-right-radius:var(--radius-pill); border-bottom-right-radius:var(--radius-pill); border-bottom-left-radius:var(--radius-pill); transition:inline-size var(--transition-1), background-color var(--transition-1); }
+    .ui-loader-indeterminate .ui-loader-fill { animation:ui-loader-sweep var(--progress-sweep-duration) ease-in-out infinite; }
+    /* ring: a muted circle and an accent arc */
+    .ui-loader-circle-track { stroke:var(--c-surface-muted); }
+    .ui-loader-circle-arc { stroke:var(--c-accent); stroke-linecap:round; transition:stroke-dasharray var(--transition-1), stroke var(--transition-1); }
+    .ui-loader-indeterminate .ui-loader-circle { animation:ui-loader-spin var(--spinner-duration) linear infinite; }
+    /* end statuses: done (success), error (danger), cancelled (muted); the symbol says it without colour */
+    .ui-loader[data-status="DONE"] .ui-loader-fill { background-color:var(--c-success); }
+    .ui-loader[data-status="DONE"] .ui-loader-symbol { color:var(--c-success-text); }
+    .ui-loader[data-status="ERROR"] .ui-loader-fill { background-color:var(--c-danger); }
+    .ui-loader[data-status="ERROR"] .ui-loader-symbol, .ui-loader[data-status="ERROR"] .ui-loader-label { color:var(--c-danger-text); }
+    .ui-loader[data-status="CANCELLED"] .ui-loader-fill { background-color:var(--c-muted); }
+    .ui-loader[data-status="CANCELLED"] .ui-loader-symbol { color:var(--c-muted); }
+    /* EDGE: a straight line along the edge */
+    .ui-loader-placement-edge .ui-loader-track, .ui-loader-placement-edge .ui-loader-fill { border-top-left-radius:0; border-top-right-radius:0; border-bottom-right-radius:0; border-bottom-left-radius:0; }
+    /* OVERLAY: the scrim over the target and the panel with the indicator */
+    .ui-loader-scrim { background-color:var(--scrim-bg); }
+    .ui-loader-placement-overlay .ui-loader-panel { background-color:var(--c-surface); border-top:var(--border-thin) solid var(--c-border); border-right:var(--border-thin) solid var(--c-border); border-bottom:var(--border-thin) solid var(--c-border); border-left:var(--border-thin) solid var(--c-border); border-top-left-radius:var(--radius-panel); border-top-right-radius:var(--radius-panel); border-bottom-right-radius:var(--radius-panel); border-bottom-left-radius:var(--radius-panel); box-shadow:var(--shadow-md); }
+    .ui-loader-placement-overlay .ui-loader-frame { transition:opacity var(--transition-1); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-loader-panel { gap:var(--gap-inline-items); }
+    .ui-loader-body { gap:var(--gap-tight); }
+    .ui-loader-text { gap:var(--gap-tight); }
+    /* bar thickness */
+    .ui-loader-track { block-size:var(--space-md-1); }
+    .ui-loader-size-small .ui-loader-track { block-size:var(--space-sm-2); }
+    .ui-loader-size-large .ui-loader-track { block-size:var(--space-md-3); }
+    .ui-loader-bar .ui-loader-symbol { font-size:var(--icon-size-medium); }
+    /* END: the bar's shortest length beside the text (the text moves below the bar when there is no room) */
+    .ui-loader-bar.ui-loader-label-end .ui-loader-indicator { flex-basis:var(--size-md-1); }
+    /* ring size (the end-status symbol takes the ring's place at the same size) */
+    .ui-loader-circle { inline-size:var(--space-lg-3); block-size:var(--space-lg-3); }
+    .ui-loader-ring .ui-loader-symbol { font-size:var(--space-lg-3); }
+    .ui-loader-ring.ui-loader-size-small .ui-loader-circle { inline-size:var(--icon-size-medium); block-size:var(--icon-size-medium); }
+    .ui-loader-ring.ui-loader-size-small .ui-loader-symbol { font-size:var(--icon-size-medium); }
+    .ui-loader-ring.ui-loader-size-large .ui-loader-circle { inline-size:var(--space-xl-3); block-size:var(--space-xl-3); }
+    .ui-loader-ring.ui-loader-size-large .ui-loader-symbol { font-size:var(--space-xl-3); }
+    /* OVERLAY: the panel's padding and width (BAR), its distance from the target's edges; TOP below the page's sticky header */
+    .ui-loader-placement-overlay .ui-loader-frame { padding:var(--padding-card); }
+    .ui-loader-placement-overlay .ui-loader-panel { padding:var(--padding-card); }
+    .ui-loader-placement-overlay.ui-loader-bar .ui-loader-panel { inline-size:var(--size-md-2); }
+    .ui-loader-indicator-top .ui-loader-panel { inset-block-start:calc(var(--page-sticky-offset) + var(--padding-card)); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-loader { position:relative; min-inline-size:0; }
+    .ui-loader-frame[hidden] { display:none; }
+    .ui-loader-panel { display:flex; align-items:center; min-inline-size:0; }
+    .ui-loader-body { display:flex; flex:1 1 auto; flex-direction:column; min-inline-size:0; }
+    .ui-loader-indicator { position:relative; min-inline-size:0; }
+    .ui-loader-indicator:focus { outline:none; }
+    .ui-loader-indicator:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    /* the value moves to the next line when the label and the value do not fit; words never break unless longer than the line */
+    .ui-loader-text { display:flex; flex-wrap:wrap; align-items:baseline; min-inline-size:0; overflow-wrap:break-word; }
+    .ui-loader-value { flex:none; white-space:nowrap; }
+    /* label placements: ABOVE (text first), BELOW, END (text after the indicator, on one line) */
+    .ui-loader-label-above .ui-loader-body { flex-direction:column-reverse; }
+    .ui-loader-label-end .ui-loader-body { flex-direction:row; flex-wrap:wrap; align-items:center; }
+    .ui-loader-bar.ui-loader-label-above .ui-loader-text, .ui-loader-bar.ui-loader-label-below .ui-loader-text { justify-content:space-between; }
+    .ui-loader-bar.ui-loader-label-above .ui-loader-label, .ui-loader-bar.ui-loader-label-below .ui-loader-label { flex:1 1 auto; }
+    .ui-loader-bar.ui-loader-label-end .ui-loader-indicator { flex-grow:1; flex-shrink:1; }
+    .ui-loader-ring:is(.ui-loader-label-above, .ui-loader-label-below) .ui-loader-body { align-items:center; text-align:center; }
+    /* bar: the fill from the start, or the moving band (indeterminate) */
+    .ui-loader-track { position:relative; display:block; overflow:hidden; }
+    .ui-loader-fill { position:absolute; inset-block:0; inset-inline-start:0; inline-size:calc(var(--ui-loader-progress, 0) * 100%); }
+    .ui-loader-indeterminate .ui-loader-fill { inline-size:auto; }
+    /* ring: the circle, or the end-status symbol in its place */
+    .ui-loader-ring .ui-loader-indicator { display:inline-flex; flex:none; align-items:center; justify-content:center; }
+    .ui-loader-circle { display:block; }
+    .ui-loader-symbol { display:none; line-height:1; }
+    .ui-loader:is([data-status="DONE"], [data-status="ERROR"], [data-status="CANCELLED"]) .ui-loader-symbol { display:inline-block; flex:none; }
+    .ui-loader-ring:is([data-status="DONE"], [data-status="ERROR"], [data-status="CANCELLED"]) .ui-loader-circle { display:none; }
+    .ui-loader-cancel { display:inline-flex; flex:none; }
+    .ui-loader-cancel[hidden] { display:none; }
+    /* EDGE: a line pinned to the top of the target, taking no space */
+    .ui-loader-placement-edge { position:absolute; inset-block-start:0; inset-inline:0; z-index:20; pointer-events:none; }
+    /* OVERLAY: idle without size; while blocking, the root covers the target and takes the pointer */
+    .ui-loader-placement-overlay { position:absolute; }
+    .ui-loader-placement-overlay.ui-loader-blocking { inset:0; z-index:20; cursor:progress; }
+    .ui-loader-placement-overlay .ui-loader-frame { position:absolute; inset:0; display:grid; place-items:center; box-sizing:border-box; }
+    .ui-loader-placement-overlay:not(.ui-loader-shown) .ui-loader-frame { opacity:0; }
+    .ui-loader-scrim { position:absolute; inset:0; }
+    .ui-loader-placement-overlay .ui-loader-panel { position:relative; flex-direction:column; max-inline-size:100%; box-sizing:border-box; cursor:default; }
+    .ui-loader-placement-overlay.ui-loader-bar .ui-loader-body { align-self:stretch; }
+    .ui-loader-indicator-top .ui-loader-frame { align-items:start; }
+    .ui-loader-indicator-top .ui-loader-panel { position:sticky; }
+    /* the target (classes set by the component) */
+    .ui-loader-target { isolation:isolate; }
+    .ui-loader-target-static { position:relative; }
+    .ui-loader-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    @keyframes ui-loader-sweep {
+        0% { inset-inline-start:0; inset-inline-end:100%; }
+        50% { inset-inline-start:0; inset-inline-end:0; }
+        100% { inset-inline-start:100%; inset-inline-end:0; }
+    }
+    @keyframes ui-loader-spin { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion:reduce) {
+        .ui-loader-fill, .ui-loader-circle-arc, .ui-loader-placement-overlay .ui-loader-frame { transition:none; }
+        .ui-loader-indeterminate .ui-loader-fill { animation:none; inset-inline:0; opacity:var(--opacity-muted); }
+        .ui-loader-indeterminate .ui-loader-circle { animation:none; }
+    }
+}

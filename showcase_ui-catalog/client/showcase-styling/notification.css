@@ -1,0 +1,140 @@
+/* ==========================================================================
+   notification.css
+
+   Default generated DOM (clickable icon with a count):
+
+   <button id="bell" class="ui-notification ui-notification-content-icon ui-notification-size-medium ui-notification-circle" type="button" aria-label="Notifications, 3 new">
+     <span class="ui-notification-shape">
+       <span class="ui-notification-icon" aria-hidden="true"><i class="fa-solid fa-bell"></i></span>      (or img.ui-notification-image, or span.ui-notification-text)
+     </span>
+     <span class="ui-notification-indicator ui-notification-indicator-count ui-notification-type-danger ui-notification-corner-top-right [ui-notification-pill]" aria-hidden="true">3</span>
+   </button>
+   Display only: <span … role="img" aria-label="…"> instead of <button>.
+   Dots: .ui-notification-indicator-dot.ui-notification-shape-{circle|triangle|square|diamond} (no text).
+
+   Colours: --ui-notification-color / --ui-notification-bg (set per instance from colorToken / backgroundToken; icon and
+   text content; images unaffected); defaults: icon accent on transparent, text on the selected background.
+   Border (option border): a thin border in the border colour around the main shape (images keep a small gap inside it);
+   without it the border stays transparent, so both variants have the same size.
+   Sizes follow the icon Button sizes (control height minus/plus the inline gap); the indicator scales with the size
+   through --ui-notification-indicator-size. Main shapes: icon and image are circles; text is a circle up to three
+   characters and a pill beyond. Indicators with text are circles for one character and pills for more. The indicator
+   sits on a corner (logical insets, so it mirrors in right-to-left), overlapping it by a third of its size, with a ring
+   in the surface colour so it stays distinct. A pill (longer indicator text) at a right corner starts where a round
+   indicator starts and grows away from the shape: the notification becomes wider by the extra length, so the
+   elements after it move. At a left corner the pill starts at the corner and grows over the shape (no width change).
+   The element (button or span) has no look of its own: shape, colours, border and focus ring are on .ui-notification-shape.
+   The triangle is drawn with clip-path; the diamond is a rotated square (scale 0.8 keeps it inside the size).
+
+   Variables left: --ui-notification-bg / --ui-notification-color, written by the component on the element from the
+   configuration (backgroundToken / colorToken); and two geometry helpers set in part 2 per size option and used in
+   part 3: --ui-notification-size (the content's height) and --ui-notification-indicator-size (the indicator's height;
+   its count, dot, pill and corner offset are proportions of it).
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* the element (button or span): no look of its own; font */
+    .ui-notification { border: 0; background-color: transparent; font: inherit; font-family: var(--font-ui); font-weight: var(--fw-ui); line-height: 1; }
+    /* the shape: transparent border (shown when bordered), background and text colour (configuration, else none / --c-accent) */
+    .ui-notification-shape { border-top: var(--border-thin) solid transparent; border-right: var(--border-thin) solid transparent; border-bottom: var(--border-thin) solid transparent; border-left: var(--border-thin) solid transparent; background-color: var(--ui-notification-bg, transparent); color: var(--ui-notification-color, var(--c-accent)); }
+    .ui-notification-circle > .ui-notification-shape { border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; }
+    .ui-notification-bordered > .ui-notification-shape { border-color: var(--c-border); }
+    .ui-notification-pill-main > .ui-notification-shape { border-top-left-radius: var(--radius-pill); border-top-right-radius: var(--radius-pill); border-bottom-right-radius: var(--radius-pill); border-bottom-left-radius: var(--radius-pill); }
+    .ui-notification-image { border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; }
+
+    /* initials (text content) */
+    .ui-notification-text { font-size: var(--fs-label); font-weight: var(--fw-ui-strong); }
+    .ui-notification-size-small .ui-notification-text { font-size: var(--fs-caption); }
+    .ui-notification-content-text > .ui-notification-shape { background-color: var(--ui-notification-bg, var(--c-selected)); color: var(--ui-notification-color, var(--c-text)); }
+
+    /* clickable (button): under the pointer; own colours (configuration) darken slightly instead of being replaced; disabled */
+    button.ui-notification > .ui-notification-shape { transition: background-color var(--transition-1); }
+    button.ui-notification:hover:not(:disabled) > .ui-notification-shape { background-color: var(--c-surface-hover); color: var(--c-text); }
+    button.ui-notification[style*="--ui-notification-"]:hover:not(:disabled) > .ui-notification-shape { background-color: color-mix(in srgb, var(--ui-notification-bg, transparent) 88%, var(--c-text)); color: var(--ui-notification-color, var(--c-accent)); }
+    button.ui-notification:disabled { opacity: var(--opacity-disabled); }
+
+    /* indicator (dot or count): tag corners, colours per type, ring separating it from the content.
+       --ui-notification-indicator-bg / -color: set by the component when the indicator has its own backgroundToken / colorToken */
+    .ui-notification-indicator { border-top-left-radius: var(--tag-radius); border-top-right-radius: var(--tag-radius); border-bottom-right-radius: var(--tag-radius); border-bottom-left-radius: var(--tag-radius); background-color: var(--ui-notification-indicator-bg, var(--c-danger)); color: var(--ui-notification-indicator-color, var(--c-on-accent)); box-shadow: 0 0 0 var(--border-thick) var(--c-surface); font-weight: var(--fw-ui-strong); }
+    .ui-notification-type-info { background-color: var(--ui-notification-indicator-bg, var(--c-info)); }
+    .ui-notification-type-success { background-color: var(--ui-notification-indicator-bg, var(--c-success)); }
+    .ui-notification-type-warning { background-color: var(--ui-notification-indicator-bg, var(--c-warning)); color: var(--ui-notification-indicator-color, var(--c-text)); }
+    .ui-notification-type-danger { background-color: var(--ui-notification-indicator-bg, var(--c-danger)); }
+
+    /* dot shapes */
+    .ui-notification-shape-circle { border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; }
+    .ui-notification-shape-square { border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; }
+    .ui-notification-shape-diamond { border-top-left-radius: var(--border-thin); border-top-right-radius: var(--border-thin); border-bottom-right-radius: var(--border-thin); border-bottom-left-radius: var(--border-thin); }
+    .ui-notification-shape-triangle { border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; box-shadow: none; }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* size options: content height (MEDIUM = control height, SMALL / LARGE one step smaller / larger), indicator height
+       (a proportion of the control height) and icon size */
+    .ui-notification { --ui-notification-size: var(--control-height); --ui-notification-indicator-size: calc(var(--control-height) * 0.45); padding: 0; font-size: var(--icon-size-medium); }
+    .ui-notification-size-small { --ui-notification-size: calc(var(--control-height) - var(--gap-inline-items)); --ui-notification-indicator-size: calc(var(--control-height) * 0.38); font-size: var(--icon-size-small); }
+    .ui-notification-size-large { --ui-notification-size: calc(var(--control-height) + var(--gap-inline-items)); --ui-notification-indicator-size: calc(var(--control-height) * 0.52); font-size: var(--icon-size-large); }
+    .ui-notification-content-image.ui-notification-bordered > .ui-notification-shape { padding: var(--space-sm-1); }   /* picture inside a border */
+    .ui-notification-pill-main > .ui-notification-shape { padding: 0 var(--gap-inline-items); }                          /* left and right of a pill-shaped content */
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    /* geometry follows the helpers of part 2; the indicator's proportions are geometric */
+    .ui-notification { position:relative; display:inline-flex; flex:0 0 auto; align-items:center; box-sizing:border-box;
+      block-size:var(--ui-notification-size); vertical-align:middle; }
+    .ui-notification-shape { display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center; box-sizing:border-box;
+      min-inline-size:var(--ui-notification-size); block-size:var(--ui-notification-size); }
+    .ui-notification-circle > .ui-notification-shape { inline-size:var(--ui-notification-size); }
+    .ui-notification-image { inline-size:100%; block-size:100%; object-fit:cover; }
+    .ui-notification-text { white-space:nowrap; }
+
+    button.ui-notification { cursor:pointer; }
+    button.ui-notification:focus-visible { outline:0; }
+    button.ui-notification:focus-visible > .ui-notification-shape { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    button.ui-notification:disabled { cursor:not-allowed; }
+
+    /* Indicator */
+    .ui-notification-indicator { position:absolute; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box;
+      min-inline-size:var(--ui-notification-indicator-size); block-size:var(--ui-notification-indicator-size); padding:0;
+      font-size:calc(var(--ui-notification-indicator-size) * 0.62); line-height:1; white-space:nowrap; pointer-events:none; }
+    .ui-notification-pill { padding:0 calc(var(--ui-notification-indicator-size) * 0.3); }
+    .ui-notification-indicator-dot { min-inline-size:0; inline-size:calc(var(--ui-notification-indicator-size) * 0.6); block-size:calc(var(--ui-notification-indicator-size) * 0.6); }
+
+    /* Corners: logical insets (mirrored automatically in right-to-left), overlapping by a third of the indicator size,
+       measured from inside the shape's thin border (as when the element itself carried the border) */
+    .ui-notification-corner-top-right { inset-block-start:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); inset-inline-end:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); }
+    .ui-notification-corner-top-left { inset-block-start:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); inset-inline-start:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); }
+    .ui-notification-corner-bottom-right { inset-block-end:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); inset-inline-end:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); }
+    .ui-notification-corner-bottom-left { inset-block-end:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); inset-inline-start:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); }
+    /* A pill at a right corner is part of the layout: it starts where a round indicator starts (two thirds of the indicator
+       size, plus the border, inside the shape's end) and grows away from the shape; its negative end margin cancels the usual one-third
+       overhang, so the notification is wider only by the pill's extra length (a round indicator changes nothing). */
+    .ui-notification-pill:is(.ui-notification-corner-top-right, .ui-notification-corner-bottom-right) { position:relative; flex:0 0 auto; inset-inline-end:auto; margin-inline-start:calc(-1 * var(--border-thin) - var(--ui-notification-indicator-size) * 0.67); margin-inline-end:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); }
+    .ui-notification-pill.ui-notification-corner-top-right { align-self:flex-start; inset-block-start:calc(var(--border-thin) - var(--ui-notification-indicator-size) * 0.33); }
+    .ui-notification-pill.ui-notification-corner-bottom-right { align-self:flex-end; inset-block-start:calc(var(--ui-notification-indicator-size) * 0.33 - var(--border-thin)); inset-block-end:auto; }
+
+    /* Dot shapes */
+    .ui-notification-shape-diamond { rotate:45deg; scale:0.8; }
+    .ui-notification-shape-triangle { clip-path:polygon(50% 0, 100% 100%, 0 100%); inline-size:calc(var(--ui-notification-indicator-size) * 0.75); block-size:calc(var(--ui-notification-indicator-size) * 0.7); }
+
+    @media (prefers-reduced-motion:reduce) { button.ui-notification { transition:none; } }
+}

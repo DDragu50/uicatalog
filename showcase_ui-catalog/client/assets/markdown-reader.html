@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Markdown Reader</title>
+<style>
+:root{--bg:#f3f5f9;--panel:#fff;--fg:#182333;--sub:#617187;--border:#d9e0ea;--accent:#245dd1;--code:#f0f3f8;--button-border:#000;--header-border:#000}
+[data-theme=dark]{--bg:#101722;--panel:#1b2736;--fg:#e7edf6;--sub:#a0b0c5;--border:#39475a;--accent:#98baff;--code:#111c2a;--button-border:#a0b0c5;--header-border:#a0b0c5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 system-ui,Segoe UI,sans-serif}
+header{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 18px;background:var(--panel);border-bottom:2px solid var(--header-border)}
+.brand{font-weight:800;font-size:18px}.brand span{color:var(--accent)}#filename{font-size:13px;color:var(--fg);font-weight:600;white-space:normal;overflow-wrap:anywhere;margin-right:auto;min-width:0}
+button,input{font:inherit}button{padding:3px 8px;min-height:27px;font-size:12px;line-height:1.25;border:1px solid var(--button-border);border-radius:0;background:var(--panel);color:var(--fg);cursor:pointer}button:hover{background:var(--code)}
+
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.layout{display:grid;grid-template-columns:255px minmax(0,1fr);max-width:1550px;margin:auto}.layout:not(.show-toc){grid-template-columns:minmax(0,1fr)}.layout:not(.show-toc) aside{display:none}.layout:not(.show-toc) article{max-width:none}
+aside{position:sticky;top:62px;height:calc(100vh - 62px);overflow:auto;padding:18px 12px;border-right:1px solid var(--border)}
+aside h2{font-size:12px;letter-spacing:.1em;color:var(--sub);text-transform:uppercase;padding-left:9px}
+#toc a{display:block;padding:6px 8px;border-radius:5px;text-decoration:none;color:var(--fg);font-size:13px;line-height:1.35}
+#toc a:hover{background:var(--code);color:var(--accent)}
+main{min-width:0;padding:28px clamp(15px,4vw,65px) 70px}
+article{max-width:1100px;margin:auto;padding:clamp(20px,4vw,50px);background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow-wrap:anywhere}
+article h1,article h2,article h3,article h4{line-height:1.3;scroll-margin-top:95px;margin:1.6em 0 .6em}
+article h1{font-size:2em;margin-top:0}article h2{font-size:1.5em;border-bottom:1px solid var(--border);padding-bottom:8px}article h3{font-size:1.22em}
+article p{margin:0 0 1em}article a{color:var(--accent)}article hr{border:0;border-top:1px solid var(--border);margin:26px 0}
+article ul,article ol{padding-left:28px}article li{margin:4px 0}article blockquote{margin:18px 0;padding:12px 18px;border-left:4px solid var(--accent);background:var(--code)}
+article code{font: .88em Consolas,monospace;background:var(--code);border-radius:4px;padding:2px 5px}
+article pre{background:var(--code);padding:16px;border-radius:8px;overflow:auto}article pre code{padding:0;background:none;white-space:pre}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin:18px 0}table{border-collapse:collapse;width:100%;min-width:max-content;font-size:14px}
+th,td{border-bottom:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;max-width:560px}
+th{background:var(--code)}tr:nth-child(even) td{background:color-mix(in srgb,var(--code) 45%,transparent)}
+.document-filename{font-size:13px;color:var(--sub);font-weight:600;padding-bottom:12px;margin-bottom:24px;border-bottom:1px solid var(--border);overflow-wrap:anywhere}.document-filename strong{color:var(--fg)}article img{max-width:100%}mark{background:#facc15;color:#111}mark.active{background:#fb923c}
+.empty{text-align:center;padding:90px 10px;color:var(--sub)}.empty strong{display:block;font-size:22px;color:var(--fg)}
+.drop{outline:3px dashed var(--accent);outline-offset:-9px}.toc-option{display:flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap;cursor:pointer}.toc-option input{accent-color:var(--accent)}
+@media(max-width:800px){.layout,.layout:not(.show-toc){display:block}.layout aside{position:static;height:auto;border-bottom:1px solid var(--border)}main{padding:12px}#filename{max-width:none}}
+@media print{header,aside{display:none!important}.layout{display:block}main{padding:0}article{border:0;padding:0;max-width:none}.table-wrap{overflow:visible}}
+</style></head><body>
+<header><div class="brand">Markdown <span>Reader</span></div><span id="filename">No file selected</span>
+<button id="open">Select .md file</button><label class="toc-option"><input type="checkbox" id="showToc" checked>Show contents</label><button id="theme">Dark</button><button id="print">Print / PDF</button>
+<input type="file" id="file" accept=".md,.markdown,.txt" hidden></header>
+<div class="layout show-toc" id="drop"><aside id="sidebar"><h2>Contents</h2><nav id="toc"></nav></aside>
+<main><article id="article"><div class="empty"><strong>Open a Markdown file</strong>Choose a .md file or drag it here.<p>Runs directly in your browser, completely offline.</p></div></article></main></div>
+<script>
+'use strict';
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const url=s=>/^(https?:|mailto:|#|\.?\.?\/|[^:/?#][^:]*$)/i.test(s)?esc(s):'#';
+
+function inline(s){
+ let tokens=[];const stash=x=>{tokens.push(x);return '\uE000'+(tokens.length-1)+'\uE001';};
+ s=esc(s);
+ s=s.replace(/`([^`\n]+)`/g,(_,x)=>stash('<code>'+x+'</code>'));
+ s=s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,(_,a,u)=>stash('<img alt="'+a+'" src="'+url(u)+'">'));
+ s=s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,(_,a,u)=>stash('<a href="'+url(u)+'" target="_blank" rel="noopener noreferrer">'+a+'</a>'));
+ s=s.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_\n]+)__/g,'<strong>$1</strong>').replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g,'<em>$1</em>').replace(/~~([^~\n]+)~~/g,'<del>$1</del>');
+ return s.replace(/\uE000(\d+)\uE001/g,(_,i)=>tokens[+i]);
+}
+function cells(s){let a=[],v='',code=false,slash=false;for(const ch of s.trim().replace(/^\|/,'').replace(/\|$/,'')){if(slash){v+=ch;slash=false;}else if(ch==='\\')slash=true;else if(ch==='`'){code=!code;v+=ch;}else if(ch==='|'&&!code){a.push(v.trim());v='';}else v+=ch;}a.push(v.trim());return a;}
+const sep=s=>/^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(s);
+function render(md){
+ const lines=md.replace(/\r\n?/g,'\n').split('\n'),out=[];let i=0;
+ const block=j=>!lines[j]?.trim()||/^\s*(#{1,6}\s|>|[-*+]\s|\d+[.)]\s|```|~~~)/.test(lines[j])||sep(lines[j])||(j+1<lines.length&&sep(lines[j+1])&&lines[j].includes('|'));
+ while(i<lines.length){
+ let s=lines[i].trim();if(!s){i++;continue;}
+ let fence=s.match(/^(`{3,}|~{3,})/);
+ if(fence){const ch=fence[1][0],len=fence[1].length;let a=[];i++;while(i<lines.length&&!new RegExp('^\\s*'+ch+'{'+len+',}\\s*$').test(lines[i]))a.push(lines[i++]);i++;out.push('<pre><code>'+esc(a.join('\n'))+'</code></pre>');continue;}
+ let h=s.match(/^(#{1,6})\s+(.+?)\s*#*$/);if(h){out.push('<h'+h[1].length+'>'+inline(h[2])+'</h'+h[1].length+'>');i++;continue;}
+ if(i+1<lines.length&&/^\s*(=+|-{3,})\s*$/.test(lines[i+1])&&!s.includes('|')){let n=lines[i+1].trim()[0]==='='?1:2;out.push('<h'+n+'>'+inline(s)+'</h'+n+'>');i+=2;continue;}
+ if(/^([-*_])(?:\s*\1){2,}\s*$/.test(s)){out.push('<hr>');i++;continue;}
+ if(i+1<lines.length&&sep(lines[i+1])&&s.includes('|')){
+ let head=cells(lines[i]),align=cells(lines[i+1]).map(x=>x.startsWith(':')&&x.endsWith(':')?'center':x.endsWith(':')?'right':'left');i+=2;let rows=[];
+ while(i<lines.length&&lines[i].trim()&&lines[i].includes('|'))rows.push(cells(lines[i++]));
+ out.push('<div class="table-wrap"><table><thead><tr>'+head.map((x,j)=>'<th style="text-align:'+align[j]+'">'+inline(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+head.map((_,j)=>'<td style="text-align:'+align[j]+'">'+inline(row[j]||'')+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>');continue;
+ }
+ if(s.startsWith('>')){let a=[];while(i<lines.length&&lines[i].trim().startsWith('>'))a.push(lines[i++].replace(/^\s*>\s?/,''));out.push('<blockquote>'+render(a.join('\n'))+'</blockquote>');continue;}
+ let li=s.match(/^([-*+]|\d+[.)])\s+/);
+ if(li){let ordered=/^\d/.test(li[1]),items=[];while(i<lines.length){let m=lines[i].match(/^\s{0,3}([-*+]|\d+[.)])\s+(.*)$/);if(!m||/^\d/.test(m[1])!==ordered)break;let item=m[2];i++;while(i<lines.length&&/^\s{2,}\S/.test(lines[i])&&!/^\s{0,3}([-*+]|\d+[.)])\s+/.test(lines[i]))item+=' '+lines[i++].trim();let task=item.match(/^\[([ xX])\]\s+(.*)$/);items.push('<li>'+(task?'<input type="checkbox" disabled '+(task[1].toLowerCase()==='x'?'checked':'')+'> '+inline(task[2]):inline(item))+'</li>');}let tag=ordered?'ol':'ul';out.push('<'+tag+'>'+items.join('')+'</'+tag+'>');continue;}
+ let a=[s];i++;while(i<lines.length&&!block(i)&&!(i+1<lines.length&&/^\s*(=+|-{3,})\s*$/.test(lines[i+1])))a.push(lines[i++].trim());out.push('<p>'+inline(a.join(' '))+'</p>');
+ }return out.join('\n');
+}
+function load(name,text){$('#filename').textContent=name;$('#article').innerHTML='<div class="document-filename"><strong>File:</strong> '+esc(name)+'</div>'+render(text);let toc=$('#toc');toc.replaceChildren();let seen=new Map();$('#article').querySelectorAll('h1,h2,h3,h4').forEach(h=>{let base=h.textContent.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-')||'section',n=seen.get(base)||0;seen.set(base,n+1);h.id=base+(n?'-'+n:'');let a=document.createElement('a');a.href='#'+h.id;a.textContent=h.textContent;a.style.paddingLeft=(8+(Number(h.tagName[1])-1)*12)+'px';toc.append(a);});}
+async function open(file){if(file)try{load(file.name,await file.text());}catch(e){alert('Cannot read file: '+e.message);}}
+$('#open').onclick=()=>$('#file').click();$('#file').onchange=e=>open(e.target.files[0]);
+$('#showToc').onchange=e=>$('#drop').classList.toggle('show-toc',e.target.checked);
+$('#theme').onclick=()=>{let dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('#theme').textContent=dark?'Light':'Dark';};
+$('#print').onclick=()=>window.print();
+for(let t of ['dragenter','dragover'])document.addEventListener(t,e=>{e.preventDefault();$('#drop').classList.add('drop');});
+for(let t of ['dragleave','drop'])document.addEventListener(t,e=>{e.preventDefault();$('#drop').classList.remove('drop');});
+document.addEventListener('drop',e=>open(e.dataTransfer.files[0]));
+</script></body></html>

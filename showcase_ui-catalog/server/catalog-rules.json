@@ -1,0 +1,39 @@
+{
+  "_help": [
+    "Edit this file to change groups and keywords, then run: npm run catalog",
+    "groups: one entry per menu group, in menu order. A component can belong to several groups.",
+    "  rule.maxDependencies / rule.minDependencies: membership computed from all dependencies: the components' own imports and, recursively, what those import.",
+    "  rule.components: a hand-picked list of component folder names (e.g. for a future Dashboard group).",
+    "  icon: Font Awesome classes shown in the menu.",
+    "keywords: keyword -> list of component folder names. Each component also gets its group ids as keywords.",
+    "dependencyKeywords: one keyword per component from its number of dependencies, indirect ones included (computed, like the groups).",
+    "  none = 0, one = 1, many = 2 or more ({count} becomes the number). Remove this entry to stop adding them."
+  ],
+  "groups": [
+    {
+      "id": "basic",
+      "label": "Basic components",
+      "icon": "fa-solid fa-cube",
+      "description": "Components that use at most one other component, directly or indirectly.",
+      "rule": { "maxDependencies": 1 }
+    },
+    {
+      "id": "complex",
+      "label": "Complex components",
+      "icon": "fa-solid fa-cubes",
+      "description": "Components built from two or more other components, directly or indirectly.",
+      "rule": { "minDependencies": 2 }
+    }
+  ],
+  "dependencyKeywords": { "none": "no dependency", "one": "1 dependency", "many": "{count} dependencies" },
+  "keywords": {
+    "actions": [ "button", "actionMenu", "copyArea" ],
+    "containers": [ "contentGroup", "collapsiblePanel", "accordion", "form", "stepper" ],
+    "data": [ "pagination", "table", "treeView" ],
+    "time/date": [ "calendar" ],
+    "state": [ "chip", "notification", "badge", "message", "notificationsPanel", "stepper", "loader" ],
+    "inputs": [ "select", "textArea", "toggle", "calendar", "checkboxRadio", "textInput", "searchBox", "form", "treeView", "uploadFiles" ],
+    "layout": [ "contentGroup", "collapsiblePanel", "accordion", "sideNavigation", "appHeader" ],
+    "navigation": [ "pagination", "topNavigation", "breadcrumbs", "sideNavigation", "appHeader", "actionMenu", "treeView", "stepper" ]
+  }
+}

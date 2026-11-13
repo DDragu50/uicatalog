@@ -1,0 +1,217 @@
+/* ==========================================================================
+   select.css
+
+   Default generated DOM (NATIVE, SINGLE):
+
+   <div class="ui-select-wrapper ui-select-width-full ui-select-native">
+     <label id="country-label" class="ui-select-label" for="country">Country</label>
+     <div class="ui-select-control">
+       <select id="country" name="country" class="ui-select-native-field" aria-invalid="false" aria-required="true">
+         <option value="">Select an option</option>  <optgroup label="Europe"><option value="RO">Romania</option></optgroup>
+       </select>
+       <span class="ui-select-chevron" aria-hidden="true"></span>
+     </div>
+     <div id="country-error" class="ui-select-error" hidden></div>
+   </div>
+
+   CUSTOM (.ui-select-custom):
+     <span id="{id}-label" class="ui-select-label">…</span>
+     <button id="{id}" class="ui-select-trigger" role="combobox" aria-haspopup="listbox" aria-expanded aria-controls="{id}-listbox">
+       <span class="ui-select-value [ui-select-placeholder]" aria-hidden="true">Red, Blue</span><span class="ui-select-more" aria-hidden="true">+2</span>
+       <span class="ui-select-visually-hidden">full value</span><span class="ui-select-chevron" aria-hidden="true"></span>
+     </button>
+     <div id="{id}-popup" class="ui-select-popup" popover="manual" style="--ui-select-hover-bg:…">   (top layer)
+       <input class="ui-select-search" role="combobox">                                             (searchable)
+       <div id="{id}-listbox" class="ui-select-listbox" role="listbox" [aria-multiselectable]>
+         <div class="ui-select-option ui-select-option-clear" role="option">Clear selection</div>   (non-mandatory SINGLE)
+         <div class="ui-select-group" role="group"><div class="ui-select-group-label">Europe</div>
+           <div class="ui-select-option [ui-select-option-active]" role="option" aria-selected [aria-disabled]>
+             <span class="ui-select-check"></span><span class="ui-select-option-label">Romania</span></div>
+         </div>
+       </div>
+       <div class="ui-select-no-matches" hidden>No matching options</div>
+     </div>
+
+   Option colors come from the local properties --ui-select-hover-bg/-color and --ui-select-selected-bg/-color,
+   mapped to design tokens (defaults --select-option-*). The active option also gets an outline, and selected
+   options a check mark, so state never depends on color alone. The popover position and size are set by the
+   component through --ui-select-popup-left/-top/-width/-max-height; --ui-select-popup-limit caps its height.
+   The check mark and chevron are drawn with borders; rotate(45deg), the translate percentages and the small calc()
+   multipliers of spacing tokens (chevron inset, trigger end padding) are geometric proportions, not design values.
+
+   Variables that remain belong to the component's JavaScript, not to styling: the option colours
+   (--ui-select-hover-bg/-color and --ui-select-selected-bg/-color, set from the configuration), the list position and size
+   (--ui-select-popup-left/-top/-width/-max-height, measured) and --ui-select-popup-limit (part 2: the list height
+   the component aims for, which it reads).
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   ui-catalog source and client/local-styling use this file with the app look; client/showcase-styling keeps
+   the original values, which the lines marked [APP] name in brackets (library / original).
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and normal weight for every text of the select (the field and the list inherit them;
+       labels, "*", error and group labels are --fw-ui-strong, below) */
+    .ui-select-wrapper, .ui-select-popup { font-family: var(--font-ui); font-weight: var(--fw-ui); }
+    .ui-select-label { color:var(--c-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-compact); }
+    .ui-select-optional { color:var(--c-muted); font-size:var(--fs-label); font-weight:var(--fw-ui); }
+    .ui-select-mandatory { color:var(--c-danger-text); font-weight:var(--fw-ui-strong); }
+    .ui-select-help { color:var(--c-muted); font-size:var(--fs-label); line-height:var(--lh-body); }
+    .ui-select-error { color:var(--c-danger-text); font-size:var(--fs-label); font-weight:var(--fw-ui-strong); line-height:var(--lh-body); }
+    .ui-select-view-value { color:var(--c-text); font-size:var(--fs-control); }
+
+    /* the field (native select and custom button): border, corners, background and text, at rest */
+    .ui-select-native-field, .ui-select-trigger {
+        border-top: 0 solid var(--c-border);                       /* [APP] as TextInput: bottom line only (original: var(--border-thin) on every side) */
+        border-right: 0 solid var(--c-border);
+        border-bottom: var(--border-thin) solid var(--c-border);
+        border-left: 0 solid var(--c-border);
+        border-top-left-radius: 0;                                  /* [APP] square corners (original: var(--radius-control)) */
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        background-color: var(--c-surface);
+        color: var(--c-text);
+        font: inherit;                                              /* the select's font (above), then the field size */
+        font-size: var(--fs-control);
+        transition: border-color var(--transition-1);
+    }
+    /* the same field while open or focused, with an invalid value (keep it clearly "error") and disabled */
+    .ui-select-native-field:focus, .ui-select-trigger:focus { border-color: var(--c-accent); }
+    .ui-select-native-field[aria-invalid="true"], .ui-select-trigger[aria-invalid="true"] { border-color: var(--c-danger); }
+    .ui-select-native-field:disabled, .ui-select-trigger:disabled { background-color: var(--c-surface-muted); color: var(--c-muted); }
+
+    /* DISABLED LABEL — the label and the "*" of a disabled field use the secondary text colour.
+       Disabled = state INACTIVE, or inside a disabled fieldset (e.g. ContentGroup disabled:true); :has() looks for a
+       disabled field inside the wrapper. "(Optional)" and the help text are already --c-muted; the error stays red.
+       To change the colour, edit these two lines (a plain .ui-select-label rule elsewhere cannot override them). */
+    .ui-select-wrapper:has(:is(.ui-select-native-field, .ui-select-trigger):disabled) .ui-select-label { color: var(--c-muted); }
+    .ui-select-wrapper:has(:is(.ui-select-native-field, .ui-select-trigger):disabled) .ui-select-mandatory { color: var(--c-muted); }
+
+    /* arrow at the end of the field */
+    .ui-select-chevron { border-inline-end: var(--border-thick) solid var(--c-muted); border-block-end: var(--border-thick) solid var(--c-muted); }
+    .ui-select-placeholder { color: var(--c-muted); }
+    .ui-select-more { color: var(--c-muted); font-weight: var(--fw-ui-strong); }
+
+    /* the open list (a floating panel: keeps its border, corners and shadow) */
+    .ui-select-popup { border: var(--border-thin) solid var(--c-border); border-radius: var(--radius-control); background-color: var(--c-surface); color: var(--c-text); box-shadow: var(--shadow-md); }
+    /* search field at the top of the list: same look as the field */
+    .ui-select-search {
+        border-top: 0 solid var(--c-border);                       /* [APP] as TextInput: bottom line only (original: var(--border-thin) on every side) */
+        border-right: 0 solid var(--c-border);
+        border-bottom: var(--border-thin) solid var(--c-border);
+        border-left: 0 solid var(--c-border);
+        border-top-left-radius: 0;                                  /* [APP] square corners (original: var(--radius-control)) */
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        background-color: var(--c-surface);
+        color: var(--c-text);
+        font: inherit;
+        font-size: var(--fs-control);
+    }
+    .ui-select-group-label { color: var(--c-muted); font-size: var(--fs-label); font-weight: var(--fw-ui-strong); }
+    .ui-select-option { border-radius: var(--radius-control-small); font-size: var(--fs-control); }
+    /* option colours come from the configuration (optionSelected… / optionHover… tokens) */
+    .ui-select-option[aria-selected="true"] { background-color: var(--ui-select-selected-bg); color: var(--ui-select-selected-color); }
+    .ui-select-option:hover, .ui-select-option-active { background-color: var(--ui-select-hover-bg); color: var(--ui-select-hover-color); }
+    .ui-select-option[aria-disabled="true"] { opacity: var(--opacity-disabled); background-color: transparent; }
+    .ui-select-option-clear { color: var(--c-muted); font-family: var(--font-italic); font-style: italic; }
+    .ui-select-option[aria-selected="true"] .ui-select-check { border-inline-end: var(--border-thick) solid currentColor; border-block-end: var(--border-thick) solid currentColor; }
+    .ui-select-no-matches { color: var(--c-muted); font-size: var(--fs-label); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    .ui-select-wrapper { gap:var(--gap-tight); margin-block-end:var(--gap-section); }
+    .ui-select-label { gap:var(--gap-inline-items); }
+    .ui-select-native-field, .ui-select-trigger { min-block-size:var(--control-height); padding:var(--padding-control); }
+    /* room at the end of the field for the arrow */
+    .ui-select-native-field:not([multiple]), .ui-select-trigger { padding-inline-end:calc(var(--gap-inline-items) * 4); }
+    .ui-select-chevron { inset-inline-end:calc(var(--gap-inline-items) * 1.5); inline-size:var(--gap-inline-items); block-size:var(--gap-inline-items); }
+    .ui-select-trigger { gap:var(--gap-tight); }
+
+    /* the list: --ui-select-popup-limit is the height the component aims for (it reads this value) */
+    .ui-select-popup { --ui-select-popup-limit:var(--size-md-3); padding:var(--gap-tight); }
+    .ui-select-popup:popover-open, .ui-select-popup-open { gap:var(--gap-tight); }
+    .ui-select-search { min-block-size:var(--control-height); padding:var(--padding-control); }
+    .ui-select-group-label { padding:var(--gap-tight) var(--gap-inline-items); }
+    .ui-select-option { gap:var(--gap-inline-items); padding:var(--gap-tight) var(--gap-inline-items); }
+    .ui-select-check { inline-size:var(--gap-inline-items); block-size:var(--gap-toolbar); }
+    .ui-select-no-matches { padding:var(--gap-tight) var(--gap-inline-items); }
+
+    /* width option */
+    .ui-select-width-small { inline-size:var(--percentage-s); }
+    .ui-select-width-medium { inline-size:var(--percentage-m); }
+    .ui-select-width-large { inline-size:var(--percentage-l); }
+    .ui-select-width-full { inline-size:var(--percentage-full); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-select-wrapper { display:grid; min-inline-size:0; max-inline-size:var(--percentage-full); }
+    .ui-select-label { display:flex; align-items:center; margin:0; }
+    .ui-select-view-value { margin:0; }
+    .ui-select-visually-hidden { position:absolute; inline-size:1px; block-size:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+
+    /* Shared field (native select and custom trigger) */
+    .ui-select-control { position:relative; display:flex; min-inline-size:0; }
+    .ui-select-native-field, .ui-select-trigger { box-sizing:border-box; inline-size:100%; min-inline-size:0; }
+    .ui-select-native-field:not([multiple]), .ui-select-trigger { -webkit-appearance:none; appearance:none; cursor:pointer; }
+    .ui-select-native-field:focus, .ui-select-trigger:focus { outline:0; }
+    .ui-select-native-field:focus-visible, .ui-select-trigger:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-select-native-field:disabled, .ui-select-trigger:disabled { cursor:not-allowed; }
+
+    .ui-select-chevron { position:absolute; inset-block-start:50%; transform:translateY(-75%) rotate(45deg); pointer-events:none; }
+
+    /* Custom trigger */
+    .ui-select-trigger { position:relative; display:flex; align-items:center; text-align:start; }
+    .ui-select-value { flex:0 1 auto; min-inline-size:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .ui-select-more { flex:0 0 auto; }
+    .ui-select-more:empty { display:none; }
+
+    /* Custom popover and listbox (top layer); position and size set by the component */
+    .ui-select-popup { position:fixed; inset:auto; margin:0;
+      inset-inline-start:var(--ui-select-popup-left,0); inset-block-start:var(--ui-select-popup-top,0); inline-size:var(--ui-select-popup-width,auto);
+      max-block-size:var(--ui-select-popup-max-height,var(--ui-select-popup-limit)); overflow:hidden; box-sizing:border-box; }
+    .ui-select-popup:popover-open, .ui-select-popup-open { display:flex; flex-direction:column; }
+    .ui-select-popup:not(:popover-open):not(.ui-select-popup-open) { display:none; }
+    .ui-select-search { box-sizing:border-box; flex:0 0 auto; inline-size:100%; }
+    .ui-select-search:focus-visible { outline:var(--focus-outline); outline-offset:var(--focus-offset); }
+    .ui-select-listbox { flex:1 1 auto; min-block-size:0; overflow-y:auto; outline:0; }
+    .ui-select-option { display:flex; align-items:center; cursor:pointer; }
+    .ui-select-option[hidden], .ui-select-group[hidden] { display:none; }
+    .ui-select-option-active { outline:var(--focus-outline); outline-offset:calc(-1 * var(--border-thin)); }
+    .ui-select-option[aria-disabled="true"] { cursor:not-allowed; }
+    .ui-select-check { flex:0 0 auto; }
+    .ui-select-option[aria-selected="true"] .ui-select-check { transform:rotate(45deg) translateY(-15%); }
+
+    /* Label on the left: labelPosition START, or INHERIT inside an element with the class ui-labels-start.
+       Applies only while the nearest container (e.g. Form, ContentGroup, CollapsiblePanel) is at least 36rem wide;
+       narrower, the label returns on top. 36rem is a literal because custom properties cannot be used in container queries.
+       Label column width: --form-label-width (design-system.css); gap between label and field: --gap-toolbar. */
+    @container (min-width:36rem) {
+        :is(.ui-labels-start .ui-select-wrapper:not(.ui-select-label-top), .ui-select-wrapper.ui-select-label-start) { grid-template-columns:var(--form-label-width) minmax(0,1fr); column-gap:var(--gap-toolbar); }
+        /* label on the left with width SMALL / MEDIUM / LARGE: the row keeps the full width and the option sizes the field
+           column (a share of the row, never more than the room beside the label) */
+        :is(.ui-labels-start .ui-select-wrapper:not(.ui-select-label-top), .ui-select-wrapper.ui-select-label-start).ui-select-width-small { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-s), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-select-wrapper:not(.ui-select-label-top), .ui-select-wrapper.ui-select-label-start).ui-select-width-medium { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-m), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-select-wrapper:not(.ui-select-label-top), .ui-select-wrapper.ui-select-label-start).ui-select-width-large { inline-size:var(--percentage-full); grid-template-columns:var(--form-label-width) minmax(0,min(var(--percentage-l), 100% - var(--form-label-width) - var(--gap-toolbar))); }
+        :is(.ui-labels-start .ui-select-wrapper:not(.ui-select-label-top), .ui-select-wrapper.ui-select-label-start) > * { grid-column:2; }
+        :is(.ui-labels-start .ui-select-wrapper:not(.ui-select-label-top), .ui-select-wrapper.ui-select-label-start) > .ui-select-label { grid-column:1; float:inline-start; margin:0; align-self:center; }
+    }
+}

@@ -1,0 +1,7 @@
+/* app.css — the page layout of this starter (your project's own file). Design tokens only; layer "layout", so the
+   components' own styles (layer "components") are never overridden by accident. */
+@layer layout {
+    .page { display:grid; gap:var(--gap-block); max-inline-size:var(--size-lg-4); margin:0 auto; padding:var(--gap-block) var(--space-md-3); }
+    .card { display:grid; gap:var(--gap-block); padding:var(--padding-card); border:var(--border-thin) solid var(--c-border); border-radius:var(--radius-panel); background:var(--c-surface); }
+    .fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--size-md-3)),1fr)); gap:var(--gap-block); }
+}

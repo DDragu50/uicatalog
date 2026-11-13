@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <title>UI Catalog favicon</title>
+  <g fill="#000" transform="translate(3 2) scale(1.38 0.82)">
+    <path d="M9 28V0H6V28C6 30 5.81795 31 4.5 31C3.18205 31 3 29.5 3 28V0H0V28C0 30.9268 1.60051 34 4.5 34C7.3995 34 9 31.0001 9 28Z"/>
+    <path d="M13.5 0V34" fill="none" stroke="#000" stroke-width="3"/>
+  </g>
+</svg>

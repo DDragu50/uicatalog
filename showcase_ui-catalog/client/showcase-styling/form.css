@@ -1,0 +1,75 @@
+/* ==========================================================================
+   form.css
+
+   Default generated DOM (SUBMIT):
+
+   <form id="signup" class="ui-form ui-form-mode-submit [ui-labels-start]" novalidate style="--ui-form-columns:1">
+     <div class="ui-form-summary-host"> → Message (BLOCK, DANGER): title, text, details linking to the fields </div>
+     <div class="ui-form-message-host"> → Message (submit success, showMessage(); placement ABOVE) </div>
+     <p class="ui-form-required-note" [hidden]>* Required field</p>                 (requiredNote AUTO: shown when a field shows "*")
+     <div class="ui-form-content">
+       <div class="ui-form-item">…child component or static HTML…</div>        (display:contents)
+     </div>
+     <div class="ui-form-actions ui-form-actions-end">
+       <span class="ui-form-loader-host"> → Loader (RING, SMALL, label after it) </span>     (busyIndicator BUTTONS; shown only while the Loader is)
+       → Buttons: Submit | Apply, Reset, Clear all, Cancel
+     </div>
+     <div class="ui-form-overlay-host"> → Loader (OVERLAY over the form, panel at the top) </div>           (busyIndicator OVERLAY)
+     <div class="ui-form-dialog-host"> → Message (MODAL, WARNING): "Discard your changes?" before Reset / Clear </div>
+   </form>
+
+   ui-labels-start is the shared class that puts the labels of all fields inside on the left (fields follow it
+   with labelPosition INHERIT). The form is a size container ("form"), so fields and columns react to its width.
+   Items use display:contents, so a child's own grid span (e.g. ContentGroup span) applies to the form grid.
+   The 36rem container query is a literal because custom properties cannot be used in container queries.
+   Loader hosts take no place of their own (display:contents); the BUTTONS host is not displayed while its Loader is
+   hidden, so the buttons do not move at rest. Without buttons the BUTTONS host follows the content.
+
+   STYLE GROUPS. The rules are in three parts; a class can appear in more than one part, each time with
+   different properties. Values are design tokens written directly in the rules (no component variables).
+     1. APPEARANCE  colours, borders, corners, type, motion. Change freely: only the look changes.
+     2. DIMENSIONS  sizes, spacing, widths. Change with care: the component keeps working, its size changes.
+     3. STRUCTURE   layout, behaviour, states, accessibility (focus ring, hidden text). Do not change.
+   Text uses the typography roles of design-system.css (--font-ui, --fw-ui, --fw-ui-strong, …), never --font-sans
+   or --fw-* directly, so a change of a role reaches every component.
+   To restyle, change a value in part 1 or 2 (client/local-styling marks app values [APP]), or write the same
+   selector with the new value in a stylesheet that loads later, in @layer overrides.
+   The same file is used in ui-catalog source, client/showcase-styling and client/local-styling.
+   Borders use physical sides (top, right, bottom, left): a value set for one side only does not mirror in
+   right-to-left languages.
+   ========================================================================== */
+
+@layer components {
+
+    /* ======================================================================
+       1. APPEARANCE — change freely
+       ====================================================================== */
+    /* component font and normal weight; the "* Required" note */
+    .ui-form { font-family:var(--font-ui); font-weight:var(--fw-ui); }
+    .ui-form-required-note { color:var(--c-muted); font-size:var(--fs-label); }
+
+    /* ======================================================================
+       2. DIMENSIONS — change with care
+       ====================================================================== */
+    /* space between form parts; between columns; between action buttons */
+    .ui-form { gap:var(--gap-block); }
+    .ui-form-content { gap:0 var(--gap-toolbar); }
+    .ui-form-actions { gap:var(--gap-inline-items); }
+
+    /* ======================================================================
+       3. STRUCTURE — do not change
+       ====================================================================== */
+    .ui-form-summary-host:empty, .ui-form-message-host:empty, .ui-form-dialog-host:empty { display:none; }
+    /* --ui-form-columns: number of columns, set by the component (1 by default) */
+    .ui-form { --ui-form-columns:1; container-type:inline-size; container-name:form; display:grid; min-inline-size:0; margin:0; }
+    .ui-form-content { display:grid; grid-template-columns:repeat(var(--ui-form-columns),minmax(0,1fr)); align-items:start; min-inline-size:0; }
+    .ui-form-item { display:contents; }
+    @container form (max-width:36rem) { .ui-form-content { grid-template-columns:minmax(0,1fr); } }
+    .ui-form-required-note { margin:0; }
+    .ui-form-actions { display:flex; flex-wrap:wrap; align-items:center; }
+    .ui-form-actions-end { justify-content:flex-end; }
+    .ui-form-actions-start { justify-content:flex-start; }
+    .ui-form-busy { cursor:progress; }
+    .ui-form-loader-host, .ui-form-overlay-host { display:contents; }
+    .ui-form-loader-host:not(:has(.ui-loader-shown)) { display:none; }
+}
