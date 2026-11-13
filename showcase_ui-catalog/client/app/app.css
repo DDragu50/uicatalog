@@ -279,11 +279,11 @@
     .app-home-faq-answer { margin:0 0 var(--gap-toolbar); }
     .app-home-faq-host .ui-copy-area { margin-block-end:var(--gap-toolbar); }   /* the prompt for AI tools, before the guide button */
     @container (max-width:48rem) { .app-home-columns { grid-template-columns:minmax(0,1fr); } }
-    /* Contact: title, invitation and form on the left (at most 640px) | about the author on the right, from the top of the page
-       to its right edge, 64px apart; one below the other below 48rem */
+    /* Contact: title, invitation and form on the left (at most 640px) | about the author on the right, at the bottom (level with
+       the form's end) and to the page's right edge, 64px apart; one below the other below 48rem */
     .app-contact-page { display:grid; grid-template-columns:minmax(0,var(--size-lg-2)) minmax(0,1fr); column-gap:calc(2 * var(--gap-section)); row-gap:var(--gap-section); align-items:start; }
     .app-contact-main { display:flex; flex-direction:column; gap:var(--gap-block); min-inline-size:0; }
-    .app-contact-aside { margin-inline-end:calc(-1 * var(--space-lg-1)); }   /* right edge in line with the header's search icon */
+    .app-contact-aside { align-self:end; margin-inline-end:calc(-1 * var(--space-lg-1)); }   /* at the bottom, level with the end of the form; right edge in line with the header's search icon */
     .app-contact-aside > :first-child { margin-block-start:0; }
     @container (max-width:48rem) { .app-contact-page { grid-template-columns:minmax(0,1fr); } .app-contact-aside { margin-inline-end:0; } }
     /* Links to other sites (markdown/externalLinks.js): a small arrow-out-of-a-square icon after the text */

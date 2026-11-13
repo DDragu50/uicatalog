@@ -3,7 +3,7 @@
 // CONTACT PAGE.
 // Shows content/contact.md and a contact Form. contact.md is split at its marker line "<!-- aside -->": before it
 // (title and invitation) above the Form on the left; the rest of contact.md (about the author, LinkedIn link) on the right,
-// from the top of the page to its right edge; one below the other in a narrow page. Links to other sites open in a new tab.
+// at the bottom (level with the end of the Form) and to the page's right edge; one below the other in a narrow page. Links to other sites open in a new tab.
 // The Form (TextInput and TextArea fields) that sends the message to the server
 // (POST api/contact: server/contactHandler.js locally, client/api/contact.php on the public site). Server checks are shown next to the fields; other outcomes are shown as Form messages.
 

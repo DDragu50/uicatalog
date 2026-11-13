@@ -1,5 +1,9 @@
 # Changelog
 
+## Delivery 140 — 2026-11-13: Contact page, text at the bottom
+
+Showcase look: **Contact page** (your request). The text on the right is aligned to the bottom, level with the "Send message" button; width, right edge and spacing as in delivery 139.
+
 ## Delivery 139 — 2026-11-13: Contact page, right column
 
 Showcase look: **Contact page** (your request). The live examples are unchanged.
